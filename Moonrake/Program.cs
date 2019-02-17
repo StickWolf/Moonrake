@@ -11,12 +11,7 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            var sounds = new Sounds();
-            sounds.AncientDrumBeeps();
-            sounds.AncientHarpBeeps();
-            sounds.AncientPianoBeeps();
-            sounds.AttacksBeep();
-            sounds.HealBeeps();
+           
         }
     }
 }
