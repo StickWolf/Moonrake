@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    class Character
+    public class Character
     {
         private string Name;
         private int Hp, FullHp;

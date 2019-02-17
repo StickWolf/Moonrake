@@ -10,7 +10,9 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
+            // TODO: Create an instance of GameData here
             
+            // TODO: Create a new Engine here and feed it the game data
         }
     }
 }
