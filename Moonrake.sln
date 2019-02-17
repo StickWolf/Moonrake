@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moonrake", "Moonrake\Moonrake.csproj", "{45464526-E20A-4257-9F37-A8BAE1CB3472}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine", "GameEngine\GameEngine.csproj", "{C578242E-55E6-4A63-89A4-138505108342}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameData", "GameData\GameData.csproj", "{7E387CF0-17BD-42C1-9DF4-B208153DDE4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{45464526-E20A-4257-9F37-A8BAE1CB3472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45464526-E20A-4257-9F37-A8BAE1CB3472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45464526-E20A-4257-9F37-A8BAE1CB3472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C578242E-55E6-4A63-89A4-138505108342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C578242E-55E6-4A63-89A4-138505108342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C578242E-55E6-4A63-89A4-138505108342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C578242E-55E6-4A63-89A4-138505108342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E387CF0-17BD-42C1-9DF4-B208153DDE4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E387CF0-17BD-42C1-9DF4-B208153DDE4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E387CF0-17BD-42C1-9DF4-B208153DDE4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E387CF0-17BD-42C1-9DF4-B208153DDE4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
