@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoundUtils1
+namespace SoundUtils
 {
-    public class Class1
+    public class Sounds
     {
         public void AttacksBeep()
         {
@@ -24,7 +24,7 @@ namespace SoundUtils1
             Console.Beep(700, 100);
         }
 
-        public void AcientPianoBeeps()
+        public void AncientPianoBeeps()
         {
             Console.Beep(100, 100);
             Console.Beep(100, 100);
@@ -33,7 +33,7 @@ namespace SoundUtils1
             Console.Beep(100, 100);
         }
 
-        public void AcientHarpBeeps()
+        public void AncientHarpBeeps()
         {
             Console.Beep(100, 100);
             Console.Beep(100, 100);
@@ -42,7 +42,7 @@ namespace SoundUtils1
             Console.Beep(100, 100);
         }
 
-        public void AcientDrumBeeps()
+        public void AncientDrumBeeps()
         {
             Console.Beep(100, 100);
             Console.Beep(100, 100);

@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moonrake", "Moonrake\Moonrake.csproj", "{45464526-E20A-4257-9F37-A8BAE1CB3472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundUtils1", "SoundUtils1\SoundUtils1.csproj", "{5BB92D21-99F0-4C40-BD84-63E7F5391716}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundUtils", "SoundUtils1\SoundUtils.csproj", "{5BB92D21-99F0-4C40-BD84-63E7F5391716}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
