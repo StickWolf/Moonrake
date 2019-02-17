@@ -14,6 +14,7 @@ namespace SoundUtils
             Console.Beep(500, 100);
             Console.Beep(600, 100);
             Console.Beep(400, 100);
+            Console.ReadLine();
         }
 
         public void HealBeeps()
@@ -22,24 +23,28 @@ namespace SoundUtils
             Console.Beep(700, 100);
             Console.Beep(600, 100);
             Console.Beep(700, 100);
+            Console.ReadLine();
         }
 
         public void AncientPianoBeeps()
         {
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
+            Console.Beep(100, 1000);
+            Console.Beep(200, 1000);
+            Console.Beep(300, 1000);
+            Console.Beep(200, 1000);
+            Console.Beep(100, 1000);
+            Console.ReadLine();
         }
 
         public void AncientHarpBeeps()
         {
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
-            Console.Beep(100, 100);
+            Console.Beep(800, 100);
+            Console.Beep(700, 100);
+            Console.Beep(600, 100);
+            Console.Beep(700, 100);
+            Console.Beep(800, 100);
+            Console.Beep(800, 100);
+            Console.ReadLine();
         }
 
         public void AncientDrumBeeps()
@@ -47,8 +52,10 @@ namespace SoundUtils
             Console.Beep(100, 100);
             Console.Beep(100, 100);
             Console.Beep(100, 100);
+            Console.Beep(90, 100);
             Console.Beep(100, 100);
             Console.Beep(100, 100);
+            Console.ReadLine();
         }
     }
 }

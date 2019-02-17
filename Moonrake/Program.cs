@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoundUtils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,12 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            
+            var sounds = new Sounds();
+            sounds.AncientDrumBeeps();
+            sounds.AncientHarpBeeps();
+            sounds.AncientPianoBeeps();
+            sounds.AttacksBeep();
+            sounds.HealBeeps();
         }
     }
 }

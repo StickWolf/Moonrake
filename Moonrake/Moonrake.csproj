@@ -48,5 +48,19 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameData\GameData.csproj">
+      <Project>{7e387cf0-17bd-42c1-9df4-b208153dde4b}</Project>
+      <Name>GameData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameEngine\GameEngine.csproj">
+      <Project>{c578242e-55e6-4a63-89a4-138505108342}</Project>
+      <Name>GameEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundUtils\SoundUtils.csproj">
+      <Project>{5bb92d21-99f0-4c40-bd84-63e7f5391716}</Project>
+      <Name>SoundUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
