@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameData
+namespace GameEngine
 {
-    public class Class1
+    public class Class
     {
+
     }
 }
