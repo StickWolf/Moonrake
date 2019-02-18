@@ -23,7 +23,7 @@ namespace GameData
             return "Once, there were three ancient instruments." + 
                 "The Harp, Piano, and the Drum." + 
                 "Inside of each instrument there was a magical gem." +
-                "A ruby, sapphire, and a dimond." +
+                "A ruby, sapphire, and a diamond." +
                 "When the gems are merged, it will the create an ancient weapon." +
                 "The Moonrake."; 
         }
