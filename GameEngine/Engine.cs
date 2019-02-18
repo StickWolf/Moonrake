@@ -41,6 +41,8 @@ namespace GameEngine
             }
 
             // Prompt the player to see if they want to play the game again.
+            // TODO: When we get the ability to save the game implemented, rewrite this code so instead
+            // TODO: it lets the player start over from the last time they saved instead of starting the whole game again.
             Console.WriteLine("Would you like to play again (yes/no)?");
             return Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase);
         }
