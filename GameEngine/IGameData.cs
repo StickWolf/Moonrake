@@ -9,5 +9,7 @@ namespace GameEngine
     public interface IGameData
     {
         List<Character> CreateAllGameCharacters();
+
+        string GetGameIntroduction();
     }
 }

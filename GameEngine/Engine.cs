@@ -8,7 +8,7 @@ namespace GameEngine
 {
     public class Engine
     {
-        private List<Character> AllCharacters { get; set; }
+        private List<Character> AllCharacters { get; set; } = new List<Character>();
 
         private IGameData gameData;
 
@@ -26,6 +26,10 @@ namespace GameEngine
         {
             while (true)
             {
+                string intro = gameData.GetGameIntroduction();
+                Console.Clear();
+                Console.WriteLine(intro);
+                Console.ReadLine();
                 // TODO: decide everything here that should happen in the main game loop
             }
         }

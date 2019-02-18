@@ -17,5 +17,10 @@ namespace GameData
 
             return allCharacters;
         }
+
+        public string GetGameIntroduction()
+        {
+            return "Once, there were three ancient instruments.";
+        }
     }
 }
