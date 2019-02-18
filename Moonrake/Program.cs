@@ -1,5 +1,6 @@
 ﻿using GameData;
 using GameEngine;
+using System;
 
 namespace Moonrake
 {
@@ -7,10 +8,8 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            var gameData = new Data();
-            var gameEngine = new Engine(gameData);
-
-            gameEngine.Start();
+            // Keep running new games of MoonRake as long as the user wants to keep playing
+            Engine.Start(new Data());
         }
     }
 }

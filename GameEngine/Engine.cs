@@ -12,7 +12,7 @@ namespace GameEngine
 
         private IGameData gameData;
 
-        public Engine(IGameData gameData)
+        private Engine(IGameData gameData)
         {
             this.gameData = gameData;
 
@@ -22,15 +22,69 @@ namespace GameEngine
             AllCharacters.AddRange(characters);
         }
 
-        public void Start()
+        // TODO: refactor this function to instead accept a game data factory method and not a direct instance of gamedata.
+        // TODO: the gamedata instance should be created internally.
+        public static void Start(IGameData gameData, int loadFromSlot = 0)
         {
-            while (true)
+            bool keepPlaying = true;
+
+            while (keepPlaying)
             {
-                string intro = gameData.GetGameIntroduction();
-                Console.Clear();
-                Console.WriteLine(intro);
-                Console.ReadLine();
-                // TODO: decide everything here that should happen in the main game loop
+                // Create a new engine
+                var engineInstance = new Engine(gameData);
+
+                // Load a saved game if loadfromSlot is between 0 and 5
+                if (loadFromSlot > 0 && loadFromSlot < 6)
+                {
+                    // TODO: Do the work to load a saved game here.
+                }
+                else
+                {
+                    // Otherwise if we're not starting a new game, show the game intro text
+                    // Show the game introduction
+                    string intro = gameData.GetGameIntroduction();
+                    Console.Clear();
+                    Console.WriteLine(intro);
+                }
+
+                // Let the player keep playing until they are either dead, they won the game or they want to quit.
+                // The main game loop, 1 loop = 1 game turn
+                while (true)
+                {
+                    // TODO: Decide everything here that should happen in the main game loop
+
+                    Console.ReadLine();
+
+                    // TODO: If the user types in exit, ask they if they want to save first, then set keepPlaying to false and break;
+
+                    // TODO: If the user types in load, figure out what slot they want to load from e.g. "load 3" will load from slot 3.
+                    // TODO: set loadFromSlot to the correct number and break. This will assure we clear the engine of the current game
+                    // TODO: and are starting from the save correctly.
+
+                    // TODO: Fix this to check the actual player instead of hardcoding true here.
+                    bool playerIsDead = true; 
+                    if (playerIsDead)
+                    {
+                        Console.WriteLine("You have died. Would you like to continue from the last save (yes/no)?");
+                        if (Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // TODO: Figure out what the last save spot is and set that to loadFromSlot here
+                        }
+                        else
+                        {
+                            keepPlaying = false;
+                        }
+                        break;
+                    }
+
+                    bool playerHasWon = false;
+                    if (playerHasWon)
+                    {
+                        // TODO: Print out the end of game story. This should be provided by the game data.
+                        keepPlaying = false;
+                        break;
+                    }
+                }
             }
         }
     }
