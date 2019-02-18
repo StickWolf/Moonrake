@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GameData;
+using GameEngine;
 
 namespace Moonrake
 {
@@ -10,7 +7,10 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            
+            var gameData = new Data();
+            var gameEngine = new Engine(gameData);
+
+            gameEngine.Start();
         }
     }
 }
