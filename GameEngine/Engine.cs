@@ -22,16 +22,27 @@ namespace GameEngine
             AllCharacters.AddRange(characters);
         }
 
-        public void Start()
+        public bool Start()
         {
+            // Show the game introduction
+            string intro = gameData.GetGameIntroduction();
+            Console.Clear();
+            Console.WriteLine(intro);
+
+            // The main game loop, 1 loop = 1 game turn
             while (true)
             {
-                string intro = gameData.GetGameIntroduction();
-                Console.Clear();
-                Console.WriteLine(intro);
-                Console.ReadLine();
                 // TODO: decide everything here that should happen in the main game loop
+                Console.ReadLine();
+
+                // TODO: if the player is dead, or if the game is complete then break out of this loop.
+                // TODO: this should eventually be an if check surrounding this break.
+                break;
             }
+
+            // Prompt the player to see if they want to play the game again.
+            Console.WriteLine("Would you like to play again (yes/no)?");
+            return Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
