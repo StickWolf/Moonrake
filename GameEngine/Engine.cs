@@ -8,6 +8,7 @@ namespace GameEngine
 {
     public class Engine
     {
+        public string Name;
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
         private IGameData gameData;
@@ -94,7 +95,7 @@ namespace GameEngine
             Console.WriteLine(intro);
 
             Console.WriteLine($"First, we are going to set up your Character.");
-            Console.WriteLine($"Now, you are {gameData.PlayerName}, do you want to change it? Yes/No");
+            Console.WriteLine($"Now, your name is, {gameData.PlayerName}, do you want to change it? Yes/No");
 
             if(Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
@@ -107,6 +108,7 @@ namespace GameEngine
             {
             }
             Console.WriteLine($"Very well, you are {gameData.PlayerName}.");
+            Name = gameData.PlayerName;
         }
     }
 }
