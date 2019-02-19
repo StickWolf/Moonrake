@@ -9,7 +9,12 @@ namespace Moonrake
         static void Main(string[] args)
         {
             // Keep running new games of MoonRake as long as the user wants to keep playing
-            Engine.Start(new Data());
+            Engine.Start(CreateMoonrakeGameData);
+        }
+
+        static IGameData CreateMoonrakeGameData()
+        {
+            return new Data();
         }
     }
 }

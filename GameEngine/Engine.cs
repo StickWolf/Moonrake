@@ -22,14 +22,15 @@ namespace GameEngine
             AllCharacters.AddRange(characters);
         }
 
-        // TODO: refactor this function to instead accept a game data factory method and not a direct instance of gamedata.
-        // TODO: the gamedata instance should be created internally.
-        public static void Start(IGameData gameData, int loadFromSlot = 0)
+        public static void Start(Func<IGameData> gameDataFactory, int loadFromSlot = 0)
         {
             bool keepPlaying = true;
 
             while (keepPlaying)
             {
+                // Create a new game data instance
+                var gameData = gameDataFactory();
+
                 // Create a new engine
                 var engineInstance = new Engine(gameData);
 
