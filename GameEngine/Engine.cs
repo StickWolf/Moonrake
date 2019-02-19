@@ -43,27 +43,7 @@ namespace GameEngine
                 {
                     // Otherwise if we're not starting a new game, show the game intro text
                     // Show the game introduction
-                    string finishedChange = gameData.FinalName();
-                    string answer;
-                    string intro = gameData.GetGameIntroduction();
-                    string playerData = gameData.MainCharacterNamePick();
-                    Console.Clear();
-                    Console.WriteLine(intro);
-                    Console.WriteLine(playerData);
-                    answer = Console.ReadLine();
-                    answer = answer.ToLower();
-                    if(answer == "yes")
-                    {
-                        string change = gameData.IfPlayerWantsToChangeName();
-                        Console.WriteLine(change);
-                        gameData.PlayerNewName = Console.ReadLine();
-                        gameData.PlayerName = gameData.PlayerNewName;
-                        Console.WriteLine(finishedChange);                     
-                    }
-                    else if(answer == "no")
-                    {
-                        Console.WriteLine(finishedChange);
-                    } 
+                    engineInstance.StartNewGame();
                 }
 
                 // Let the player keep playing until they are either dead, they won the game or they want to quit.
@@ -105,6 +85,29 @@ namespace GameEngine
                     }
                 }
             }
+        }
+
+        public void StartNewGame()
+        {
+            string intro = gameData.GetGameIntroduction();
+            Console.Clear();
+            Console.WriteLine(intro);
+            string answer;
+            Console.WriteLine($"First, we are going to set up your Character.");
+            Console.WriteLine($"Now, you are {gameData.PlayerName}, do you want to change it? Yes/No");
+            answer = Console.ReadLine();
+            answer = answer.ToLower();
+            if (answer == "yes")
+            {
+                string PlayersNewName;
+                Console.Write($"You are changing your name, what is your new name?: ");
+                PlayersNewName = Console.ReadLine();
+                gameData.PlayerName = PlayersNewName;
+            }
+            else if (answer == "no")
+            {
+            }
+            Console.WriteLine($"Very well, you are {gameData.PlayerName}.");
         }
     }
 }
