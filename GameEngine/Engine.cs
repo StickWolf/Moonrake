@@ -92,19 +92,18 @@ namespace GameEngine
             string intro = gameData.GetGameIntroduction();
             Console.Clear();
             Console.WriteLine(intro);
-            string answer;
+
             Console.WriteLine($"First, we are going to set up your Character.");
             Console.WriteLine($"Now, you are {gameData.PlayerName}, do you want to change it? Yes/No");
-            answer = Console.ReadLine();
-            answer = answer.ToLower();
-            if (answer == "yes")
+
+            if(Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
                 string PlayersNewName;
                 Console.Write($"You are changing your name, what is your new name?: ");
                 PlayersNewName = Console.ReadLine();
                 gameData.PlayerName = PlayersNewName;
             }
-            else if (answer == "no")
+            else if(Console.ReadLine().Equals("no", StringComparison.OrdinalIgnoreCase))
             {
             }
             Console.WriteLine($"Very well, you are {gameData.PlayerName}.");
