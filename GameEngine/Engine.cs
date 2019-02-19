@@ -98,10 +98,10 @@ namespace GameEngine
 
             if(Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
-                string PlayersNewName;
+                string playersNewName;
                 Console.Write($"You are changing your name, what is your new name?: ");
-                PlayersNewName = Console.ReadLine();
-                gameData.PlayerName = PlayersNewName;
+                playersNewName = Console.ReadLine();
+                gameData.PlayerName = playersNewName;
             }
             else if(Console.ReadLine().Equals("no", StringComparison.OrdinalIgnoreCase))
             {
