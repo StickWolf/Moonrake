@@ -8,8 +8,17 @@ namespace GameEngine
 {
     public interface IGameData
     {
+        string PlayerName { get; set; }
+        string PlayerNewName { get; set; }
+
         List<Character> CreateAllGameCharacters();
 
         string GetGameIntroduction();
+
+        string MainCharacterNamePick();
+
+        string IfPlayerWantsToChangeName();
+
+        string FinalName();
     }
 }

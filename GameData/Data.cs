@@ -9,6 +9,10 @@ namespace GameData
 {
     public class Data : IGameData
     {
+
+        public string PlayerName { get; set; } = "Eric";
+        public string PlayerNewName { get; set; }
+
         public List<Character> CreateAllGameCharacters()
         {
             var allCharacters = new List<Character>();
@@ -26,6 +30,21 @@ namespace GameData
                 "A ruby, sapphire, and a diamond." +
                 "When the gems are merged, it will the create an ancient weapon." +
                 "The Moonrake."; 
+        }
+
+        public string MainCharacterNamePick()
+        {          
+            return $"You, are {PlayerName}, would you like to change your name? yes/no";           
+        }
+
+        public string IfPlayerWantsToChangeName()
+        {
+            return $"You are changing your name, what is your new name?: ";
+        }
+
+        public string FinalName()
+        {
+            return $"Very well, you are: {PlayerName}.";
         }
     }
 }
