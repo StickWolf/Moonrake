@@ -29,7 +29,5 @@ namespace GameData
                 " The Moonrake." +
                 " Hello, Welcome to Moonrake, a text adventure game. ";
         }
-
-        
     }
 }
