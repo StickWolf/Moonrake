@@ -27,9 +27,9 @@ namespace GameData
                 " A ruby, sapphire, and a diamond." +
                 " When the gems are merged, it will the create an ancient weapon;" +
                 " The Moonrake." +
-                "                                                                                                                            Hello, wellcome to Moonrake, a text adventure game. " + 
-                " If you want to take a look at settings, type in settings, and if you want to save, type save." +
-                "";
+                "Hello, Welcome to Moonrake, a text adventure game. " +
+                " First, we're going to set up your player.";
+                
         }
 
         
