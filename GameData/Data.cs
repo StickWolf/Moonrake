@@ -9,6 +9,7 @@ namespace GameData
 {
     public class Data : IGameData
     {
+        
         public List<Character> CreateAllGameCharacters()
         {
             var allCharacters = new List<Character>();
@@ -20,12 +21,17 @@ namespace GameData
 
         public string GetGameIntroduction()
         {
-            return "Once, there were three ancient instruments." + 
-                "The Harp, Piano, and the Drum." + 
-                "Inside of each instrument there was a magical gem." +
-                "A ruby, sapphire, and a diamond." +
-                "When the gems are merged, it will the create an ancient weapon." +
-                "The Moonrake."; 
+            return "Once, there were three ancient instruments." +
+                " The Harp, Piano, and the Drum." +
+                " Inside of each instrument there was a magical gem." +
+                " A ruby, sapphire, and a diamond." +
+                " When the gems are merged, it will the create an ancient weapon;" +
+                " The Moonrake." +
+                "                                                                                                                            Hello, wellcome to Moonrake, a text adventure game. " + 
+                " If you want to take a look at settings, type in settings, and if you want to save, type save." +
+                "";
         }
+
+        
     }
 }
