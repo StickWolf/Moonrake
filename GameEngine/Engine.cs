@@ -8,6 +8,7 @@ namespace GameEngine
 {
     public class Engine
     {
+        string NewPlayerName;
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
         private IGameData gameData;
@@ -43,9 +44,7 @@ namespace GameEngine
                 {
                     // Otherwise if we're not starting a new game, show the game intro text
                     // Show the game introduction
-                    string intro = gameData.GetGameIntroduction();
-                    Console.Clear();
-                    Console.WriteLine(intro);
+                    engineInstance.StartNewGame();
                 }
 
                 // Let the player keep playing until they are either dead, they won the game or they want to quit.
@@ -87,6 +86,29 @@ namespace GameEngine
                     }
                 }
             }
+        }
+
+        public void StartNewGame()
+        {
+            string intro = gameData.GetGameIntroduction();
+            string answer;
+            Console.Clear();
+            Console.WriteLine(intro);
+
+            Console.WriteLine($"First, we are going to set up your Character.");
+            Console.WriteLine($"Now, your name is, {gameData.DefualtPlayerName}, do you want to change it? Yes/No");
+            answer = Console.ReadLine();
+
+            if(answer.Equals("yes", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Write($"You are changing your name, what is your new name?: ");
+                NewPlayerName = Console.ReadLine();
+            }
+            else if(answer.Equals("no", StringComparison.OrdinalIgnoreCase))
+            {
+                NewPlayerName = gameData.DefualtPlayerName;
+            }
+            Console.WriteLine($"Very well, you are {NewPlayerName}.");
         }
     }
 }

@@ -9,7 +9,8 @@ namespace GameData
 {
     public class Data : IGameData
     {
-        
+        public string DefualtPlayerName { get; set; } = "Eric";
+
         public List<Character> CreateAllGameCharacters()
         {
             var allCharacters = new List<Character>();
