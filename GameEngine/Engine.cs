@@ -90,11 +90,11 @@ namespace GameEngine
 
         public void StartNewGame()
         {
-            string intro = gameData.GetGameIntroduction();
-            string answer;
+            string gameIntroductionText = gameData.GetGameIntroduction().AddLineReturns(true);
             Console.Clear();
-            Console.WriteLine(intro);
+            Console.WriteLine(gameIntroductionText);
 
+            string answer;
             Console.WriteLine($"First, we are going to set up your Character.");
             Console.WriteLine($"Now, your name is, {gameData.DefualtPlayerName}, do you want to change it? Yes/No");
             answer = Console.ReadLine();
