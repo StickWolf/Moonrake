@@ -22,12 +22,13 @@ namespace GameData
 
         public string GetGameIntroduction()
         {
-            return "Once, there were three ancient instruments." + 
-                "The Harp, Piano, and the Drum." + 
-                "Inside of each instrument there was a magical gem." +
-                "A ruby, sapphire, and a diamond." +
-                "When the gems are merged, it will the create an ancient weapon." +
-                "The Moonrake."; 
+            return "Once, there were three ancient instruments." +
+                " The Harp, Piano, and the Drum." +
+                " Inside of each instrument there was a magical gem." +
+                " A ruby, sapphire, and a diamond." +
+                " When the gems are merged, it will the create an ancient weapon;" +
+                " The Moonrake." +
+                " Hello, Welcome to Moonrake, a text adventure game. ";
         }
     }
 }
