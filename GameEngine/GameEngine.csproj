@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Engine.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="IGameData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
