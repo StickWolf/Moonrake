@@ -8,7 +8,7 @@ namespace GameEngine
 {
     public class Engine
     {
-        public string Name;
+        string NewPlayerName;
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
         private IGameData gameData;
@@ -91,24 +91,24 @@ namespace GameEngine
         public void StartNewGame()
         {
             string intro = gameData.GetGameIntroduction();
+            string answer;
             Console.Clear();
             Console.WriteLine(intro);
 
             Console.WriteLine($"First, we are going to set up your Character.");
-            Console.WriteLine($"Now, your name is, {gameData.PlayerName}, do you want to change it? Yes/No");
+            Console.WriteLine($"Now, your name is, {gameData.DefualtPlayerName}, do you want to change it? Yes/No");
+            answer = Console.ReadLine();
 
-            if(Console.ReadLine().Equals("yes", StringComparison.OrdinalIgnoreCase))
+            if(answer.Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
-                string playersNewName;
                 Console.Write($"You are changing your name, what is your new name?: ");
-                playersNewName = Console.ReadLine();
-                gameData.PlayerName = playersNewName;
+                NewPlayerName = Console.ReadLine();
             }
-            else if(Console.ReadLine().Equals("no", StringComparison.OrdinalIgnoreCase))
+            else if(answer.Equals("no", StringComparison.OrdinalIgnoreCase))
             {
+                NewPlayerName = gameData.DefualtPlayerName;
             }
-            Console.WriteLine($"Very well, you are {gameData.PlayerName}.");
-            Name = gameData.PlayerName;
+            Console.WriteLine($"Very well, you are {NewPlayerName}.");
         }
     }
 }
