@@ -13,5 +13,26 @@ namespace GameEngine
     public class GameState
     {
         public string PlayerName { get; set; }
+
+        public static List<string> GetValidSaveSlotNames()
+        {
+            // This function should list all save slots that currently have save data in them
+
+            throw new NotImplementedException();
+        }
+
+        public static GameState LoadGameState(string slotName)
+        {
+            // This function should load the named slotName into a GameState and return it.
+
+            throw new NotImplementedException();
+        }
+
+        public static void SaveGameState(string slotName, GameState gameState)
+        {
+            // This function should save the gameState that is passed in to the slotName slot
+
+            throw new NotImplementedException();
+        }
     }
 }
