@@ -8,7 +8,7 @@ namespace GameEngine
 {
     public class Engine
     {
-        private GameState CurrentGameState { get; set; }
+        private static GameState CurrentGameState { get; set; }
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
@@ -47,7 +47,7 @@ namespace GameEngine
                     // Show the game introduction
                     int displaycount = 1;
                     Dictionary<int, string> SlotNames = new Dictionary<int, string>();
-                    Console.WriteLine("Hello, wellcome to our game, to load or start a new game, pick a number.");
+                    Console.WriteLine("Hello, to load or start a new game, pick a number.");
                     foreach(var slotName in GameState.GetValidSaveSlotNames())
                     {
                         Console.WriteLine();
@@ -64,20 +64,15 @@ namespace GameEngine
                     {
                         string slotToFind;
                         slotToFind = SlotNames[input];
-                        Console.WriteLine($"Loading {slotToFind}.......");                 
-                        Console.ReadLine();
+                        Console.WriteLine($"Loading {slotToFind}.......");
+                        Console.Beep();
+                        CurrentGameState = GameState.LoadGameState(slotToFind);
                         Console.WriteLine($"Completed Loading {slotToFind}.");
-                        Console.ReadLine();
-                        GameState.LoadGameState(slotToFind);
                     }
                     else
                     {
-                        Console.WriteLine($"Starting new Game.........");
-                        Console.ReadLine();
-                        Console.WriteLine("Complete.");
-                        Console.ReadLine();
                         engineInstance.StartNewGame();
-                    }                  
+                    }
                 }
 
                 // Let the player keep playing until they are either dead, they won the game or they want to quit.

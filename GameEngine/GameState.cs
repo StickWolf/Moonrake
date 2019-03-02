@@ -17,7 +17,6 @@ namespace GameEngine
         public static List<string> GetValidSaveSlotNames()
         {
             // This function should list all save slots that currently have save data in them
-
             throw new NotImplementedException();
         }
 
