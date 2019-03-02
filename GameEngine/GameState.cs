@@ -24,7 +24,6 @@ namespace GameEngine
         public static GameState LoadGameState(string slotName)
         {
             // This function should load the named slotName into a GameState and return it.
-
             throw new NotImplementedException();
         }
 
