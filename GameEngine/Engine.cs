@@ -95,7 +95,6 @@ namespace GameEngine
                     // TODO: and are starting from the save correctly.
 
                     // TODO: Fix this to check the actual player instead of hardcoding true here.
-
                     bool playerIsDead = true; 
                     if (playerIsDead)
                     {
@@ -125,7 +124,6 @@ namespace GameEngine
         public void StartNewGame()
         {
             CurrentGameState = new GameState();
-
             string gameIntroductionText = gameData.GetGameIntroduction().AddLineReturns(true);
             Console.Clear();
             Console.WriteLine(gameIntroductionText);
