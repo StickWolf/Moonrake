@@ -8,7 +8,7 @@ namespace GameEngine
 {
     public interface IGameData
     {
-        string DefualtPlayerName { get; }
+        string DefaultPlayerName { get; }
 
         List<Character> CreateAllGameCharacters();
 

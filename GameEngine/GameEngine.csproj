@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine.cs" />
+    <Compile Include="EngineFactory.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="EngineInternal.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="IGameData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
