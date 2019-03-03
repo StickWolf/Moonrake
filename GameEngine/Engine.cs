@@ -8,7 +8,8 @@ namespace GameEngine
 {
     public class Engine
     {
-        string NewPlayerName;
+        private static GameState CurrentGameState { get; set; }
+
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
         private IGameData gameData;
@@ -44,7 +45,34 @@ namespace GameEngine
                 {
                     // Otherwise if we're not starting a new game, show the game intro text
                     // Show the game introduction
-                    engineInstance.StartNewGame();
+                    int displaycount = 1;
+                    Dictionary<int, string> SlotNames = new Dictionary<int, string>();
+                    Console.WriteLine("Hello, to load or start a new game, pick a number.");
+                    foreach(var slotName in GameState.GetValidSaveSlotNames())
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine($"{displaycount}. {slotName}");
+                        SlotNames.Add(displaycount, slotName);
+                        displaycount++;
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine($"{displaycount}. Start new Game");
+                    Console.WriteLine("-----------------------------------------");
+                    Console.Write("> ");
+                    int input = int.Parse(Console.ReadLine());
+                    if (SlotNames.ContainsKey(input))
+                    {
+                        string slotToFind;
+                        slotToFind = SlotNames[input];
+                        Console.WriteLine($"Loading {slotToFind}.......");
+                        Console.Beep();
+                        CurrentGameState = GameState.LoadGameState(slotToFind);
+                        Console.WriteLine($"Completed Loading {slotToFind}.");
+                    }
+                    else
+                    {
+                        engineInstance.StartNewGame();
+                    }
                 }
 
                 // Let the player keep playing until they are either dead, they won the game or they want to quit.
@@ -90,6 +118,7 @@ namespace GameEngine
 
         public void StartNewGame()
         {
+            CurrentGameState = new GameState();
             string gameIntroductionText = gameData.GetGameIntroduction().AddLineReturns(true);
             Console.Clear();
             Console.WriteLine(gameIntroductionText);
@@ -102,13 +131,13 @@ namespace GameEngine
             if(answer.Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
                 Console.Write($"You are changing your name, what is your new name?: ");
-                NewPlayerName = Console.ReadLine();
+                CurrentGameState.PlayerName = Console.ReadLine();
             }
             else if(answer.Equals("no", StringComparison.OrdinalIgnoreCase))
             {
-                NewPlayerName = gameData.DefualtPlayerName;
+                CurrentGameState.PlayerName = gameData.DefualtPlayerName;
             }
-            Console.WriteLine($"Very well, you are {NewPlayerName}.");
+            Console.WriteLine($"Very well, you are {CurrentGameState.PlayerName}.");
         }
     }
 }

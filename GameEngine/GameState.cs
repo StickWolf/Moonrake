@@ -17,14 +17,12 @@ namespace GameEngine
         public static List<string> GetValidSaveSlotNames()
         {
             // This function should list all save slots that currently have save data in them
-
             throw new NotImplementedException();
         }
 
         public static GameState LoadGameState(string slotName)
         {
             // This function should load the named slotName into a GameState and return it.
-
             throw new NotImplementedException();
         }
 
