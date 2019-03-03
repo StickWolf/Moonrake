@@ -9,7 +9,7 @@ namespace GameData
 {
     public class Data : IGameData
     {
-        public string DefualtPlayerName { get; set; } = "Eric";
+        public string DefaultPlayerName { get; set; } = "Eric";
 
         public List<Character> CreateAllGameCharacters()
         {
