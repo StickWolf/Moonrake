@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace GameEngine
 {
@@ -13,6 +15,7 @@ namespace GameEngine
     public class GameState
     {
         public string PlayerName { get; set; }
+        private static string SaveFileName { get; set; } = "GameSaves.json";
 
         public static List<string> GetValidSaveSlotNames()
         {
@@ -22,8 +25,14 @@ namespace GameEngine
 
         public static GameState LoadGameState(string slotName)
         {
-            // This function should load the named slotName into a GameState and return it.
-            throw new NotImplementedException();
+            // read the save file into a string
+            string fileContents = File.ReadAllText(SaveFileName);
+            // deserialize the string into a dictionary
+            var savedGames = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents);
+            // get the specified value out of the dictionary using slotName as the key
+            var game = savedGames[slotName];
+            // return the value which should be the game state
+            return game;
         }
 
         public static void SaveGameState(string slotName, GameState gameState)
