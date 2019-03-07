@@ -19,27 +19,62 @@ namespace GameEngine
 
         public static List<string> GetValidSaveSlotNames()
         {
-            // This function should list all save slots that currently have save data in them
-            throw new NotImplementedException();
+            // Create a new list
+            List<string> saveList = new List<string>();
+
+            var savedGamesDictionary = GetGameStates();
+            // loop through all the items in the dictionary and add each slotname to the list
+            foreach (var slotName in savedGamesDictionary.Keys)
+            {
+                saveList.Add(slotName);
+            }
+            // return the list
+            return saveList;
         }
 
         public static GameState LoadGameState(string slotName)
         {
-            // read the save file into a string
-            string fileContents = File.ReadAllText(SaveFileName);
-            // deserialize the string into a dictionary
-            var savedGames = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents);
+            var savedGamesDictionary = GetGameStates();
             // get the specified value out of the dictionary using slotName as the key
-            var game = savedGames[slotName];
+            var game = savedGamesDictionary[slotName];
             // return the value which should be the game state
             return game;
         }
 
         public static void SaveGameState(string slotName, GameState gameState)
         {
-            // This function should save the gameState that is passed in to the slotName slot
+            var savedGamesDictionary = GetGameStates();
 
-            throw new NotImplementedException();
+            // add (or update) the gamestate that was passed in into the dictionary we now have using slotName as the key
+            savedGamesDictionary[slotName] = gameState;
+
+            // serialize the dictionary to a string
+            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary);
+
+            // save that serialized string to the game saves file
+            File.WriteAllText(SaveFileName, serializedDictionary);
+        }
+
+        private static Dictionary<string, GameState> GetGameStates()
+        {
+            Dictionary<string, GameState> savedGamesDictionary;
+
+            // If there is an existing saves file
+            if (File.Exists(SaveFileName))
+            {
+                // read the save file to a string
+                string fileContents = File.ReadAllText(SaveFileName);
+
+                // deserialize the string into a dictionary<string, gamestate>
+                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents);
+            }
+            else
+            {
+                // create a new dictionary<string, gameState>
+                savedGamesDictionary = new Dictionary<string, GameState>();
+            }
+
+            return savedGamesDictionary;
         }
     }
 }
