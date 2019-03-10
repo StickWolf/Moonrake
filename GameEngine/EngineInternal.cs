@@ -30,8 +30,13 @@ namespace GameEngine
 
         private void FillCommandList()
         {
-            Commands = new List<ICommand>();
-            Commands.Add(new MoveCommand());
+            Commands = new List<ICommand>()
+            {
+                new MoveCommand(),
+                new SaveCommand(),
+                new LoadCommand(),
+                new ExitCommand()
+            };
         }
 
         /// <summary>
@@ -86,15 +91,7 @@ namespace GameEngine
             // The main game loop, 1 loop = 1 game turn
             while (true)
             {
-                // TODO: Decide everything here that should happen in the main game loop
-
-                Console.ReadLine();
-
-                // TODO: If the user types in exit, ask they if they want to save first, then set keepPlaying to false and break;
-
-                // TODO: If the user types in load, figure out what slot they want to load from e.g. "load 3" will load from slot 3.
-                // TODO: set loadFromSlot to the correct number and break. This will assure we clear the engine of the current game
-                // TODO: and are starting from the save correctly.
+                ProcessUserInput();
 
                 // TODO: Fix this to check the actual player instead of hardcoding true here.
                 bool playerIsDead = true;
@@ -113,6 +110,26 @@ namespace GameEngine
                     break;
                 }
             }
+        }
+
+        private void ProcessUserInput()
+        {
+            string input;
+            Console.Write(">");
+            input = Console.ReadLine();
+            Console.Clear();
+            var partsOfInput = input.Split(' ');
+            var firstWord = partsOfInput[0];
+
+            var commandToRun = Commands.FirstOrDefault(c => c.IsActivatedBy(firstWord));
+            if (commandToRun == null)
+            {
+                Console.WriteLine($"I don't know what you mean by '{firstWord}'.");
+                return;
+            }
+
+            // The command is a real command if we got this far
+            // TODO: Run the command!
         }
     }
 }

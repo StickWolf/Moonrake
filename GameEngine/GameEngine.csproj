@@ -44,8 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\LoadCommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
+    <Compile Include="Commands\SaveCommand.cs" />
     <Compile Include="EngineFactory.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="EngineInternal.cs" />
