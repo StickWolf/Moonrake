@@ -8,6 +8,12 @@ namespace GameEngine.Commands
 {
     public class SaveCommand : ICommand
     {
+        public void Exceute()
+        {
+            //TODO: Implement this.
+            throw new NotImplementedException();
+        }
+
         public bool IsActivatedBy(string word)
         {
             return word.Equals("save", StringComparison.OrdinalIgnoreCase);
