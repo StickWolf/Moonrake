@@ -8,5 +8,6 @@ namespace GameEngine.Commands
 {
     public interface ICommand
     {
+        bool IsActivatedBy(string word); 
     }
 }
