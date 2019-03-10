@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace GameEngine
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
+        private List<ICommand> Commands { get; set; }
+
         private IGameData gameData;
 
         public EngineInternal(IGameData gameData)
@@ -22,6 +25,13 @@ namespace GameEngine
             // and fill up our local list with the objects we get back.
             var characters = gameData.CreateAllGameCharacters();
             AllCharacters.AddRange(characters);
+            FillCommandList();
+        }
+
+        private void FillCommandList()
+        {
+            Commands = new List<ICommand>();
+            Commands.Add(new MoveCommand());
         }
 
         /// <summary>
