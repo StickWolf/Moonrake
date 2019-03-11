@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    public class MoveCommand : ICommand
+    internal class MoveCommand : ICommand
     {
-        public void Exceute()
+        public void Exceute(EngineInternal engine)
         {
             //TODO: Implement this.
             throw new NotImplementedException();
