@@ -8,13 +8,20 @@ namespace GameEngine.Commands
 {
     public class LoadCommand : ICommand
     {
+        public void Exceute()
+        {
+            // TODO: If the user types in load and they haven't typed in a second word then
+            // TODO: prompt them on what they want to load using the standard loading screen.
+            // TODO: The act of loading a game should go through creating a whole new engine instance
+            //TODO: Implement this.
+            throw new NotImplementedException();
+        }
+
         public bool IsActivatedBy(string word)
         {
             return word.Equals("load", StringComparison.OrdinalIgnoreCase);
         }
 
-        // TODO: If the user types in load and they haven't typed in a second word then
-        // TODO: prompt them on what they want to load using the standard loading screen.
-        // TODO: The act of loading a game should go through creating a whole new engine instance
+
     }
 }

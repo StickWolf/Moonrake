@@ -13,8 +13,6 @@ namespace GameEngine
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
-        private List<ICommand> Commands { get; set; }
-
         private IGameData gameData;
 
         public EngineInternal(IGameData gameData)
@@ -25,18 +23,6 @@ namespace GameEngine
             // and fill up our local list with the objects we get back.
             var characters = gameData.CreateAllGameCharacters();
             AllCharacters.AddRange(characters);
-            FillCommandList();
-        }
-
-        private void FillCommandList()
-        {
-            Commands = new List<ICommand>()
-            {
-                new MoveCommand(),
-                new SaveCommand(),
-                new LoadCommand(),
-                new ExitCommand()
-            };
         }
 
         /// <summary>
@@ -121,7 +107,7 @@ namespace GameEngine
             var partsOfInput = input.Split(' ');
             var firstWord = partsOfInput[0];
 
-            var commandToRun = Commands.FirstOrDefault(c => c.IsActivatedBy(firstWord));
+            var commandToRun = CommandHelper.GetCommand(firstWord);
             if (commandToRun == null)
             {
                 Console.WriteLine($"I don't know what you mean by '{firstWord}'.");
