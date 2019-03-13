@@ -1,10 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace GameEngine
 {
@@ -14,6 +10,8 @@ namespace GameEngine
     /// </summary>
     public class GameState
     {
+        // TODO: make this a private set and fix any places that try to set it externally
+        // TODO: instead make the load command in this class set it.
         public static GameState CurrentGameState { get; set; }
         public string PlayerName { get; set; }
         private static string SaveFileName { get; set; } = "GameSaves.json";
@@ -42,6 +40,9 @@ namespace GameEngine
             return game;
         }
 
+        // TODO: make this so it no longer accepts GameState, but instead just uses
+        // TODO: the CurrentGamestate that is on this class and fix up any refs that try
+        // TODO: to pass that in.
         public static void SaveGameState(string slotName, GameState gameState)
         {
             var savedGamesDictionary = GetGameStates();
