@@ -30,7 +30,7 @@ namespace GameEngine
         /// <summary>
         /// Gives the player an option to change their name
         /// </summary>
-        public void LetPlayerChangeTheirName()
+        public void LetPlayerChangeTheirName() // TODO: make this into a command that can be used by the user as desired
         {
             Console.WriteLine($"Your name is {GameState.CurrentGameState.PlayerName} would you like to change it? Yes/No");
 
