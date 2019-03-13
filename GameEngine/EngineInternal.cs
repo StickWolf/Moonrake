@@ -9,7 +9,9 @@ namespace GameEngine
 {
     internal class EngineInternal
     {
-        private GameState CurrentGameState { get; set; }
+        public bool RunGameLoop { get; set; } = true;
+        public bool PlayerIsDead { get; set; } = false;
+        public bool PlayerHasWon { get; set; } = false;
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
@@ -30,30 +32,26 @@ namespace GameEngine
         /// </summary>
         public void LetPlayerChangeTheirName()
         {
-            Console.WriteLine($"Your name is {CurrentGameState.PlayerName} would you like to change it? Yes/No");
+            Console.WriteLine($"Your name is {GameState.CurrentGameState.PlayerName} would you like to change it? Yes/No");
 
             string answer = Console.ReadLine();
             if (answer.Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
                 Console.Write($"What would you like your name to be?: ");
-                CurrentGameState.PlayerName = Console.ReadLine();
-                Console.WriteLine($"Very well, you are now {CurrentGameState.PlayerName}.");
+                GameState.CurrentGameState.PlayerName = Console.ReadLine();
+                Console.WriteLine($"Very well, you are now {GameState.CurrentGameState.PlayerName}.");
             }
         }
 
         /// <summary>
         /// Runs the game until they win or die.
         /// </summary>
-        public void Start(GameState startingGameState)
+        public void Start()
         {
-            if (startingGameState != null)
+            if (GameState.CurrentGameState == null)
             {
-                CurrentGameState = startingGameState;
-            }
-            else
-            {
-                CurrentGameState = new GameState();
-                CurrentGameState.PlayerName = gameData.DefaultPlayerName;
+                GameState.CurrentGameState = new GameState();
+                GameState.CurrentGameState.PlayerName = gameData.DefaultPlayerName;
 
                 string gameIntroductionText = gameData.GetGameIntroduction().AddLineReturns(true);
                 Console.Clear();
@@ -65,35 +63,32 @@ namespace GameEngine
             }
 
             // Main game loop
-            Start();
+            GameLoop();
         }
 
         /// <summary>
         /// The main game loop
         /// </summary>
-        private void Start()
+        private void GameLoop()
         {
             // Let the player keep playing until they are either dead, they won the game or they want to quit.
             // The main game loop, 1 loop = 1 game turn
-            while (true)
+            while (RunGameLoop)
             {
                 ProcessUserInput();
 
                 // TODO: Fix this to check the actual player instead of hardcoding true here.
-                bool playerIsDead = true;
-                if (playerIsDead)
+                if (PlayerIsDead)
                 {
                     Console.WriteLine();
                     Console.WriteLine("You have died. Please press a key.");
                     Console.ReadKey();
-                    break;
+                    RunGameLoop = false;
                 }
-
-                bool playerHasWon = true;
-                if (playerHasWon)
+                else if (PlayerHasWon)
                 {
                     // TODO: Print out the end of game story. This should be provided by the game data.
-                    break;
+                    RunGameLoop = false;
                 }
             }
         }
@@ -115,7 +110,7 @@ namespace GameEngine
             }
 
             // The command is a real command if we got this far
-            // TODO: Run the command!
+            commandToRun.Exceute(this);
         }
     }
 }

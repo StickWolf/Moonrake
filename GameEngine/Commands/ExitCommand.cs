@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    public class ExitCommand : ICommand
+    internal class ExitCommand : ICommand
     {
-        public void Exceute()
+        public void Exceute(EngineInternal engine)
         {
             // TODO: If the user types in exit, ask them if they want to save first,
             // TODO: then set keepPlaying to false and break;

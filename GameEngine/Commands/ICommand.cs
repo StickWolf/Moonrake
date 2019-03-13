@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    public interface ICommand
+    internal interface ICommand
     {
         bool IsActivatedBy(string word);
 
-        void Exceute(); 
+        void Exceute(EngineInternal engine); 
     }
 }
