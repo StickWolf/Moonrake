@@ -14,6 +14,7 @@ namespace GameEngine
     /// </summary>
     public class GameState
     {
+        public static GameState CurrentGameState { get; set; }
         public string PlayerName { get; set; }
         private static string SaveFileName { get; set; } = "GameSaves.json";
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    public static class CommandHelper
+    internal static class CommandHelper
     {
         private static List<ICommand> AllCommands { get; set; }
 
