@@ -17,7 +17,8 @@ namespace GameEngine.Commands
                 new MoveCommand(),
                 new SaveCommand(),
                 new LoadCommand(),
-                new ExitCommand()
+                new ExitCommand(),
+                new LetPlayerChangeTheirNameCommand()
             };
         }
 
