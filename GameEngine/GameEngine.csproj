@@ -47,6 +47,7 @@
     <Compile Include="Commands\CommandHelper.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\LetPlayerChangeTheirNameCommand.cs" />
     <Compile Include="Commands\LoadCommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />

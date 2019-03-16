@@ -1,10 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace GameEngine
 {
@@ -42,6 +38,9 @@ namespace GameEngine
             return game;
         }
 
+        // TODO: make this so it no longer accepts GameState, but instead just uses
+        // TODO: the CurrentGamestate that is on this class and fix up any refs that try
+        // TODO: to pass that in.
         public static void SaveGameState(string slotName, GameState gameState)
         {
             var savedGamesDictionary = GetGameStates();

@@ -66,6 +66,7 @@ namespace GameEngine.Commands
             {
                 string slotToLoad;
                 slotToLoad = SlotNames[input];
+                Console.WriteLine();
                 Console.WriteLine($"Loading {slotToLoad}.");
                 loadedGameState = GameState.LoadGameState(slotToLoad);
                 Console.WriteLine("Loading complete.");
