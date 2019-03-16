@@ -75,9 +75,10 @@ namespace GameEngine
             return savedGamesDictionary;
         }
 
-        public static void StartNewGame()
+        public static void StartNewGame(IGameData gameData)
         {
             CurrentGameState = new GameState();
+            CurrentGameState.PlayerName = gameData.DefaultPlayerName;
         }
     }
 }
