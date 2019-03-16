@@ -24,11 +24,11 @@ namespace GameEngine
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
-        private IGameData gameData;
+        public IGameData GameData { get; private set; }
 
         public EngineInternal(IGameData gameData)
         {
-            this.gameData = gameData;
+            GameData = gameData;
 
             // Ask the gamedata class to create all the characters that will be needed for the game
             // and fill up our local list with the objects we get back.
@@ -37,27 +37,13 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Gives the player an option to change their name
-        /// </summary>
-        
-
-        /// <summary>
         /// Runs the game until they win, die or exit.
         /// </summary>
         public void Start()
         {
-            if (GameState.CurrentGameState == null)
-            {
-                GameState.CurrentGameState = new GameState();
-                GameState.CurrentGameState.PlayerName = gameData.DefaultPlayerName;
-
-                string gameIntroductionText = gameData.GetGameIntroduction().AddLineReturns(true);
-                Console.Clear();
-                Console.WriteLine(gameIntroductionText);
-                Console.WriteLine();
-
-                // Give the player the option to change their name if desired before beginning the game.
-            }
+            // Ask the player to pick to load a saved game if there are any
+            var loadCommand = CommandHelper.GetCommand("load");
+            loadCommand.Exceute(this);
 
             // Main game loop
             GameLoop();
