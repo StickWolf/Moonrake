@@ -9,7 +9,7 @@ namespace GameEngine.Commands
         {
             if(engine == null)
             {
-                GameState.CurrentGameState = PickSavedGame();
+                PickSavedGame();
             }
             else
             {
@@ -29,7 +29,7 @@ namespace GameEngine.Commands
         /// Returns the loaded game state.
         /// Returns null when there are no saved games or the user choose not to load a saved game.
         /// </returns>
-        private GameState PickSavedGame()
+        private void PickSavedGame()
         {
             int displaycount = 1;
             Dictionary<int, string> SlotNames = new Dictionary<int, string>();
@@ -61,18 +61,19 @@ namespace GameEngine.Commands
                 }
             }
 
-            GameState loadedGameState = null;
             if (SlotNames.ContainsKey(input))
             {
                 string slotToLoad;
                 slotToLoad = SlotNames[input];
                 Console.WriteLine();
                 Console.WriteLine($"Loading {slotToLoad}.");
-                loadedGameState = GameState.LoadGameState(slotToLoad);
+                GameState.LoadGameState(slotToLoad);
                 Console.WriteLine("Loading complete.");
             }
-
-            return loadedGameState;
+            else
+            {
+                GameState.StartNewGame();
+            }
         }
     }
 }

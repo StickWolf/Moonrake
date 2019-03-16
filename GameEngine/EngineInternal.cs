@@ -55,8 +55,6 @@ namespace GameEngine
                 Console.Clear();
                 Console.WriteLine(gameIntroductionText);
                 Console.WriteLine();
-
-                // Give the player the option to change their name if desired before beginning the game.
             }
 
             // Main game loop
