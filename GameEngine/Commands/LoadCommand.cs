@@ -48,11 +48,7 @@ namespace GameEngine.Commands
             }
             else
             {
-                GameState.StartNewGame(engine.GameData);
-                string gameIntroductionText = engine.GameData.GetGameIntroduction().AddLineReturns(true);
-                Console.Clear();
-                Console.WriteLine(gameIntroductionText);
-                Console.WriteLine();
+                engine.StartNewGame();
             }
         }
 

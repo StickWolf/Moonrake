@@ -22,7 +22,7 @@ namespace GameEngine
                 engine = new EngineInternal(gameData);
 
                 // Start the game
-                engine.Start();
+                engine.StartEngine();
 
             } while (engine.RunFactory);
         }
