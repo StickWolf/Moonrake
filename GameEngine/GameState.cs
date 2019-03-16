@@ -36,9 +36,6 @@ namespace GameEngine
             CurrentGameState = savedGamesDictionary[slotName];
         }
 
-        // TODO: make this so it no longer accepts GameState, but instead just uses
-        // TODO: the CurrentGamestate that is on this class and fix up any refs that try
-        // TODO: to pass that in.
         public static void SaveGameState(string slotName)
         {
             var savedGamesDictionary = GetGameStates();
