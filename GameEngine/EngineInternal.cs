@@ -24,9 +24,9 @@ namespace GameEngine
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
-        private IGameData GameData { get; set; }
+        private IGameSourceData GameData { get; set; }
 
-        public EngineInternal(IGameData gameData)
+        public EngineInternal(IGameSourceData gameData)
         {
             GameData = gameData;
 
