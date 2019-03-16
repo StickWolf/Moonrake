@@ -22,18 +22,11 @@ namespace GameEngine
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
-        private List<Character> AllCharacters { get; set; } = new List<Character>();
-
         private IGameSourceData GameData { get; set; }
 
         public EngineInternal(IGameSourceData gameData)
         {
             GameData = gameData;
-
-            // Ask the gamedata class to create all the characters that will be needed for the game
-            // and fill up our local list with the objects we get back.
-            var characters = gameData.CreateAllGameCharacters();
-            AllCharacters.AddRange(characters);
         }
 
         /// <summary>
@@ -93,7 +86,7 @@ namespace GameEngine
         {
             GameState.CreateNewGameState();
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
-            string gameIntroductionText = GameData.GetGameIntroduction().AddLineReturns(true);
+            string gameIntroductionText = GameData.GameIntroductionText.AddLineReturns(true);
             Console.Clear();
             Console.WriteLine(gameIntroductionText);
             Console.WriteLine();
