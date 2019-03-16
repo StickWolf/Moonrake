@@ -7,7 +7,6 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            //ZABTODO: Make sure that strting a new game works right
             int displaycount = 1;
             Dictionary<int, string> SlotNames = new Dictionary<int, string>();
             Console.WriteLine("Load or start new game?");
