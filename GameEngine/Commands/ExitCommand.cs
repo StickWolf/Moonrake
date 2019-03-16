@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -10,19 +6,42 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            // TODO: If the user types in exit, ask them if they want to save first,
-            // TODO: then set keepPlaying to false and break;
-            var commandToRun = CommandHelper.GetCommand("save");
-            //TODO: Implement this.
-            throw new NotImplementedException();
+            while (true)
+            {
+                Console.Write("Would you like to save your game first? (Yes, No or Cancel): ");
+                var answer = Console.ReadKey().KeyChar.ToString();
+                Console.WriteLine();
+                if (answer.Equals("C", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Cancel exit operation
+                    return;
+                }
+                else if (answer.Equals("N", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Exit without saving
+                    engine.RunGameLoop = false;
+                    engine.RunFactory = false;
+                    return;
+                }
+                else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Save and then exit
+                    var saveCommand = CommandHelper.GetCommand("save");
+                    saveCommand.Exceute(engine);
+                    engine.RunGameLoop = false;
+                    engine.RunFactory = false;
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine($"Unknown response: {answer}");
+                }
+            }
         }
 
         public bool IsActivatedBy(string word)
         {
             return word.Equals("exit", StringComparison.OrdinalIgnoreCase);
         }
-
-
-
     }
 }

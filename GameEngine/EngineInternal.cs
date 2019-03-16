@@ -9,7 +9,16 @@ namespace GameEngine
 {
     internal class EngineInternal
     {
+        /// <summary>
+        /// Indicates if the main game loop should keep running game turns
+        /// </summary>
         public bool RunGameLoop { get; set; } = true;
+
+        /// <summary>
+        /// If set to false, triggers the engine factory to stop generating new engines and exit.
+        /// </summary>
+        public bool RunFactory { get; set; } = true;
+
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
@@ -33,7 +42,7 @@ namespace GameEngine
         
 
         /// <summary>
-        /// Runs the game until they win or die.
+        /// Runs the game until they win, die or exit.
         /// </summary>
         public void Start()
         {

@@ -12,8 +12,8 @@ namespace GameEngine
         /// <param name="gameDataFactory">A method that returns a GameData</param>
         public static void Start(Func<IGameData> gameDataFactory)
         {
-            bool keepPlaying = true;
-            while (keepPlaying)
+            EngineInternal engine;
+            do
             {
                 // Create a new game data instance
                 var gameData = gameDataFactory();
@@ -23,11 +23,12 @@ namespace GameEngine
                 loadCommand.Exceute(null);
 
                 // Create a new engine 
-                var engine = new EngineInternal(gameData);
+                engine = new EngineInternal(gameData);
 
                 // Start the game
                 engine.Start();
-            }
+
+            } while (engine.RunFactory);
         }
     }
 }
