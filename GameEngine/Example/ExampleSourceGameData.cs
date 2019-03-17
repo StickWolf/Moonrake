@@ -2,7 +2,7 @@
 using GameEngine.Locations;
 using System.Collections.Generic;
 
-namespace GameData
+namespace GameData.Example
 {
     /// <summary>
     /// This class gives an example of how to implement all the features available to the game data
@@ -31,10 +31,29 @@ namespace GameData
             var locAreaToTheEast = new Location("AreaToTheEast");
             locations.Add(locAreaToTheEast);
 
+            var locElevator = new Location("Elevator");
+            locations.Add(locElevator);
+
             var locStart = new Location("StartingArea");
-            locStart.LocationConnections.Add(new LocationConnectionBasic(locAreaToTheWest.Name));
-            locStart.LocationConnections.Add(new LocationConnectionBasic(locAreaToTheEast.Name));
             locations.Add(locStart);
+
+            // This describes that the starting area is always connected to the area to the west
+            locStart.AddPortal(
+                new PortalDestinationAlwaysOpenRule(locAreaToTheWest.Name, "To the west you see")
+            );
+
+            // This describes that the starting area is always connected to the area to the east
+            locStart.AddPortal(
+                new PortalDestinationAlwaysOpenRule(locAreaToTheEast.Name, "To the east you see")
+            );
+
+            // This describes that the starting area is only connected to the elevator if the elevator
+            // is on floor 1 which is defined by the game variable "ElevatorFloor".
+            // If the elevator floor is not 1 then a connection to the elevator will not be available.
+            locStart.AddPortal(
+                new PortalDestinationGameVarRule(locElevator.Name, "Through an open elevator door you see", "ElevatorFloor", "1"),
+                new PortalDestinationAlwaysClosedRule(null, "You see a closed elevator door")
+            );
 
             // TODO: Create a new location named LockedArea1 that west/east are both connected to, but you need to figure out locks to get into them
 
