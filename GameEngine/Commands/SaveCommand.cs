@@ -55,7 +55,7 @@ namespace GameEngine.Commands
             }
 
             Console.WriteLine($"Saving {slotToSave}.");
-            GameState.SaveGameState(slotToSave, GameState.CurrentGameState);
+            GameState.SaveGameState(slotToSave);
             Console.WriteLine("Saving complete.");
         }
 

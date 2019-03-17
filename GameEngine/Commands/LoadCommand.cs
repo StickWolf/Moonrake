@@ -7,30 +7,6 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            if(engine == null)
-            {
-                GameState.CurrentGameState = PickSavedGame();
-            }
-            else
-            {
-                engine.RunGameLoop = false;
-            }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("load", StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// Displays any saved games to the user and loads the one they choose
-        /// </summary>
-        /// <returns>
-        /// Returns the loaded game state.
-        /// Returns null when there are no saved games or the user choose not to load a saved game.
-        /// </returns>
-        private GameState PickSavedGame()
-        {
             int displaycount = 1;
             Dictionary<int, string> SlotNames = new Dictionary<int, string>();
             Console.WriteLine("Load or start new game?");
@@ -61,18 +37,24 @@ namespace GameEngine.Commands
                 }
             }
 
-            GameState loadedGameState = null;
             if (SlotNames.ContainsKey(input))
             {
                 string slotToLoad;
                 slotToLoad = SlotNames[input];
                 Console.WriteLine();
                 Console.WriteLine($"Loading {slotToLoad}.");
-                loadedGameState = GameState.LoadGameState(slotToLoad);
+                GameState.LoadGameState(slotToLoad);
                 Console.WriteLine("Loading complete.");
             }
+            else
+            {
+                engine.StartNewGame();
+            }
+        }
 
-            return loadedGameState;
+        public bool IsActivatedBy(string word)
+        {
+            return word.Equals("load", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

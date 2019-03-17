@@ -24,11 +24,11 @@ namespace GameEngine
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
-        private IGameData gameData;
+        private IGameData GameData { get; set; }
 
         public EngineInternal(IGameData gameData)
         {
-            this.gameData = gameData;
+            GameData = gameData;
 
             // Ask the gamedata class to create all the characters that will be needed for the game
             // and fill up our local list with the objects we get back.
@@ -37,39 +37,15 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Gives the player an option to change their name
-        /// </summary>
-        
-
-        /// <summary>
         /// Runs the game until they win, die or exit.
         /// </summary>
-        public void Start()
+        public void StartEngine()
         {
-            if (GameState.CurrentGameState == null)
-            {
-                GameState.CurrentGameState = new GameState();
-                GameState.CurrentGameState.PlayerName = gameData.DefaultPlayerName;
+            // Ask the player to pick to load a saved game if there are any
+            var loadCommand = CommandHelper.GetCommand("load");
+            loadCommand.Exceute(this);
 
-                string gameIntroductionText = gameData.GetGameIntroduction().AddLineReturns(true);
-                Console.Clear();
-                Console.WriteLine(gameIntroductionText);
-                Console.WriteLine();
-
-                // Give the player the option to change their name if desired before beginning the game.
-            }
-
-            // Main game loop
-            GameLoop();
-        }
-
-        /// <summary>
-        /// The main game loop
-        /// </summary>
-        private void GameLoop()
-        {
-            // Let the player keep playing until they are either dead, they won the game or they want to quit.
-            // The main game loop, 1 loop = 1 game turn
+            // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
             {
                 ProcessUserInput();
@@ -108,6 +84,19 @@ namespace GameEngine
 
             // The command is a real command if we got this far
             commandToRun.Exceute(this);
+        }
+
+        /// <summary>
+        /// Sets up everything to start a new game and shows the game introduction text
+        /// </summary>
+        public void StartNewGame()
+        {
+            GameState.CreateNewGameState();
+            GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
+            string gameIntroductionText = GameData.GetGameIntroduction().AddLineReturns(true);
+            Console.Clear();
+            Console.WriteLine(gameIntroductionText);
+            Console.WriteLine();
         }
     }
 }
