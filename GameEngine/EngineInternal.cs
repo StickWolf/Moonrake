@@ -24,7 +24,7 @@ namespace GameEngine
 
         private List<Character> AllCharacters { get; set; } = new List<Character>();
 
-        public IGameData GameData { get; private set; }
+        private IGameData GameData { get; set; }
 
         public EngineInternal(IGameData gameData)
         {
@@ -39,23 +39,13 @@ namespace GameEngine
         /// <summary>
         /// Runs the game until they win, die or exit.
         /// </summary>
-        public void Start()
+        public void StartEngine()
         {
             // Ask the player to pick to load a saved game if there are any
             var loadCommand = CommandHelper.GetCommand("load");
             loadCommand.Exceute(this);
 
-            // Main game loop
-            GameLoop();
-        }
-
-        /// <summary>
-        /// The main game loop
-        /// </summary>
-        private void GameLoop()
-        {
-            // Let the player keep playing until they are either dead, they won the game or they want to quit.
-            // The main game loop, 1 loop = 1 game turn
+            // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
             {
                 ProcessUserInput();
@@ -94,6 +84,19 @@ namespace GameEngine
 
             // The command is a real command if we got this far
             commandToRun.Exceute(this);
+        }
+
+        /// <summary>
+        /// Sets up everything to start a new game and shows the game introduction text
+        /// </summary>
+        public void StartNewGame()
+        {
+            GameState.CreateNewGameState();
+            GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
+            string gameIntroductionText = GameData.GetGameIntroduction().AddLineReturns(true);
+            Console.Clear();
+            Console.WriteLine(gameIntroductionText);
+            Console.WriteLine();
         }
     }
 }
