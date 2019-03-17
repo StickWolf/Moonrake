@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GameEngine.Locations;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
@@ -9,5 +10,7 @@ namespace GameEngine
         string GameIntroductionText { get; }
 
         List<Character> Characters { get; }
+
+        List<Location> Locations { get; }
     }
 }

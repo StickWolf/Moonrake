@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Locations;
 using System.Collections.Generic;
 
 namespace GameData
@@ -20,5 +21,16 @@ namespace GameData
         {
             new Character("Player", 50)
         };
+
+        public List<Location> Locations => CreateLocations();
+
+        private List<Location> CreateLocations()
+        {
+            var locations = new List<Location>();
+
+            // TODO: create the locations
+
+            return locations;
+        }
     }
 }
