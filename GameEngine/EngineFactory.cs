@@ -10,7 +10,7 @@ namespace GameEngine
         /// The factory will create games and start them over and over until stopped.
         /// </summary>
         /// <param name="gameDataFactory">A method that returns a GameData</param>
-        public static void Start(Func<IGameData> gameDataFactory)
+        public static void Start(Func<IGameSourceData> gameDataFactory)
         {
             EngineInternal engine;
             do
