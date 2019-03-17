@@ -52,8 +52,11 @@
     <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
     <Compile Include="Example\ExampleSourceGameData.cs" />
-    <Compile Include="Locations\LocationConnectionBasic.cs" />
-    <Compile Include="Locations\LocationConnection.cs" />
+    <Compile Include="Locations\PortalDestinationAlwaysClosedRule.cs" />
+    <Compile Include="Locations\PortalDestinationAlwaysOpenRule.cs" />
+    <Compile Include="Locations\PortalDestinationGameVarRule.cs" />
+    <Compile Include="Locations\PortalDestinationRule.cs" />
+    <Compile Include="Locations\Portal.cs" />
     <Compile Include="EngineFactory.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="EngineInternal.cs" />
