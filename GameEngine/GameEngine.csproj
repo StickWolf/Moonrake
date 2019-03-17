@@ -51,7 +51,7 @@
     <Compile Include="Commands\LoadCommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
-    <Compile Include="Locations\LocationConnectionGameVar.cs" />
+    <Compile Include="Example\ExampleSourceGameData.cs" />
     <Compile Include="Locations\LocationConnectionBasic.cs" />
     <Compile Include="Locations\LocationConnection.cs" />
     <Compile Include="EngineFactory.cs" />

@@ -28,16 +28,7 @@ namespace GameData
         {
             var locations = new List<Location>();
 
-            var locAreaToTheWest = new Location("AreaToTheWest");
-            locations.Add(locAreaToTheWest);
-
-            var locAreaToTheEast = new Location("AreaToTheEast");
-            locations.Add(locAreaToTheEast);
-
-            var locStart = new Location("StartingArea");
-            locStart.LocationConnections.Add(new LocationConnectionBasic(locAreaToTheWest.Name));
-            locStart.LocationConnections.Add(new LocationConnectionGameVar(locAreaToTheEast.Name, "EastUnlock", "True"));
-            locations.Add(locStart);
+            // TODO: create the locations
 
             return locations;
         }
