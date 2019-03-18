@@ -25,33 +25,48 @@ namespace GameData.Example
         {
             var locations = new List<Location>();
 
-            var locAreaToTheWest = new Location("AreaToTheWest");
-            locations.Add(locAreaToTheWest);
-
-            var locAreaToTheEast = new Location("AreaToTheEast");
-            locations.Add(locAreaToTheEast);
-
-            var locElevator = new Location("Elevator");
-            locations.Add(locElevator);
-
-            var locStart = new Location("StartingArea");
+            var locStart = new Location("Starting Area", "an open area with a small marble colleseum",
+                "You stand in the midsts of a miniture marble colleseum. " +
+                "The pillars appear to have been carved by hand and you sense that this area is very old."
+                );
             locations.Add(locStart);
 
-            // This describes that the starting area is always connected to the area to the west
+            var locBanquetHall = new Location("Banquet Hall", "a large hall filled with several tables",
+                "Around you are several tables full of delicious looking food. " + 
+                "The hall is bustling with many visitors of different nationality"
+                );
+            locations.Add(locBanquetHall);
+
+            var locCemetaryTheatre = new Location("Cemetary Theatre", "a frightful looking cemetary",
+                "Although the dirt in this area is real, the multitudes of tombstones are " +
+                "obvious fakes. Upon further inspection you discover that they all have the " +
+                "same name on them and have been made from a mold."
+                );
+            locations.Add(locCemetaryTheatre);
+
+            var locBanquetElevator = new Location("Banquet Elevator", "an ornately designed elevator",
+                "From within the elevator you view what could have only taken ages to craft. " +
+                "The elevator walls are hand crafted from a giant, once whole, block of marble. " +
+                "Although the design is from a historical era, the electronic components appear to " +
+                "be more advanced than what you are familiar with."
+                );
+            locations.Add(locBanquetElevator);
+
+            // This describes that the starting area is always connected to the banquet hall
             locStart.AddPortal(
-                new PortalDestinationAlwaysOpenRule(locAreaToTheWest.Name, "To the west you see")
+                new PortalDestinationAlwaysOpenRule(locBanquetHall.Name, "To the west you see")
             );
 
-            // This describes that the starting area is always connected to the area to the east
+            // This describes that the starting area is always connected to the cemetary
             locStart.AddPortal(
-                new PortalDestinationAlwaysOpenRule(locAreaToTheEast.Name, "To the east you see")
+                new PortalDestinationAlwaysOpenRule(locCemetaryTheatre.Name, "To the east you see")
             );
 
-            // This describes that the starting area is only connected to the elevator if the elevator
-            // is on floor 1 which is defined by the game variable "ElevatorFloor".
+            // This describes that the banquet hall is only connected to the banquet elevator if the elevator
+            // is on floor 1 which is defined by the game variable "BanquetElevatorFloor".
             // If the elevator floor is not 1 then a connection to the elevator will not be available.
-            locStart.AddPortal(
-                new PortalDestinationGameVarRule(locElevator.Name, "Through an open elevator door you see", "ElevatorFloor", "1"),
+            locBanquetHall.AddPortal(
+                new PortalDestinationGameVarRule(locBanquetElevator.Name, "Through an open elevator door you see", "BanquetElevatorFloor", "1"),
                 new PortalDestinationAlwaysClosedRule(null, "You see a closed elevator door")
             );
 
