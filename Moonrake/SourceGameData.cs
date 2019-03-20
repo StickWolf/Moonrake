@@ -30,7 +30,23 @@ namespace GameData
         {
             var locations = new List<Location>();
 
-            // TODO: create the locations
+            var locTreeHouse = new Location("Tree House", "a small tree house with a rope ladder and windows", 
+                "a bed, blanket curtains and fridge full of soda "
+                );
+            locations.Add(locTreeHouse);
+
+            var locField = new Location("Field", 
+                "a beautiful grass field with trimmed lime-green grass with benches and flowers.",
+                "flowers and lime-green grass surrond you as you stroll and stand around in the field. "
+                );
+            locations.Add(locField);
+
+            var locIceCreamShop = new Location("Ice Cream Shop",
+                "an ice cream shop with a big sign on the door with tables under umbrellas around it.",
+                "a cashier and candy, ice cream and tables with many people on them. The store has checkered walls and" +
+                "a floor decorated in all sorts of different candies."
+                );
+            locations.Add(locIceCreamShop);
 
             return locations;
         }
