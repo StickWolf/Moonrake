@@ -24,6 +24,8 @@ namespace GameData
 
         public List<Location> Locations => CreateLocations();
 
+        public string StartingLocationName => "Tree House";
+
         private List<Location> CreateLocations()
         {
             var locations = new List<Location>();
