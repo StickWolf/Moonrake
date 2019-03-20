@@ -5,6 +5,8 @@ namespace GameEngine
 {
     public interface IGameSourceData
     {
+        string StartingLocationName { get; }
+
         string DefaultPlayerName { get; }
 
         string GameIntroductionText { get; }

@@ -21,6 +21,8 @@ namespace GameData.Example
 
         public List<Location> Locations => CreateLocations();
 
+        public string StartingLocationName => "Starting Area";
+
         private List<Location> CreateLocations()
         {
             var locations = new List<Location>();

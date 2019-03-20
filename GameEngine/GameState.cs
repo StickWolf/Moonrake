@@ -10,8 +10,12 @@ namespace GameEngine
     /// </summary>
     public class GameState
     {
-        public static GameState CurrentGameState { get; private set; }
+        // This data goes into save files
         public string PlayerName { get; set; }
+        public Dictionary<string, string> CharacterLocations { get; set; } = new Dictionary<string, string>();
+
+        // This data does NOT go into save files
+        public static GameState CurrentGameState { get; private set; }
         private static string SaveFileName { get; set; } = "GameSaves.json";
 
         public static List<string> GetValidSaveSlotNames()
