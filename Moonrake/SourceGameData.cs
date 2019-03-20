@@ -9,11 +9,11 @@ namespace GameData
         public string DefaultPlayerName => "Eric";
 
         public string GameIntroductionText => 
-            "Once, there were three ancient instruments." +
+            "Once, there were three ancient instruments:" +
             " The Harp, Piano, and the Drum." +
-            " Inside of each instrument there was a magical gem." +
+            " Inside of each instrument there was a magical gem:" +
             " A ruby, sapphire, and a diamond." +
-            " When the gems are merged, it will the create an ancient weapon;" +
+            " When the gems are merged, it will the create an ancient weapon:" +
             " The Moonrake." +
             " Hello, Welcome to Moonrake, a text adventure game. ";
 
