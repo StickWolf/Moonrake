@@ -29,12 +29,12 @@ namespace GameData
             var locations = new List<Location>();
 
             var locTreeHouse = new Location("Tree House", "a small tree house with a rope ladder and windows", 
-                "a bed, blanket curtains and refridgorator full of soda "
+                "a bed, blanket curtains and fridge full of soda "
                 );
             locations.Add(locTreeHouse);
 
             var locField = new Location("Field", 
-                "a beatiful grass field with trimmed lime-green grass with benches and flowers.",
+                "a beautiful grass field with trimmed lime-green grass with benches and flowers.",
                 "flowers and lime-green grass surrond you as you stroll and stand around in the field. "
                 );
             locations.Add(locField);
