@@ -22,7 +22,7 @@ namespace GameEngine
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
-        private IGameSourceData GameData { get; set; }
+        public IGameSourceData GameData { get; set; }
 
         public EngineInternal(IGameSourceData gameData)
         {
