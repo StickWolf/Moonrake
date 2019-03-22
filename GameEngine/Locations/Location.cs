@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.Locations
 {
@@ -44,10 +45,7 @@ namespace GameEngine.Locations
         /// <param name="destinationRules">An array of portal rules to apply in order to the portal</param>
         public void AddPortal(params PortalDestinationRule[] destinationRules)
         {
-            var portal = new Portal();
-            portal.DestinationRules = new List<PortalDestinationRule>();
-            portal.DestinationRules.AddRange(destinationRules);
-            Portals.Add(portal);
+            Portals.Add(new Portal(destinationRules.ToList()));
         }
     }
 }
