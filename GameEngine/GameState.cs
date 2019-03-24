@@ -12,7 +12,12 @@ namespace GameEngine
     {
         // This data goes into save files
         public string PlayerName { get; set; }
+
+        // CharacterLocations[{CharacterName}] = {LocationName}
         public Dictionary<string, string> CharacterLocations { get; set; } = new Dictionary<string, string>();
+
+        // GameVars[{GameVarName}] = {GameVarValue}
+        public Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
 
         // This data does NOT go into save files
         public static GameState CurrentGameState { get; private set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Locations
@@ -30,6 +31,12 @@ namespace GameEngine.Locations
             return Rules.Any(r => r.Origin.Equals(locationName));
         }
 
+        /// <summary>
+        /// Looks at all the rules that originate from the specified location and returns the first
+        /// one that matches as a PortalDestinationDetails
+        /// </summary>
+        /// <param name="origin">The source location name</param>
+        /// <returns>The first rule that matches</returns>
         public PortalDestinationDetails GetDestination(string origin)
         {
             var destDetails = new PortalDestinationDetails();
@@ -47,9 +54,14 @@ namespace GameEngine.Locations
                 }
                 else if (destRule is PortalOpenGameVarRule)
                 {
-                    var gaveVarRule = destRule as PortalOpenGameVarRule;
-
-                    // TODO: when gavevars are added, actually do this check
+                    var gameVarRule = destRule as PortalOpenGameVarRule;
+                    if (GameState.CurrentGameState.GameVars.ContainsKey(gameVarRule.GameVarName) &&
+                        GameState.CurrentGameState.GameVars[gameVarRule.GameVarName].Equals(gameVarRule.ExpectedValue, StringComparison.OrdinalIgnoreCase))
+                    {
+                        destDetails.Description = destRule.Description;
+                        destDetails.Destination = destRule.Destination;
+                        return destDetails;
+                    }
                 }
             }
 

@@ -20,6 +20,14 @@ namespace GameData
 
             Characters.Add(new Character("Player", 50));
 
+            #region GameVars
+
+            var gvIceCreamShopDoor = AddDefaultGameVar("IceCreamShopDoor", "closed");
+
+            #endregion
+
+            #region Locations
+
             var locTreeHouse = new Location("Tree House", "what looks like a small living space",
                 "you see a bed, blanket curtains and fridge full of soda while wooden planks smashed together for walls and" +
                 "the floor. You have a very sertain feeling the tree house is going to break. "
@@ -40,6 +48,10 @@ namespace GameData
                 );
             Locations.Add(locIceCreamShop);
 
+            #endregion
+
+            #region Portals
+
             // Tree house <--> Field
             AddPortal(
                 new PortalAlwaysOpenRule(locTreeHouse.Name, locField.Name, "Through the door shaped space you see"),
@@ -50,15 +62,17 @@ namespace GameData
             // Field <--> Ice cream shop
             AddPortal(
                 new PortalOpenGameVarRule(locField.Name, locIceCreamShop.Name,
-                "Through the Ice Cream Shop's medium wooden door you see", "IceCreamShopDoor", "open"),
+                "Through the Ice Cream Shop's medium wooden door you see", gvIceCreamShopDoor, "open"),
                 new PortalAlwaysClosedRule(locField.Name, null,
                 "You see a closed medium sized wooden door under the big sign on the Ice Cream Shop"),
 
                 new PortalOpenGameVarRule(locIceCreamShop.Name, locField.Name,
-                "Through the medium wooden door you see", "IceCreamShopDoor", "open"),
+                "Through the medium wooden door you see", gvIceCreamShopDoor, "open"),
                 new PortalAlwaysClosedRule(locIceCreamShop.Name, null,
                 "You see a closed medium sized wooden door inside the Ice Cream Shop")
                 );
+
+            #endregion
 
         }
     }
