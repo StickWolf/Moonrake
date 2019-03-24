@@ -14,7 +14,7 @@ namespace GameEngine.Commands
             var location = engine.GameData.Locations.FirstOrDefault(loc => loc.Name.Equals(playerLocationName));
 
             // Display the local description of the location
-            Console.WriteLine(location?.LocalDescription.AddLineReturns(true));
+            Console.WriteLine(location?.LocalDescription);
 
             // Get all portals that have a rule that originates from the current location
             var originPortals = engine.GameData.Portals.Where(p => p.HasOriginLocation(playerLocationName));
@@ -22,7 +22,7 @@ namespace GameEngine.Commands
             // Loop through all portals in that location 
             foreach (var portal in originPortals)
             {
-                // get the portal destination
+                // Get the portal destination
                 var portalDest = portal.GetDestination(location.Name);
 
                 // Evaluate each rule and choose what should be diplayed 
@@ -33,15 +33,15 @@ namespace GameEngine.Commands
                 else if(portalDest.Destination == null)
                 {
                     // If we get here, the description exists, but the destination does not
-                    Console.WriteLine(portalDest.Description.AddLineReturns(true));
+                    Console.WriteLine(portalDest.Description);
                 }
                 else
                 {
-                    // If we got here, the description AND the destiation exist.
+                    // If we got here, the description AND the destination exist.
                     var remoteLocation = engine.GameData.Locations.First(loc => loc.Name.Equals(portalDest.Destination));
-                    string discriptionAndDestination = portalDest.Description + ' ' + remoteLocation.RemoteDescription;
+                    string descriptionAndDestination = portalDest.Description + ' ' + remoteLocation.RemoteDescription;
                     // TODO: write a new specialized Console class that can add these line returns automatically
-                    Console.WriteLine(discriptionAndDestination.AddLineReturns(true));
+                    Console.WriteLine(descriptionAndDestination);
                 }
             }
         }
