@@ -54,7 +54,7 @@
     <Compile Include="Example\ExampleSourceGameData.cs" />
     <Compile Include="Locations\PortalDestinationAlwaysClosedRule.cs" />
     <Compile Include="Locations\PortalDestinationAlwaysOpenRule.cs" />
-    <Compile Include="Locations\PortalDestinationGameVarRule.cs" />
+    <Compile Include="Locations\PortalDestinationOpenGameVarRule.cs" />
     <Compile Include="Locations\PortalDestinationRule.cs" />
     <Compile Include="Locations\Portal.cs" />
     <Compile Include="EngineFactory.cs" />

@@ -31,7 +31,8 @@ namespace GameData
             var locations = new List<Location>();
 
             var locTreeHouse = new Location("Tree House", "a small tree house with a rope ladder and windows", 
-                "a bed, blanket curtains and fridge full of soda"
+                "you see a bed, blanket curtains and fridge full of soda while wooden planks smashed together for walls and"+
+                "the floor. You have a very sertain feeling the tree house is going to break. "
                 );
             locations.Add(locTreeHouse);
 
@@ -48,6 +49,33 @@ namespace GameData
                 "a floor decorated in all sorts of different candies."
                 );
             locations.Add(locIceCreamShop);
+
+            locField.AddPortal(
+                new PortalDestinationOpenGameVarRule(locIceCreamShop.Name,
+                "Through the meduim wooden door you see","IceCreamShopDoor","open"),
+
+                new PortalDestinationAlwaysClosedRule(locIceCreamShop.Name,
+                "You see a medium sized wooden door under the big sign on the Ice Cream Shop")
+                );
+
+            locIceCreamShop.AddPortal(
+                new PortalDestinationOpenGameVarRule(locField.Name,
+                "Through the medium wooden door you see",
+                "IceCreamShopDoorToTheField",
+                "open"),
+
+            new PortalDestinationAlwaysClosedRule(locField.Name, "you see a closed wooden door.")
+                );
+
+            locTreeHouse.AddPortal(
+                new PortalDestinationAlwaysOpenRule(locField.Name,
+                "Through the door shaped space you see")
+                );
+
+            locField.AddPortal(
+                new PortalDestinationAlwaysOpenRule(locTreeHouse.Name,"Through the door shaped space you see")
+                );
+
 
             return locations;
         }
