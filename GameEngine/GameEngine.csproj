@@ -52,6 +52,7 @@
     <Compile Include="Commands\LookCommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
+    <Compile Include="Console.cs" />
     <Compile Include="Example\ExampleSourceGameData.cs" />
     <Compile Include="GameSourceDataBase.cs" />
     <Compile Include="Locations\PortalAlwaysClosedRule.cs" />

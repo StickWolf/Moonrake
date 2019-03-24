@@ -87,9 +87,8 @@ namespace GameEngine
             GameState.CreateNewGameState();
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
             GameState.CurrentGameState.CharacterLocations["Player"] = GameData.StartingLocationName;
-            string gameIntroductionText = GameData.GameIntroductionText.AddLineReturns(true);
             Console.Clear();
-            Console.WriteLine(gameIntroductionText);
+            Console.WriteLine(GameData.GameIntroductionText);
             Console.WriteLine();
         }
     }
