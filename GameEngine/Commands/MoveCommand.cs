@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -10,8 +7,16 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            //TODO: Implement this.
-            throw new NotImplementedException();
+            var playerLoc = GameState.CurrentGameState.CharacterLocations["Player"];
+            var originPortalsDestinations = engine.GameData.Portals
+                .Where(p => p.HasOriginLocation(playerLoc))
+                .Select(p => p.GetDestination(playerLoc))
+                .Where(d => d.Destination != null)
+                .Select(d =>  d.Destination)
+                .ToList();
+
+            var placeToMoveTo = Console.Choose("Where would you like to move to?", originPortalsDestinations);
+            GameState.CurrentGameState.CharacterLocations["Player"] = placeToMoveTo;
         }
 
         public bool IsActivatedBy(string word)
