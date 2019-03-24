@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.Locations
 {
@@ -12,18 +13,31 @@ namespace GameEngine.Locations
     /// </summary>
     public class Portal
     {
-        private List<PortalRule> DestinationRules { get; set; }
+        private List<PortalRule> Rules { get; set; }
 
-        public Portal(List<PortalRule> destinationRules)
+        public Portal(List<PortalRule> rules)
         {
-            DestinationRules = destinationRules;
+            Rules = rules;
         }
 
-        public PortalDestinationDetails GetDestination()
+        /// <summary>
+        /// Indicates if the portal has any rules that originate from the specified location
+        /// </summary>
+        /// <param name="locationName">The location to check for</param>
+        /// <returns>True / False</returns>
+        public bool HasOriginLocation(string locationName)
+        {
+            return Rules.Any(r => r.Origin.Equals(locationName));
+        }
+
+        public PortalDestinationDetails GetDestination(string origin)
         {
             var destDetails = new PortalDestinationDetails();
 
-            foreach (var destRule in DestinationRules)
+            // Filter the list of rules down to just those that start from the specified origin
+            var originRules = Rules.Where(r => r.Origin.Equals(origin));
+
+            foreach (var destRule in originRules)
             {
                 if (destRule is PortalAlwaysClosedRule || destRule is PortalAlwaysOpenRule)
                 {

@@ -49,6 +49,7 @@
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LetPlayerChangeTheirNameCommand.cs" />
     <Compile Include="Commands\LoadCommand.cs" />
+    <Compile Include="Commands\LookCommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
     <Compile Include="Example\ExampleSourceGameData.cs" />
