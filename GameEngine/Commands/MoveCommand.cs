@@ -17,6 +17,11 @@ namespace GameEngine.Commands
 
             var placeToMoveTo = Console.Choose("Where would you like to move to?", originPortalsDestinations);
             GameState.CurrentGameState.CharacterLocations["Player"] = placeToMoveTo;
+
+            // Make the player automatically look after they move to the new location
+            Console.WriteLine();
+            var lookCommand = CommandHelper.GetCommand("look");
+            lookCommand.Exceute(engine);
         }
 
         public bool IsActivatedBy(string word)
