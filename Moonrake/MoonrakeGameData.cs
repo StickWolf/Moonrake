@@ -16,7 +16,7 @@ namespace GameData
                 " A ruby, sapphire, and a diamond." +
                 " When the gems are merged, it will the create an ancient weapon:" +
                 " The Moonrake." +
-                " Hello, Welcome to Moonrake, a text adventure game. ";
+                " Hello, Welcome to Moonrake, a text adventure game.";
 
             Characters.Add(new Character("Player", 50));
 
@@ -28,23 +28,25 @@ namespace GameData
 
             #region Locations
 
-            var locTreeHouse = new Location("Tree House", "what looks like a small living space",
-                "you see a bed, blanket curtains and fridge full of soda while wooden planks smashed together for walls and" +
-                "the floor. You have a very sertain feeling the tree house is going to break. "
+            var locTreeHouse = new Location("Tree House", "what looks like a small living space.",
+                "You are in a tree house. You see a bed covered with a blanket, curtains on the windows and a fridge full of soda. " +
+                "White wooden planks smashed together make up the walls and the floor. " +
+                "You have a very certain feeling the tree house is going to break. "
                 );
             Locations.Add(locTreeHouse);
             StartingLocationName = locTreeHouse.Name; // This is the starting location
 
-            var locField = new Location("Field", "a beautiful trimmed lime-green grass field with benches and flowers.",
-                "flowers and lime-green grass surround you as you stroll and stand around in the field. " +
+            var locField = new Location("Field", "a beautifuly trimmed field of lime-green grass and flowers.",
+                "You are in an open field, flowers and lime-green grass surround you. A number of benches provide a resting place for visitors. " +
                 "There is a small tree house here with a rope ladder and windows. " +
-                "You see an ice cream shop with a big sign on the door. There are tables with umbrellas around the shop."
+                "In the center of the field you see an ice cream shop with a big sign on the door. There are tables with umbrellas around the shop."
                 );
             Locations.Add(locField);
 
-            var locIceCreamShop = new Location("Ice Cream Shop", "an ice cream shop full of people at tables",
-                "you see a cashier and candy, ice cream and tables with many people sitting in chairs around them. " +
-                "The store has checkered walls and a floor decorated in all sorts of different candies."
+            var locIceCreamShop = new Location("Ice Cream Shop", "an ice cream shop full of people at tables.",
+                "You see many containers of candy, an ice cream machine and many people sitting in chairs around tables. " +
+                "A cashier resides in the central area of the shop. " +
+                "The store has checkered walls and a floor decorated with many pictures of candies."
                 );
             Locations.Add(locIceCreamShop);
 
@@ -64,12 +66,12 @@ namespace GameData
                 new PortalOpenGameVarRule(locField.Name, locIceCreamShop.Name,
                 "Through the Ice Cream Shop's medium wooden door you see", gvIceCreamShopDoor, "open"),
                 new PortalAlwaysClosedRule(locField.Name, null,
-                "You see a closed medium sized wooden door under the big sign on the Ice Cream Shop"),
+                "You see a closed medium sized wooden door under the big sign on the Ice Cream Shop."),
 
                 new PortalOpenGameVarRule(locIceCreamShop.Name, locField.Name,
                 "Through the medium wooden door you see", gvIceCreamShopDoor, "open"),
                 new PortalAlwaysClosedRule(locIceCreamShop.Name, null,
-                "You see a closed medium sized wooden door inside the Ice Cream Shop")
+                "You see a closed medium sized wooden door inside the Ice Cream Shop.")
                 );
 
             #endregion

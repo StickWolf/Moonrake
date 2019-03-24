@@ -64,7 +64,7 @@ namespace GameEngine
             string input;
             Console.Write(">");
             input = Console.ReadLine();
-            Console.Clear();
+            Console.WriteLine();
             var partsOfInput = input.Split(' ');
             var firstWord = partsOfInput[0];
 
@@ -98,6 +98,9 @@ namespace GameEngine
             Console.Clear();
             Console.WriteLine(GameData.GameIntroductionText);
             Console.WriteLine();
+
+            var lookCommand = CommandHelper.GetCommand("look");
+            lookCommand.Exceute(this);
         }
     }
 }
