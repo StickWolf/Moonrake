@@ -68,7 +68,7 @@ namespace GameData.Example
             // is on floor 1 which is defined by the game variable "BanquetElevatorFloor".
             // If the elevator floor is not 1 then a connection to the elevator will not be available.
             locBanquetHall.AddPortal(
-                new PortalDestinationGameVarRule(locBanquetElevator.Name, "Through an open elevator door you see", "BanquetElevatorFloor", "1"),
+                new PortalDestinationOpenGameVarRule(locBanquetElevator.Name, "Through an open elevator door you see", "BanquetElevatorFloor", "1"),
                 new PortalDestinationAlwaysClosedRule(null, "You see a closed elevator door")
             );
 
