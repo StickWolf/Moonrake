@@ -10,7 +10,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            //TODO: Implement this.
+            //TODO: Implement this
             throw new NotImplementedException();
         }
 
