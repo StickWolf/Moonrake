@@ -12,9 +12,9 @@ namespace GameEngine.Locations
     /// </summary>
     public class Portal
     {
-        private List<PortalDestinationRule> DestinationRules { get; set; }
+        private List<PortalRule> DestinationRules { get; set; }
 
-        public Portal(List<PortalDestinationRule> destinationRules)
+        public Portal(List<PortalRule> destinationRules)
         {
             DestinationRules = destinationRules;
         }
@@ -25,15 +25,15 @@ namespace GameEngine.Locations
 
             foreach (var destRule in DestinationRules)
             {
-                if (destRule is PortalDestinationAlwaysClosedRule || destRule is PortalDestinationAlwaysOpenRule)
+                if (destRule is PortalAlwaysClosedRule || destRule is PortalAlwaysOpenRule)
                 {
                     destDetails.Description = destRule.Description;
                     destDetails.Destination = destRule.Destination;
                     return destDetails;
                 }
-                else if (destRule is PortalDestinationGameVarRule)
+                else if (destRule is PortalOpenGameVarRule)
                 {
-                    var gaveVarRule = destRule as PortalDestinationGameVarRule;
+                    var gaveVarRule = destRule as PortalOpenGameVarRule;
 
                     // TODO: when gavevars are added, actually do this check
                 }
