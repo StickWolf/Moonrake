@@ -19,12 +19,13 @@ namespace GameEngine.Commands
             // Get all portals that have a rule that originates from the current location
             var originPortals = engine.GameData.Portals.Where(p => p.HasOriginLocation(playerLocationName));
 
-            // Loop through all portals in that location 
-            foreach (var portal in originPortals)
-            {
-                // Get the portal destination
-                var portalDest = portal.GetDestination(location.Name);
+            var portalDesinations = originPortals
+                .Select(p => p.GetDestination(location.Name))
+                .OrderBy(d => d.Destination);
 
+            // Loop through all destinations in that location 
+            foreach (var portalDest in portalDesinations)
+            {
                 // Evaluate each rule and choose what should be diplayed 
                 if(portalDest.Description == null)
                 {
@@ -39,9 +40,7 @@ namespace GameEngine.Commands
                 {
                     // If we got here, the description AND the destination exist.
                     var remoteLocation = engine.GameData.Locations.First(loc => loc.Name.Equals(portalDest.Destination));
-                    string descriptionAndDestination = portalDest.Description + ' ' + remoteLocation.RemoteDescription;
-                    // TODO: write a new specialized Console class that can add these line returns automatically
-                    Console.WriteLine(descriptionAndDestination);
+                    Console.WriteLine($"[{portalDest.Destination}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
             }
         }
