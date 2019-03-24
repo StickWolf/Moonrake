@@ -31,9 +31,9 @@ namespace GameEngine.Locations
                     destDetails.Destination = destRule.Destination;
                     return destDetails;
                 }
-                else if (destRule is PortalDestinationGameVarRule)
+                else if (destRule is PortalDestinationOpenGameVarRule)
                 {
-                    var gaveVarRule = destRule as PortalDestinationGameVarRule;
+                    var gaveVarRule = destRule as PortalDestinationOpenGameVarRule;
 
                     // TODO: when gavevars are added, actually do this check
                 }
