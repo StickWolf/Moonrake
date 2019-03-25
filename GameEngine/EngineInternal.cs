@@ -85,8 +85,16 @@ namespace GameEngine
         public void StartNewGame()
         {
             GameState.CreateNewGameState();
+
+            // Transfer all defaults from the game data to game state
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
             GameState.CurrentGameState.CharacterLocations["Player"] = GameData.StartingLocationName;
+            foreach (var gv in GameData.DefaultGameVars)
+            {
+                GameState.CurrentGameState.GameVars.Add(gv.Key, gv.Value);
+            }
+
+            // Show the intro
             Console.Clear();
             Console.WriteLine(GameData.GameIntroductionText);
             Console.WriteLine();

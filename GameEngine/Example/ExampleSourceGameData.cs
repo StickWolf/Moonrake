@@ -20,6 +20,14 @@ namespace GameData.Example
 
             Characters.Add(new Character("Player", 50));
 
+            #region GameVars
+
+            var gvBanquetElevatorFloor = AddDefaultGameVar("BanquetElevatorFloor", "1");
+
+            #endregion
+
+            #region Locations
+
             var locStart = new Location("Starting Area", "an open area with a small marble colleseum",
                 "You stand in the midsts of a miniture marble colleseum. " +
                 "The pillars appear to have been carved by hand and you sense that this area is very old."
@@ -48,6 +56,9 @@ namespace GameData.Example
                 );
             Locations.Add(locBanquetElevator);
 
+            #endregion
+
+            #region Portals
 
             // This describes that the starting area is always connected to the banquet hall
             // and that the banquet hall is always connected to the starting area
@@ -68,12 +79,14 @@ namespace GameData.Example
             AddPortal(
                 // These 2 rules will only be considered if the player is in the banquet hall.
                 // If the game variable "BanquestElevatorFloor" is set to 1 then the first rule will match, otherwise it'll match the 2nd
-                new PortalOpenGameVarRule(locBanquetHall.Name, locBanquetElevator.Name, "Through an open elevator door you see", "BanquetElevatorFloor", "1"),
+                new PortalOpenGameVarRule(locBanquetHall.Name, locBanquetElevator.Name, "Through an open elevator door you see", gvBanquetElevatorFloor, "1"),
                 new PortalAlwaysClosedRule(locBanquetHall.Name, null, "You see a closed elevator door"),
 
-                new PortalOpenGameVarRule(locBanquetElevator.Name, locBanquetHall.Name, "From within the elevator you peer through the door to see", "BanquetElevatorFloor", "1"),
+                new PortalOpenGameVarRule(locBanquetElevator.Name, locBanquetHall.Name, "From within the elevator you peer through the door to see", gvBanquetElevatorFloor, "1"),
                 new PortalAlwaysClosedRule(locBanquetElevator.Name, null, "The elevator door is closed")
                 );
+
+            #endregion
 
             // TODO: Create a new location named LockedArea1 that west/east are both connected to, but you need to figure out locks to get into them
 
