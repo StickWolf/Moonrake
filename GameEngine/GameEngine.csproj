@@ -55,6 +55,7 @@
     <Compile Include="Console.cs" />
     <Compile Include="Example\ExampleSourceGameData.cs" />
     <Compile Include="GameSourceDataBase.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Locations\PortalAlwaysClosedRule.cs" />
     <Compile Include="Locations\PortalAlwaysOpenRule.cs" />
     <Compile Include="Locations\PortalOpenGameVarRule.cs" />
