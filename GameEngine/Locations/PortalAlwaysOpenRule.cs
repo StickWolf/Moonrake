@@ -5,10 +5,10 @@
     /// Any rules after this in a portal rules list would essentially be ignored.
     /// This rule represents a portal that is open without condition.
     /// </summary>
-    public class PortalDestinationAlwaysOpenRule : PortalDestinationRule
+    public class PortalAlwaysOpenRule : PortalRule
     {
-        public PortalDestinationAlwaysOpenRule(string destination, string description)
-            : base(destination, description)
+        public PortalAlwaysOpenRule(string origin, string destination, string description)
+            : base(origin, destination, description)
         {
         }
     }

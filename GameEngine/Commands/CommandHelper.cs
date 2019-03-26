@@ -18,7 +18,8 @@ namespace GameEngine.Commands
                 new SaveCommand(),
                 new LoadCommand(),
                 new ExitCommand(),
-                new LetPlayerChangeTheirNameCommand()
+                new LetPlayerChangeTheirNameCommand(),
+                new LookCommand()
             };
         }
 

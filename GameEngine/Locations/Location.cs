@@ -22,12 +22,6 @@ namespace GameEngine.Locations
         public string RemoteDescription { get; private set; }
 
         /// <summary>
-        /// A list of one-way connections that appear in this room and that
-        /// potentially lead to another room
-        /// </summary>
-        public List<Portal> Portals { get; private set; } = new List<Portal>();
-
-        /// <summary>
         /// Constructs a new Location
         /// </summary>
         /// <param name="remoteDescription">A description of what the location looks like from a remote location.</param>
@@ -37,15 +31,6 @@ namespace GameEngine.Locations
             Name = locationName;
             LocalDescription = localDescription;
             RemoteDescription = remoteDescription;
-        }
-
-        /// <summary>
-        /// Helper method that can be used to add a portal to a location more elegantly
-        /// </summary>
-        /// <param name="destinationRules">An array of portal rules to apply in order to the portal</param>
-        public void AddPortal(params PortalDestinationRule[] destinationRules)
-        {
-            Portals.Add(new Portal(destinationRules.ToList()));
         }
     }
 }

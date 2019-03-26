@@ -7,44 +7,46 @@ namespace GameData.Example
     /// <summary>
     /// This class gives an example of how to implement all the features available to the game data
     /// </summary>
-    public class ExampleSourceGameData : IGameSourceData
+    public class ExampleSourceGameData : GameSourceDataBase
     {
-        public string DefaultPlayerName => "Sally";
-
-        public string GameIntroductionText => 
-            "There once was an example game.";
-
-        public List<Character> Characters => new List<Character>()
+        /// <summary>
+        /// Constructor that fills in the data
+        /// </summary>
+        public ExampleSourceGameData()
         {
-            new Character("Player", 50)
-        };
+            DefaultPlayerName = "Sally";
 
-        public List<Location> Locations => CreateLocations();
+            GameIntroductionText = "There once was an example game.";
 
-        public string StartingLocationName => "Starting Area";
+            Characters.Add(new Character("Player", 50));
 
-        private List<Location> CreateLocations()
-        {
-            var locations = new List<Location>();
+            #region GameVars
+
+            var gvBanquetElevatorFloor = AddDefaultGameVar("BanquetElevatorFloor", "1");
+
+            #endregion
+
+            #region Locations
 
             var locStart = new Location("Starting Area", "an open area with a small marble colleseum",
                 "You stand in the midsts of a miniture marble colleseum. " +
                 "The pillars appear to have been carved by hand and you sense that this area is very old."
                 );
-            locations.Add(locStart);
+            Locations.Add(locStart);
+            StartingLocationName = locStart.Name; // This is the starting location
 
             var locBanquetHall = new Location("Banquet Hall", "a large hall filled with several tables",
-                "Around you are several tables full of delicious looking food. " + 
+                "Around you are several tables full of delicious looking food. " +
                 "The hall is bustling with many visitors of different nationality"
                 );
-            locations.Add(locBanquetHall);
+            Locations.Add(locBanquetHall);
 
             var locCemetaryTheatre = new Location("Cemetary Theatre", "a frightful looking cemetary",
                 "Although the dirt in this area is real, the multitudes of tombstones are " +
                 "obvious fakes. Upon further inspection you discover that they all have the " +
                 "same name on them and have been made from a mold."
                 );
-            locations.Add(locCemetaryTheatre);
+            Locations.Add(locCemetaryTheatre);
 
             var locBanquetElevator = new Location("Banquet Elevator", "an ornately designed elevator",
                 "From within the elevator you view what could have only taken ages to craft. " +
@@ -52,25 +54,39 @@ namespace GameData.Example
                 "Although the design is from a historical era, the electronic components appear to " +
                 "be more advanced than what you are familiar with."
                 );
-            locations.Add(locBanquetElevator);
+            Locations.Add(locBanquetElevator);
+
+            #endregion
+
+            #region Portals
 
             // This describes that the starting area is always connected to the banquet hall
-            locStart.AddPortal(
-                new PortalDestinationAlwaysOpenRule(locBanquetHall.Name, "To the west you see")
-            );
+            // and that the banquet hall is always connected to the starting area
+            // Start <--> Banquet Hall
+            AddPortal(
+                new PortalAlwaysOpenRule(locStart.Name, locBanquetHall.Name, "To the west you see"),
+                new PortalAlwaysOpenRule(locBanquetHall.Name, locStart.Name, "To the east you see")
+                );
 
-            // This describes that the starting area is always connected to the cemetary
-            locStart.AddPortal(
-                new PortalDestinationAlwaysOpenRule(locCemetaryTheatre.Name, "To the east you see")
-            );
+            // Another 2 way portal
+            // Start <--> Cemetary
+            AddPortal(
+                new PortalAlwaysOpenRule(locStart.Name, locCemetaryTheatre.Name, "To the east you see"),
+                new PortalAlwaysOpenRule(locCemetaryTheatre.Name, locStart.Name, "To the west you see")
+                );
 
-            // This describes that the banquet hall is only connected to the banquet elevator if the elevator
-            // is on floor 1 which is defined by the game variable "BanquetElevatorFloor".
-            // If the elevator floor is not 1 then a connection to the elevator will not be available.
-            locBanquetHall.AddPortal(
-                new PortalDestinationOpenGameVarRule(locBanquetElevator.Name, "Through an open elevator door you see", "BanquetElevatorFloor", "1"),
-                new PortalDestinationAlwaysClosedRule(null, "You see a closed elevator door")
-            );
+            // Banquet Hall <--> Elevator
+            AddPortal(
+                // These 2 rules will only be considered if the player is in the banquet hall.
+                // If the game variable "BanquestElevatorFloor" is set to 1 then the first rule will match, otherwise it'll match the 2nd
+                new PortalOpenGameVarRule(locBanquetHall.Name, locBanquetElevator.Name, "Through an open elevator door you see", gvBanquetElevatorFloor, "1"),
+                new PortalAlwaysClosedRule(locBanquetHall.Name, null, "You see a closed elevator door"),
+
+                new PortalOpenGameVarRule(locBanquetElevator.Name, locBanquetHall.Name, "From within the elevator you peer through the door to see", gvBanquetElevatorFloor, "1"),
+                new PortalAlwaysClosedRule(locBanquetElevator.Name, null, "The elevator door is closed")
+                );
+
+            #endregion
 
             // TODO: Create a new location named LockedArea1 that west/east are both connected to, but you need to figure out locks to get into them
 
@@ -93,8 +109,6 @@ namespace GameData.Example
             // TODO: When a new game starts the combination should be initially set to 8734.
             // TODO: The current state of the combination should be part of the saved game data.
             // TODO: When the player is in the east room and looks around follows the same logic as defined for the west room above.
-
-            return locations;
         }
     }
 }

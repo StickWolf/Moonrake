@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.Locations
 {
@@ -12,30 +14,54 @@ namespace GameEngine.Locations
     /// </summary>
     public class Portal
     {
-        private List<PortalDestinationRule> DestinationRules { get; set; }
+        private List<PortalRule> Rules { get; set; }
 
-        public Portal(List<PortalDestinationRule> destinationRules)
+        public Portal(List<PortalRule> rules)
         {
-            DestinationRules = destinationRules;
+            Rules = rules;
         }
 
-        public PortalDestinationDetails GetDestination()
+        /// <summary>
+        /// Indicates if the portal has any rules that originate from the specified location
+        /// </summary>
+        /// <param name="locationName">The location to check for</param>
+        /// <returns>True / False</returns>
+        public bool HasOriginLocation(string locationName)
+        {
+            return Rules.Any(r => r.Origin.Equals(locationName));
+        }
+
+        /// <summary>
+        /// Looks at all the rules that originate from the specified location and returns the first
+        /// one that matches as a PortalDestinationDetails
+        /// </summary>
+        /// <param name="origin">The source location name</param>
+        /// <returns>The first rule that matches</returns>
+        public PortalDestinationDetails GetDestination(string origin)
         {
             var destDetails = new PortalDestinationDetails();
 
-            foreach (var destRule in DestinationRules)
+            // Filter the list of rules down to just those that start from the specified origin
+            var originRules = Rules.Where(r => r.Origin.Equals(origin));
+
+            foreach (var destRule in originRules)
             {
-                if (destRule is PortalDestinationAlwaysClosedRule || destRule is PortalDestinationAlwaysOpenRule)
+                if (destRule is PortalAlwaysClosedRule || destRule is PortalAlwaysOpenRule)
                 {
                     destDetails.Description = destRule.Description;
                     destDetails.Destination = destRule.Destination;
                     return destDetails;
                 }
-                else if (destRule is PortalDestinationOpenGameVarRule)
+                else if (destRule is PortalOpenGameVarRule)
                 {
-                    var gaveVarRule = destRule as PortalDestinationOpenGameVarRule;
-
-                    // TODO: when gavevars are added, actually do this check
+                    var gameVarRule = destRule as PortalOpenGameVarRule;
+                    if (GameState.CurrentGameState.GameVars.ContainsKey(gameVarRule.GameVarName) &&
+                        GameState.CurrentGameState.GameVars[gameVarRule.GameVarName].Equals(gameVarRule.ExpectedValue, StringComparison.OrdinalIgnoreCase))
+                    {
+                        destDetails.Description = destRule.Description;
+                        destDetails.Destination = destRule.Destination;
+                        return destDetails;
+                    }
                 }
             }
 

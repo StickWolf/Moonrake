@@ -22,9 +22,9 @@ namespace GameEngine
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
-        private IGameSourceData GameData { get; set; }
+        public GameSourceDataBase GameData { get; set; }
 
-        public EngineInternal(IGameSourceData gameData)
+        public EngineInternal(GameSourceDataBase gameData)
         {
             GameData = gameData;
         }
@@ -64,7 +64,7 @@ namespace GameEngine
             string input;
             Console.Write(">");
             input = Console.ReadLine();
-            Console.Clear();
+            Console.WriteLine();
             var partsOfInput = input.Split(' ');
             var firstWord = partsOfInput[0];
 
@@ -85,12 +85,22 @@ namespace GameEngine
         public void StartNewGame()
         {
             GameState.CreateNewGameState();
+
+            // Transfer all defaults from the game data to game state
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
             GameState.CurrentGameState.CharacterLocations["Player"] = GameData.StartingLocationName;
-            string gameIntroductionText = GameData.GameIntroductionText.AddLineReturns(true);
+            foreach (var gv in GameData.DefaultGameVars)
+            {
+                GameState.CurrentGameState.GameVars.Add(gv.Key, gv.Value);
+            }
+
+            // Show the intro
             Console.Clear();
-            Console.WriteLine(gameIntroductionText);
+            Console.WriteLine(GameData.GameIntroductionText);
             Console.WriteLine();
+
+            var lookCommand = CommandHelper.GetCommand("look");
+            lookCommand.Exceute(this);
         }
     }
 }
