@@ -2,7 +2,7 @@
 using GameEngine.Locations;
 using System.Collections.Generic;
 
-namespace GameData.Example
+namespace ExampleGame
 {
     /// <summary>
     /// This class gives an example of how to implement all the features available to the game data
