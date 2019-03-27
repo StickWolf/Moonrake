@@ -76,6 +76,11 @@ namespace GameData
 
             #endregion
 
+            #region Items
+
+            var itemMagicEye = AddItem(new Item("Magic Eye") { IsUnique = true });
+            
+            #endregion
         }
     }
 }
