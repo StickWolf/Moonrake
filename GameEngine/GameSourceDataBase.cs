@@ -13,7 +13,7 @@ namespace GameEngine
 
         public string GameIntroductionText { get; protected set; }
 
-        public List<Character> Characters { get; private set; } = new List<Character>();
+        private Dictionary<string, Character> Characters { get; set; } = new Dictionary<string, Character>();
 
         private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
 
@@ -23,7 +23,7 @@ namespace GameEngine
 
         public Dictionary<string, string> DefaultGameVars { get; private set; } = new Dictionary<string, string>();
 
-        public Dictionary<string, Item> Items { get; private set; } = new Dictionary<string, Item>();
+        private Dictionary<string, Item> Items { get; set; } = new Dictionary<string, Item>();
 
         /// <summary>
         /// Helper method to add a location
@@ -83,6 +83,51 @@ namespace GameEngine
         {
             Items[item.Name] = item;
             return item.Name;
+        }
+
+        /// <summary>
+        /// Gets an item if it exists
+        /// </summary>
+        /// <param name="itemName">The item name to try and get</param>
+        /// <param name="item">The item if it exists</param>
+        /// <returns>True/False depending on if the item exists</returns>
+        public bool TryGetItem(string itemName, out Item item)
+        {
+            if (Items.ContainsKey(itemName))
+            {
+                item = Items[itemName];
+                return true;
+            }
+            item = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method to add a character
+        /// </summary>
+        /// <param name="character">The character to add</param>
+        /// <returns>The name of the character</returns>
+        public string AddCharacter(Character character)
+        {
+            Characters[character.Name] = character;
+            return character.Name;
+        }
+
+        /// <summary>
+        /// Gets a character if it exists
+        /// </summary>
+        /// <param name="characterName">The name of the character to try and get</param>
+        /// <param name="character">The character if it exists</param>
+        /// <returns>True/False depending on if the character exists</returns>
+        public bool TryGetCharacter(string characterName, out Character character)
+        {
+            if (Characters.ContainsKey(characterName))
+            {
+                character = Characters[characterName];
+                return true;
+            }
+            character = null;
+            return false;
         }
     }
 }

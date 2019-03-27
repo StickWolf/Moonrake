@@ -18,7 +18,11 @@ namespace ExampleGame
 
             GameIntroductionText = "There once was an example game.";
 
-            Characters.Add(new Character("Player", 50));
+            #region Characters
+
+            var charPlayer = AddCharacter(new Character("Player", 50));
+
+            #endregion
 
             #region GameVars
 

@@ -18,7 +18,11 @@ namespace GameData
                 " The Moonrake." +
                 " Hello, Welcome to Moonrake, a text adventure game.";
 
-            Characters.Add(new Character("Player", 50));
+            #region Characters
+
+            var charPlayer = AddCharacter(new Character("Player", 50));
+
+            #endregion
 
             #region GameVars
 
