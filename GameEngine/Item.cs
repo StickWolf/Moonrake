@@ -11,13 +11,18 @@ namespace GameEngine
         /// <summary>
         /// Name of the item
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Tells if the item is unique (there can be only 1), or not, in which case there could be many.
         /// The game will take care of assuring that only 1 is held by any character at a time.
         /// </summary>
         public bool IsUnique { get; set;}
+
+        public Item(string name)
+        {
+            Name = name;
+        }
 
         // TODO: Implement TradeSets
         //

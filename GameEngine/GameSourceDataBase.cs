@@ -23,6 +23,8 @@ namespace GameEngine
 
         public Dictionary<string, string> DefaultGameVars { get; private set; } = new Dictionary<string, string>();
 
+        public Dictionary<string, Item> Items { get; private set; } = new Dictionary<string, Item>();
+
         /// <summary>
         /// Helper method that can be used to add a portal more elegantly
         /// </summary>
@@ -42,6 +44,17 @@ namespace GameEngine
         {
             DefaultGameVars[gameVarName] = gameVarValue;
             return gameVarName;
+        }
+        
+        /// <summary>
+        /// Helper to add items
+        /// </summary>
+        /// <param name="item">the item to add</param>
+        /// <returns>the name of the item</returns>
+        public string AddItem(Item item)
+        {
+            Items[item.Name] = item;
+            return item.Name;
         }
     }
 }
