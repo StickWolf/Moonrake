@@ -18,14 +18,14 @@ namespace DreamsAndWhatTheyMean
                 " These kids played around every day, they even had a youtube channel that they shared." +
                 " Now, in this story, you will join these kids and go on a journey with them." +
                 " Their names are: Zach, and Amaya." +
-                " Wellcome to The Tale of The DragonKitty.";
+                " Welcome to The Tale of The DragonKitty.";
 
             #region Characters
             Characters.Add(new Character("Player", 20));
             #endregion
             
             #region Locations
-            var locPlayersLivingRoom = new Location("Your House (Living Room)", "an regular room that blends in with anything.",
+            var locPlayersLivingRoom = new Location("Your House (Living Room)", "a regular room that blends in with anything.",
                "You are in the living room of your house, you find nothing of use here, except to throw things at your parents. " +
                "As you go explore, you find out that most of the plants here are made of plastic. "
                 );
@@ -46,12 +46,12 @@ namespace DreamsAndWhatTheyMean
 
             var locPlayersStreetHeLivesOn = new Location("BR Street", "a dangerous area to go to during the daytime, since the cars are everywhere.",
                 "You stand in the middle of the street you walk on every day, while you are lucky that you haven't been hit by a car." +
-                " The best thing for you do do is move out of the road."
+                " The best thing for you do now is to move out of the road."
                 );
             Locations.Add(locPlayersStreetHeLivesOn);
 
             var locStreetNextToBRStreet = new Location("ES Street", "a area so crowded with cars, making it imposible for an acident to happen.",
-                "You stand in the middle of a street less famillar to you, there are stores all over the place." +
+                "You stand in the middle of a street less familiar to you, there are stores all over the place." +
                 " But you are also standing in the middle of the road, move fast, there are cars beeping at you."
                 );
             Locations.Add(locStreetNextToBRStreet);
