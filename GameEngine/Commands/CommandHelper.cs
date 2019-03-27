@@ -19,7 +19,8 @@ namespace GameEngine.Commands
                 new LoadCommand(),
                 new ExitCommand(),
                 new LetPlayerChangeTheirNameCommand(),
-                new LookCommand()
+                new LookCommand(),
+                new ClearCommand()
             };
         }
 
