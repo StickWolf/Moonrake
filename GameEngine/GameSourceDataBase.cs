@@ -15,7 +15,7 @@ namespace GameEngine
 
         public List<Character> Characters { get; private set; } = new List<Character>();
 
-        public List<Location> Locations { get; private set; } = new List<Location>();
+        private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
 
         public string StartingLocationName { get; protected set; }
 
@@ -24,6 +24,34 @@ namespace GameEngine
         public Dictionary<string, string> DefaultGameVars { get; private set; } = new Dictionary<string, string>();
 
         public Dictionary<string, Item> Items { get; private set; } = new Dictionary<string, Item>();
+
+        /// <summary>
+        /// Helper method to add a location
+        /// </summary>
+        /// <param name="location">The location to add.</param>
+        /// <returns>The location name</returns>
+        public string AddLocation(Location location)
+        {
+            Locations[location.Name] = location;
+            return location.Name;
+        }
+
+        /// <summary>
+        /// Gets a location if it exists
+        /// </summary>
+        /// <param name="locationName">The name of the location to get</param>
+        /// <param name="location">The location if it exists</param>
+        /// <returns>True or false if the location exists</returns>
+        public bool TryGetLocation(string locationName, out Location location)
+        {
+            if (Locations.ContainsKey(locationName))
+            {
+                location = Locations[locationName];
+                return true;
+            }
+            location = null;
+            return false;
+        }
 
         /// <summary>
         /// Helper method that can be used to add a portal more elegantly
