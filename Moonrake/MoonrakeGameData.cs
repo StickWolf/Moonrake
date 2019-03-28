@@ -18,7 +18,11 @@ namespace GameData
                 " The Moonrake." +
                 " Hello, Welcome to Moonrake, a text adventure game.";
 
-            Characters.Add(new Character("Player", 50));
+            #region Characters
+
+            var charPlayer = AddCharacter(new Character("Player", 50));
+
+            #endregion
 
             #region GameVars
 
@@ -28,27 +32,24 @@ namespace GameData
 
             #region Locations
 
-            var locTreeHouse = new Location("Tree House", "what looks like a small living space.",
+            var locTreeHouse = AddLocation(new Location("Tree House", "what looks like a small living space.",
                 "You are in a tree house. You see a bed covered with a blanket, curtains on the windows and a fridge full of soda. " +
                 "White wooden planks smashed together make up the walls and the floor. " +
                 "You have a very certain feeling the tree house is going to break. "
-                );
-            Locations.Add(locTreeHouse);
-            StartingLocationName = locTreeHouse.Name; // This is the starting location
+                ));
+            StartingLocationName = locTreeHouse; // This is the starting location
 
-            var locField = new Location("Field", "a beautifuly trimmed field of lime-green grass and flowers.",
+            var locField = AddLocation(new Location("Field", "a beautifuly trimmed field of lime-green grass and flowers.",
                 "You are in an open field, flowers and lime-green grass surround you. A number of benches provide a resting place for visitors. " +
                 "There is a small tree house here with a rope ladder and windows. " +
                 "In the center of the field you see an ice cream shop with a big sign on the door. There are tables with umbrellas around the shop."
-                );
-            Locations.Add(locField);
+                ));
 
-            var locIceCreamShop = new Location("Ice Cream Shop", "an ice cream shop full of people at tables.",
+            var locIceCreamShop = AddLocation(new Location("Ice Cream Shop", "an ice cream shop full of people at tables.",
                 "You see many containers of candy, an ice cream machine and many people sitting in chairs around tables. " +
                 "A cashier resides in the central area of the shop. " +
                 "The store has checkered walls and a floor decorated with many pictures of candies."
-                );
-            Locations.Add(locIceCreamShop);
+                ));
 
             #endregion
 
@@ -56,21 +57,21 @@ namespace GameData
 
             // Tree house <--> Field
             AddPortal(
-                new PortalAlwaysOpenRule(locTreeHouse.Name, locField.Name, "Through the door shaped space you see"),
+                new PortalAlwaysOpenRule(locTreeHouse, locField, "Through the door shaped space you see"),
 
-                new PortalAlwaysOpenRule(locField.Name, locTreeHouse.Name, "Through the tree house door shaped space you see")
+                new PortalAlwaysOpenRule(locField, locTreeHouse, "Through the tree house door shaped space you see")
                 );
 
             // Field <--> Ice cream shop
             AddPortal(
-                new PortalOpenGameVarRule(locField.Name, locIceCreamShop.Name,
+                new PortalOpenGameVarRule(locField, locIceCreamShop,
                 "Through the Ice Cream Shop's medium wooden door you see", gvIceCreamShopDoor, "open"),
-                new PortalAlwaysClosedRule(locField.Name, null,
+                new PortalAlwaysClosedRule(locField, null,
                 "You see a closed medium sized wooden door under the big sign on the Ice Cream Shop."),
 
-                new PortalOpenGameVarRule(locIceCreamShop.Name, locField.Name,
+                new PortalOpenGameVarRule(locIceCreamShop, locField,
                 "Through the medium wooden door you see", gvIceCreamShopDoor, "open"),
-                new PortalAlwaysClosedRule(locIceCreamShop.Name, null,
+                new PortalAlwaysClosedRule(locIceCreamShop, null,
                 "You see a closed medium sized wooden door inside the Ice Cream Shop.")
                 );
 

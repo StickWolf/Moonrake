@@ -18,7 +18,11 @@ namespace ExampleGame
 
             GameIntroductionText = "There once was an example game.";
 
-            Characters.Add(new Character("Player", 50));
+            #region Characters
+
+            var charPlayer = AddCharacter(new Character("Player", 50));
+
+            #endregion
 
             #region GameVars
 
@@ -28,33 +32,29 @@ namespace ExampleGame
 
             #region Locations
 
-            var locStart = new Location("Starting Area", "an open area with a small marble colleseum",
+            var locStart = AddLocation(new Location("Starting Area", "an open area with a small marble colleseum",
                 "You stand in the midsts of a miniture marble colleseum. " +
                 "The pillars appear to have been carved by hand and you sense that this area is very old."
-                );
-            Locations.Add(locStart);
-            StartingLocationName = locStart.Name; // This is the starting location
+                ));
+            StartingLocationName = locStart; // This is the starting location
 
-            var locBanquetHall = new Location("Banquet Hall", "a large hall filled with several tables",
+            var locBanquetHall = AddLocation(new Location("Banquet Hall", "a large hall filled with several tables",
                 "Around you are several tables full of delicious looking food. " +
                 "The hall is bustling with many visitors of different nationality"
-                );
-            Locations.Add(locBanquetHall);
+                ));
 
-            var locCemetaryTheatre = new Location("Cemetary Theatre", "a frightful looking cemetary",
+            var locCemetaryTheatre = AddLocation(new Location("Cemetary Theatre", "a frightful looking cemetary",
                 "Although the dirt in this area is real, the multitudes of tombstones are " +
                 "obvious fakes. Upon further inspection you discover that they all have the " +
                 "same name on them and have been made from a mold."
-                );
-            Locations.Add(locCemetaryTheatre);
+                ));
 
-            var locBanquetElevator = new Location("Banquet Elevator", "an ornately designed elevator",
+            var locBanquetElevator = AddLocation(new Location("Banquet Elevator", "an ornately designed elevator",
                 "From within the elevator you view what could have only taken ages to craft. " +
                 "The elevator walls are hand crafted from a giant, once whole, block of marble. " +
                 "Although the design is from a historical era, the electronic components appear to " +
                 "be more advanced than what you are familiar with."
-                );
-            Locations.Add(locBanquetElevator);
+                ));
 
             #endregion
 
@@ -64,26 +64,26 @@ namespace ExampleGame
             // and that the banquet hall is always connected to the starting area
             // Start <--> Banquet Hall
             AddPortal(
-                new PortalAlwaysOpenRule(locStart.Name, locBanquetHall.Name, "To the west you see"),
-                new PortalAlwaysOpenRule(locBanquetHall.Name, locStart.Name, "To the east you see")
+                new PortalAlwaysOpenRule(locStart, locBanquetHall, "To the west you see"),
+                new PortalAlwaysOpenRule(locBanquetHall, locStart, "To the east you see")
                 );
 
             // Another 2 way portal
             // Start <--> Cemetary
             AddPortal(
-                new PortalAlwaysOpenRule(locStart.Name, locCemetaryTheatre.Name, "To the east you see"),
-                new PortalAlwaysOpenRule(locCemetaryTheatre.Name, locStart.Name, "To the west you see")
+                new PortalAlwaysOpenRule(locStart, locCemetaryTheatre, "To the east you see"),
+                new PortalAlwaysOpenRule(locCemetaryTheatre, locStart, "To the west you see")
                 );
 
             // Banquet Hall <--> Elevator
             AddPortal(
                 // These 2 rules will only be considered if the player is in the banquet hall.
                 // If the game variable "BanquestElevatorFloor" is set to 1 then the first rule will match, otherwise it'll match the 2nd
-                new PortalOpenGameVarRule(locBanquetHall.Name, locBanquetElevator.Name, "Through an open elevator door you see", gvBanquetElevatorFloor, "1"),
-                new PortalAlwaysClosedRule(locBanquetHall.Name, null, "You see a closed elevator door"),
+                new PortalOpenGameVarRule(locBanquetHall, locBanquetElevator, "Through an open elevator door you see", gvBanquetElevatorFloor, "1"),
+                new PortalAlwaysClosedRule(locBanquetHall, null, "You see a closed elevator door"),
 
-                new PortalOpenGameVarRule(locBanquetElevator.Name, locBanquetHall.Name, "From within the elevator you peer through the door to see", gvBanquetElevatorFloor, "1"),
-                new PortalAlwaysClosedRule(locBanquetElevator.Name, null, "The elevator door is closed")
+                new PortalOpenGameVarRule(locBanquetElevator, locBanquetHall, "From within the elevator you peer through the door to see", gvBanquetElevatorFloor, "1"),
+                new PortalAlwaysClosedRule(locBanquetElevator, null, "The elevator door is closed")
                 );
 
             #endregion

@@ -8,7 +8,8 @@ namespace GameEngine
 {
     public class Character
     {
-        private string Name;
+        public string Name { get; private set; }
+
         private int Hp, FullHp;
 
         public Character(string name, int hp)
