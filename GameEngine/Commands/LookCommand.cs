@@ -11,7 +11,7 @@ namespace GameEngine.Commands
             var playerLocationName = GameState.CurrentGameState.CharacterLocations["Player"];
 
             // Get a referience to that location from the GameData
-            var location = engine.GameData.Locations.FirstOrDefault(loc => loc.Name.Equals(playerLocationName));
+            engine.GameData.TryGetLocation(playerLocationName, out var location);
 
             // Display the local description of the location
             Console.WriteLine(location?.LocalDescription);
@@ -39,7 +39,7 @@ namespace GameEngine.Commands
                 else
                 {
                     // If we got here, the description AND the destination exist.
-                    var remoteLocation = engine.GameData.Locations.First(loc => loc.Name.Equals(portalDest.Destination));
+                    engine.GameData.TryGetLocation(portalDest.Destination, out var remoteLocation);
                     Console.WriteLine($"[{portalDest.Destination}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
             }
