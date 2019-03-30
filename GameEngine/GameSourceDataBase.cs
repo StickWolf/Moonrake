@@ -25,6 +25,8 @@ namespace GameEngine
 
         private Dictionary<string, Item> Items { get; set; } = new Dictionary<string, Item>();
 
+        private Dictionary<string, TradeSet> TradeSets { get; set; } = new Dictionary<string, TradeSet>();
+
         /// <summary>
         /// Helper method to add a location
         /// </summary>
@@ -127,6 +129,34 @@ namespace GameEngine
                 return true;
             }
             character = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method to add a trade set
+        /// </summary>
+        /// <param name="tradeSet">The trade set to add</param>
+        /// <returns>The name of the trade set</returns>
+        public string AddTradeSet(TradeSet tradeSet)
+        {
+            TradeSets[tradeSet.Name] = tradeSet;
+            return tradeSet.Name;
+        }
+
+        /// <summary>
+        /// Gets a trade set if it exists
+        /// </summary>
+        /// <param name="tradeSetName">The name of the trade set to try and get</param>
+        /// <param name="tradeSet">The trade set if it exists</param>
+        /// <returns>True/False depending on if the trade set exists</returns>
+        public bool TryGetTradeSet(string tradeSetName, out TradeSet tradeSet)
+        {
+            if (TradeSets.ContainsKey(tradeSetName))
+            {
+                tradeSet = TradeSets[tradeSetName];
+                return true;
+            }
+            tradeSet = null;
             return false;
         }
     }
