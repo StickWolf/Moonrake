@@ -79,8 +79,26 @@ namespace GameData
 
             #region Items
 
-            var itemMagicEye = AddItem(new Item("Magic Eye") { IsUnique = true });
-            
+            var itemWaterEye = AddItem(new Item("Water Eye") { IsUnique = true });
+            var itemMoney = AddItem(new Item("Money") { IsUnique = false });
+            var itemChocolateIceCream = AddItem(new Item("Chocolate Ice Cream") { IsUnique = false });
+            var itemStrawberryIceCream = AddItem(new Item("Strawberry Ice Cream") { IsUnique = false });
+            var itemVanillaIceCream = AddItem(new Item("Vanilla Ice Cream") { IsUnique = false });
+
+            #endregion
+
+            #region TradeSets
+            var tsIceCreamShop = AddTradeSet("Ice Cream Shop",
+                new ItemRecipe(itemChocolateIceCream,
+                    new ItemRecipeIngredient(itemMoney, 10)
+                ),
+                new ItemRecipe(itemVanillaIceCream,
+                    new ItemRecipeIngredient(itemMoney, 15)
+                ),
+                new ItemRecipe(itemStrawberryIceCream,
+                    new ItemRecipeIngredient(itemMoney, 15)
+                )
+            );
             #endregion
         }
     }
