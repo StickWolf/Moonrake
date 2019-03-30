@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,15 +9,24 @@ namespace GameEngine
     /// The GameState class is meant to represent the current state of the game.
     /// This class holds any data that should be saved and reloaded for saved games.
     /// </summary>
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class GameState
     {
         // This data goes into save files
+        [JsonProperty]
         public string PlayerName { get; set; }
 
+        // This dictionary is for storing WHO has an item, WHAT the item is,
+        // and how MUCH the player has.
+        [JsonProperty]
+        private Dictionary<string, Dictionary<string, int>> CharactersItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+
         // CharacterLocations[{CharacterName}] = {LocationName}
+        [JsonProperty]
         public Dictionary<string, string> CharacterLocations { get; set; } = new Dictionary<string, string>();
 
         // GameVars[{GameVarName}] = {GameVarValue}
+        [JsonProperty]
         public Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
 
         // This data does NOT go into save files
@@ -85,5 +95,29 @@ namespace GameEngine
         {
             CurrentGameState = new GameState();
         }
+
+        public int GetCharacterItemCount(string playerName, string itemName)
+        {
+            if (CharactersItems.ContainsKey(playerName))
+            {
+                if (CharactersItems[playerName].ContainsKey(itemName))
+                {
+                   return CharactersItems[playerName][itemName];
+                }
+            }
+            return 0;
+        }
+
+        public void AddCharacterItemCount(string characterName, string itemName, int count, GameSourceDataBase gameData)
+        {
+            //gameData.TryGets
+        }
+        // TODO: write the following functions
+        // TODO:   void AddCharacterItemCount(string characterName, string itemName, int count)
+        // TODO:   this will add or remove the specified amount of items (pass -10 to remove 10 items)
+        // TODO:   This function should check if an item is unique also and make sure that if a unique
+        // TODO:   item is being added that it is only 1 or -1 and that if any other character has that
+        // TODO:   item it should be removed from the other characters inventory.
+
     }
 }
