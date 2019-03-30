@@ -60,20 +60,6 @@ namespace GameEngine
         //      Dictionary<string, string> TradePostLocations
         //      TradePostLocations[{TradePostName}] = {LocationName}
         //
-        // TODO: Implement Character item tracking in GameState
-        //      How we keep track of what items each character is carrying (In GameState)
-        //
-        //      class CharacterItemInfo which has CharacterName and ItemName properties
-        //      Dictionary<CharacterItemInfo, int> CharacterItems;  // TODO: before we go too far with using a Dictionary here, test to make sure it restricts the key to be unique properly.
-        //      CharacterItems[{CharacterItemInfo}] = {ItemCount}
-        //
-        //      CharacterItems["Player","MagicKey"] = 1
-        //      CharacterItems["Player","Gold"] = 200
-        //
-        //     This works, but it also allows another character to have the 1 and only magic key at the same time
-        //     Extra validation routines will need to be added to assure that unique items stay unique. This is
-        //     what the Item.IsUnique bool is for.
-        //
         // TODO: How do we show a key laying on the floor, but only after the user has opened a trap door in the wall.
         //      Note: the act of opening the trap door would place the item on the floor. Not that the key knew how
         //      to become visible after the trap door was opened. We can keep track of these items in another GameState.

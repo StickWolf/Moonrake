@@ -96,28 +96,83 @@ namespace GameEngine
             CurrentGameState = new GameState();
         }
 
-        public int GetCharacterItemCount(string playerName, string itemName)
+        private int GetCharacterItemCount(string characterName, string itemName)
         {
-            if (CharactersItems.ContainsKey(playerName))
+            if (CharactersItems.ContainsKey(characterName))
             {
-                if (CharactersItems[playerName].ContainsKey(itemName))
+                if (CharactersItems[characterName].ContainsKey(itemName))
                 {
-                   return CharactersItems[playerName][itemName];
+                   return CharactersItems[characterName][itemName];
                 }
             }
             return 0;
         }
 
-        public void AddCharacterItemCount(string characterName, string itemName, int count, GameSourceDataBase gameData)
+        public void RemoveItemEveryWhere(string itemName)
         {
-            //gameData.TryGets
+            foreach(var characterName in CharactersItems.Keys)
+            {
+                if(CharactersItems[characterName].ContainsKey(itemName))
+                {
+                    CharactersItems[characterName].Remove(itemName);
+                }
+            }
         }
-        // TODO: write the following functions
-        // TODO:   void AddCharacterItemCount(string characterName, string itemName, int count)
-        // TODO:   this will add or remove the specified amount of items (pass -10 to remove 10 items)
-        // TODO:   This function should check if an item is unique also and make sure that if a unique
-        // TODO:   item is being added that it is only 1 or -1 and that if any other character has that
-        // TODO:   item it should be removed from the other characters inventory.
 
+        public bool TryAddCharacterItemCount(string characterName, string itemName, int count, GameSourceDataBase gameData)
+        {
+            // If the item we are trying to get does not even exist, we will stop the process of this method
+            if (gameData.TryGetItem(itemName, out Item item) == false)
+            {
+                return false;
+            }
+
+            if(count == 0)
+            {
+                return true;
+            }
+
+            if(!CharactersItems.ContainsKey(characterName))
+            {
+                CharactersItems.Add(characterName, new Dictionary<string, int>());
+            }
+
+            if (!CharactersItems[characterName].ContainsKey(itemName))
+            {
+                CharactersItems[characterName].Add(itemName, 0);
+            }
+
+            var characterItemCount = GetCharacterItemCount(characterName, itemName);
+
+            if (!item.IsUnique)
+            {
+                characterItemCount += count;
+                if(characterItemCount > 0)
+                {
+                    CharactersItems[characterName][itemName] = characterItemCount;
+                    return true;
+                }
+                else if(characterItemCount == 0)
+                {
+                    CharactersItems[characterName].Remove(itemName);
+                    return true;
+                }
+                return false;
+            }
+
+            if(count < 0)
+            {
+                if(characterItemCount > 0)
+                {
+                    CharactersItems[characterName].Remove(itemName);
+                    return true;
+                }
+                return false;
+            }
+
+            RemoveItemEveryWhere(itemName);
+            CharactersItems[characterName][itemName] = 1;
+            return true;
+        }
     }
 }
