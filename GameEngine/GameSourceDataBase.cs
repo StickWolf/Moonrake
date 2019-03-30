@@ -137,8 +137,9 @@ namespace GameEngine
         /// </summary>
         /// <param name="tradeSet">The trade set to add</param>
         /// <returns>The name of the trade set</returns>
-        public string AddTradeSet(TradeSet tradeSet)
+        public string AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)
         {
+            var tradeSet = new TradeSet(tradesetName, itemRecipes);
             TradeSets[tradeSet.Name] = tradeSet;
             return tradeSet.Name;
         }

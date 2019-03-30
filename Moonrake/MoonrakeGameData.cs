@@ -86,6 +86,20 @@ namespace GameData
             var itemVanillaIceCream = AddItem(new Item("Vanilla Ice Cream") { IsUnique = false });
 
             #endregion
+
+            #region TradeSets
+            var tsIceCreamShop = AddTradeSet("Ice Cream Shop",
+                new ItemRecipe(itemChocolateIceCream,
+                    new ItemRecipeIngredient(itemMoney, 10)
+                ),
+                new ItemRecipe(itemVanillaIceCream,
+                    new ItemRecipeIngredient(itemMoney, 15)
+                ),
+                new ItemRecipe(itemStrawberryIceCream,
+                    new ItemRecipeIngredient(itemMoney, 15)
+                )
+            );
+            #endregion
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GameEngine
 {
     public class TradeSet
     {
-        public List<ItemRecipe> Recipes { get; set; } = new List<ItemRecipe>();
-        public string Name { get; set; }
+        public List<ItemRecipe> Recipes { get; private set; } = new List<ItemRecipe>();
+        public string Name { get; private set; }
+
+        public TradeSet(string name, params ItemRecipe[] recipes)
+        {
+            Name = name;
+            Recipes.AddRange(recipes);
+        }
     }
 }
