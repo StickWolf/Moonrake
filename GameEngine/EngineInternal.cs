@@ -89,9 +89,26 @@ namespace GameEngine
             // Transfer all defaults from the game data to game state
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
             GameState.CurrentGameState.CharacterLocations["Player"] = GameData.StartingLocationName;
+
+            // Add game vars that represent the inital game state
             foreach (var gv in GameData.DefaultGameVars)
             {
                 GameState.CurrentGameState.GameVars.Add(gv.Key, gv.Value);
+            }
+
+            // Set the default locations of where trade posts exist at
+            foreach (var tp in GameData.DefaultTradePostLocations)
+            {
+                GameState.CurrentGameState.CurrentTradePostLocations.Add(tp.Key, tp.Value);
+            }
+
+            // Set the default items that all characters have
+            foreach (var characterName in GameData.DefaultCharacterItems.Keys)
+            {
+                foreach (var itemName in GameData.DefaultCharacterItems[characterName].Keys)
+                {
+                    GameState.CurrentGameState.TryAddCharacterItemCount(characterName, itemName, GameData.DefaultCharacterItems[characterName][itemName], GameData);
+                }
             }
 
             // Show the intro

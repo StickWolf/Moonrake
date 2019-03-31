@@ -87,8 +87,14 @@ namespace GameData
 
             #endregion
 
+            #region Default Character Items
+
+            AddDefaultCharacterItem(charPlayer, itemMoney, 35);
+
+            #endregion
+
             #region TradeSets
-            var tsIceCreamShop = AddTradeSet("Ice Cream Shop",
+            var tsIceCream = AddTradeSet("Ice Cream",
                 new ItemRecipe(itemChocolateIceCream,
                     new ItemRecipeIngredient(itemMoney, 10)
                 ),
@@ -99,6 +105,13 @@ namespace GameData
                     new ItemRecipeIngredient(itemMoney, 15)
                 )
             );
+            #endregion
+
+            #region TradePosts
+
+            var tpIceCreamShop = AddTradePost("Ice Cream Shop", tsIceCream);
+            DefaultTradePostLocations[tpIceCreamShop] = locIceCreamShop;
+
             #endregion
         }
     }
