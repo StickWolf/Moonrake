@@ -25,7 +25,26 @@ namespace GameEngine
 
         private Dictionary<string, Item> Items { get; set; } = new Dictionary<string, Item>();
 
+        public Dictionary<string, Dictionary<string, int>> DefaultCharacterItems = new Dictionary<string, Dictionary<string, int>>();
+
         private Dictionary<string, TradeSet> TradeSets { get; set; } = new Dictionary<string, TradeSet>();
+
+        private Dictionary<string, TradePost> TradePosts { get; set; } = new Dictionary<string, TradePost>();
+
+        public Dictionary<string, string> DefaultTradePostLocations { get; private set; } = new Dictionary<string, string>();
+
+        // TODO: Decide how to represent eventing systems like in the example below
+        //      e.g.
+        //         1. The Furnace Room initially has no location items in it.
+        //         2. The player pulls a lever on the wall. This triggers an "Event", there can be many different things that happen
+        //            during an event, however the only thing that this event does is:
+        //              AddLocationItem("Furnace Room", "Key", 1, "You see a shiny key fall from a now open crack in the wall", KeyNotFoundCondition)
+        //              This particular even shows the message and adds the location item to the location, but only if the KeyNotFoundCondition is true
+        //              (whatever that is)
+        //      etc. Events would be able to do a number of other things based on game var conditions.
+        //      Another example would be that the player could use the key at a certain portal (door), which would trigger an event and the event would
+        //          ModifyGameVar("FurnaceRoomDoorOpen", "true", "You hear a loud creaking sounds as the door slowly budges open")
+        //      Portal rules then could reference this game var to determine if the portal is open or not.
 
         /// <summary>
         /// Helper method to add a location
@@ -105,6 +124,22 @@ namespace GameEngine
         }
 
         /// <summary>
+        /// Adds an item that a character will be holding when the game starts
+        /// </summary>
+        /// <param name="characterName">The character to add the item to</param>
+        /// <param name="itemName">The name of the item</param>
+        /// <param name="itemCount">How many of the item to add</param>
+        public void AddDefaultCharacterItem(string characterName, string itemName, int itemCount)
+        {
+            if (!DefaultCharacterItems.ContainsKey(characterName))
+            {
+                DefaultCharacterItems[characterName] = new Dictionary<string, int>();
+            }
+
+            DefaultCharacterItems[characterName][itemName] = itemCount;
+        }
+
+        /// <summary>
         /// Helper method to add a character
         /// </summary>
         /// <param name="character">The character to add</param>
@@ -135,7 +170,8 @@ namespace GameEngine
         /// <summary>
         /// Helper method to add a trade set
         /// </summary>
-        /// <param name="tradeSet">The trade set to add</param>
+        /// <param name="tradesetName">The name of the trade set to add</param>
+        /// <param name="itemRecipes">A list of one or more item recipes to add</param>
         /// <returns>The name of the trade set</returns>
         public string AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)
         {
@@ -158,6 +194,36 @@ namespace GameEngine
                 return true;
             }
             tradeSet = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method to add a trade post
+        /// </summary>
+        /// <param name="tradePostName">The name of the trade post to add</param>
+        /// <param name="tradeSetNames">A list of one or more trade sets to add</param>
+        /// <returns>The name of the trade set</returns>
+        public string AddTradePost(string tradePostName, params string[] tradeSetNames)
+        {
+            var tradePost = new TradePost(tradePostName, tradeSetNames);
+            TradePosts[tradePost.Name] = tradePost;
+            return tradePost.Name;
+        }
+
+        /// <summary>
+        /// Gets a trade post if it exists
+        /// </summary>
+        /// <param name="tradePostName">The name of the trade set to try and get</param>
+        /// <param name="tradePost">The trade post if it exists</param>
+        /// <returns>True/False depending on if the trade post exists</returns>
+        public bool TryGetTradePost(string tradePostName, out TradePost tradePost)
+        {
+            if (TradeSets.ContainsKey(tradePostName))
+            {
+                tradePost = TradePosts[tradePostName];
+                return true;
+            }
+            tradePost = null;
             return false;
         }
     }

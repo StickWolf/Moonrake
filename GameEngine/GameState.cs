@@ -29,6 +29,10 @@ namespace GameEngine
         [JsonProperty]
         public Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
 
+        // CurrentTradePostLocations[{TradePostName}] = {LocationName}
+        [JsonProperty]
+        public Dictionary<string, string> CurrentTradePostLocations { get; set; } = new Dictionary<string, string>();
+
         // This data does NOT go into save files
         public static GameState CurrentGameState { get; private set; }
         private static string SaveFileName { get; set; } = "GameSaves.json";
