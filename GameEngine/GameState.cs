@@ -110,7 +110,7 @@ namespace GameEngine
             {
                 if (CharactersItems[characterName].ContainsKey(itemName))
                 {
-                   return CharactersItems[characterName][itemName];
+                    return CharactersItems[characterName][itemName];
                 }
             }
             return 0;
@@ -118,9 +118,9 @@ namespace GameEngine
 
         public void RemoveItemEveryWhere(string itemName)
         {
-            foreach(var characterName in CharactersItems.Keys)
+            foreach (var characterName in CharactersItems.Keys)
             {
-                if(CharactersItems[characterName].ContainsKey(itemName))
+                if (CharactersItems[characterName].ContainsKey(itemName))
                 {
                     CharactersItems[characterName].Remove(itemName);
                 }
@@ -135,12 +135,12 @@ namespace GameEngine
                 return false;
             }
 
-            if(count == 0)
+            if (count == 0)
             {
                 return true;
             }
 
-            if(!CharactersItems.ContainsKey(characterName))
+            if (!CharactersItems.ContainsKey(characterName))
             {
                 CharactersItems.Add(characterName, new Dictionary<string, int>());
             }
@@ -155,12 +155,12 @@ namespace GameEngine
             if (!item.IsUnique)
             {
                 characterItemCount += count;
-                if(characterItemCount > 0)
+                if (characterItemCount > 0)
                 {
                     CharactersItems[characterName][itemName] = characterItemCount;
                     return true;
                 }
-                else if(characterItemCount == 0)
+                else if (characterItemCount == 0)
                 {
                     CharactersItems[characterName].Remove(itemName);
                     return true;
@@ -168,9 +168,9 @@ namespace GameEngine
                 return false;
             }
 
-            if(count < 0)
+            if (count < 0)
             {
-                if(characterItemCount > 0)
+                if (characterItemCount > 0)
                 {
                     CharactersItems[characterName].Remove(itemName);
                     return true;
@@ -248,6 +248,18 @@ namespace GameEngine
                 }
             }
             return 0;
+        }
+
+        public Dictionary<string, int> GetCharacterItems(string characterName)
+        {
+            if (CharactersItems.ContainsKey(characterName))
+            {
+                return CharactersItems[characterName];
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
