@@ -238,7 +238,7 @@ namespace GameEngine
             return true;
         }
 
-        private int GetLocationItemCount(string locationName, string itemName)
+        public int GetLocationItemCount(string locationName, string itemName)
         {
             if (LocationItems.ContainsKey(locationName))
             {
@@ -255,6 +255,18 @@ namespace GameEngine
             if (CharactersItems.ContainsKey(characterName))
             {
                 return CharactersItems[characterName];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Dictionary<string, int> GetLocationItems(string locationName)
+        {
+            if (LocationItems.ContainsKey(locationName))
+            {
+                return LocationItems[locationName];
             }
             else
             {

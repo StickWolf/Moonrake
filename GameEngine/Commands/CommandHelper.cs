@@ -21,7 +21,8 @@ namespace GameEngine.Commands
                 new LetPlayerChangeTheirNameCommand(),
                 new LookCommand(),
                 new ClearCommand(),
-                new InventoryCommand()
+                new InventoryCommand(),
+                new GrabCommand()
             };
         }
 
