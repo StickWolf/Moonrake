@@ -115,7 +115,7 @@ namespace GameEngine
             {
                 foreach(var itemname in GameData.DefaultLocationItems[locationName].Keys)
                 {
-                    GameState.CurrentGameState.TryAddRoomItemCount(locationName, itemname, GameData.DefaultLocationItems[locationName][itemname], GameData);
+                    GameState.CurrentGameState.TryAddLocationItemCount(locationName, itemname, GameData.DefaultLocationItems[locationName][itemname], GameData);
                 }
             }
 

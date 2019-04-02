@@ -23,7 +23,8 @@ namespace GameEngine.Commands
             var itemToPickUp = Console.Choose("What do you want to pick up?", roomItems.Keys.ToList());
             var itemAmount = roomItems[itemToPickUp];
             GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToPickUp, itemAmount, engine.GameData);
-            roomItems.Remove(itemToPickUp);
+            GameState.CurrentGameState.TryAddLocationItemCount(playersLoc, itemToPickUp, -itemAmount, engine.GameData);
+
         }
 
         public bool IsActivatedBy(string word)

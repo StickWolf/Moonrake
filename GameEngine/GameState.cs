@@ -125,6 +125,14 @@ namespace GameEngine
                     CharactersItems[characterName].Remove(itemName);
                 }
             }
+
+            foreach(var locationName in LocationItems.Keys)
+            {
+                if(LocationItems[locationName].ContainsKey(itemName))
+                {
+                    LocationItems[locationName].Remove(itemName);
+                }
+            }
         }
 
         public bool TryAddCharacterItemCount(string characterName, string itemName, int count, GameSourceDataBase gameData)
@@ -183,7 +191,7 @@ namespace GameEngine
             return true;
         }
 
-        public bool TryAddRoomItemCount(string roomName, string itemName, int count, GameSourceDataBase gameData)
+        public bool TryAddLocationItemCount(string roomName, string itemName, int count, GameSourceDataBase gameData)
         {
             if (gameData.TryGetItem(itemName, out Item item) == false)
             {
