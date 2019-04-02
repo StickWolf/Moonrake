@@ -143,7 +143,11 @@ namespace GameEngine
 
         public void AddDefaultLocationItem(string locationName, string itemName, int itemCount)
         {
-            DefaultLocationItems[locationName].Add(itemName, itemCount);
+            if (!DefaultLocationItems.ContainsKey(locationName))
+            {
+                DefaultLocationItems[locationName] = new Dictionary<string, int>();
+            }
+            DefaultLocationItems[locationName][itemName] = itemCount;
         }
 
         /// <summary>
