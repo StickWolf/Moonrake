@@ -20,7 +20,8 @@ namespace GameEngine.Commands
                 new ExitCommand(),
                 new LetPlayerChangeTheirNameCommand(),
                 new LookCommand(),
-                new ClearCommand()
+                new ClearCommand(),
+                new InventoryCommand()
             };
         }
 
