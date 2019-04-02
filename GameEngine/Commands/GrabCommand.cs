@@ -12,20 +12,15 @@ namespace GameEngine.Commands
         {
             var playersLoc = GameState.CurrentGameState.CharacterLocations["Player"];
             var roomItems = GameState.CurrentGameState.GetLocationItems(playersLoc);
-            var roomItemsListNames = new List<string>();
-            foreach (var item in roomItems.Keys)
-            {
-                roomItemsListNames.Add(item);
-            }
-
-            if (roomItemsListNames.Count == 0)
+            
+            if (roomItems.Keys.Count == 0)
             {
                 Console.WriteLine("There is nothing to grab");
                 return;
             }
 
             
-            var itemToPickUp = Console.Choose("What do you want to pick up?", roomItemsListNames);
+            var itemToPickUp = Console.Choose("What do you want to pick up?", roomItems.Keys.ToList());
             var itemAmount = roomItems[itemToPickUp];
             GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToPickUp, itemAmount, engine.GameData);
             roomItems.Remove(itemToPickUp);
