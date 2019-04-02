@@ -205,7 +205,7 @@ namespace GameEngine
                 LocationItems[roomName].Add(itemName, 0);
             }
 
-            var roomItemCount = GetCharacterItemCount(roomName, itemName);
+            var roomItemCount = GetLocationItemCount(roomName, itemName);
 
             if (!item.IsUnique)
             {
@@ -217,7 +217,7 @@ namespace GameEngine
                 }
                 else if (roomItemCount == 0)
                 {
-                    CharactersItems[roomName].Remove(itemName);
+                    LocationItems[roomName].Remove(itemName);
                     return true;
                 }
                 return false;
@@ -227,24 +227,24 @@ namespace GameEngine
             {
                 if (roomItemCount > 0)
                 {
-                    CharactersItems[roomName].Remove(itemName);
+                    LocationItems[roomName].Remove(itemName);
                     return true;
                 }
                 return false;
             }
 
             RemoveItemEveryWhere(itemName);
-            CharactersItems[roomName][itemName] = 1;
+            LocationItems[roomName][itemName] = 1;
             return true;
         }
 
-        private int GetCharacterItemCount(string characterName, string itemName)
+        private int GetLocationItemCount(string locationName, string itemName)
         {
-            if (CharactersItems.ContainsKey(characterName))
+            if (LocationItems.ContainsKey(locationName))
             {
-                if (CharactersItems[characterName].ContainsKey(itemName))
+                if (LocationItems[locationName].ContainsKey(itemName))
                 {
-                    return CharactersItems[characterName][itemName];
+                    return LocationItems[locationName][itemName];
                 }
             }
             return 0;
