@@ -20,7 +20,7 @@ namespace GameEngine.Commands
             
             foreach(var characterItem in charaterItems)
             {
-                Console.WriteLine(characterItem.Key + " " + characterItem.Value);
+                Console.WriteLine(characterItem.Key + " - " + characterItem.Value);
             }
         }
 

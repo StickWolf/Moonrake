@@ -21,9 +21,7 @@ namespace DreamsAndWhatTheyMean
                 " Welcome to The Tale of The DragonKitty.";
 
             #region Characters
-
             var charPlayer = AddCharacter(new Character("Player", 20));
-
             #endregion
 
             #region Locations
@@ -78,6 +76,21 @@ namespace DreamsAndWhatTheyMean
 
                 new PortalAlwaysOpenRule(locStreetNextToBRStreet, locPlayersStreetHeLivesOn, "To the corner of the road you see")
                 );
+            #endregion
+
+            #region Items
+            var moneyItem = AddItem(new Item("Dollars") { IsUnique = false });
+            var paperitem = AddItem(new Item("Paper") { IsUnique = false });
+
+            #endregion
+
+            #region Starter Items
+            AddDefaultCharacterItem(charPlayer, moneyItem, 200);
+            #endregion
+
+            #region Room Items
+            AddDefaultLocationItem(locPlayersRoom, moneyItem, 30);
+            AddDefaultLocationItem(locPlayersRoom, paperitem, 100);
             #endregion
         }
     }

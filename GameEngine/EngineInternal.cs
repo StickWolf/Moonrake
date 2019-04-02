@@ -111,6 +111,14 @@ namespace GameEngine
                 }
             }
 
+            foreach(var locationName in GameData.DefaultLocationItems.Keys)
+            {
+                foreach(var itemname in GameData.DefaultLocationItems[locationName].Keys)
+                {
+                    GameState.CurrentGameState.TryAddLocationItemCount(locationName, itemname, GameData.DefaultLocationItems[locationName][itemname], GameData);
+                }
+            }
+
             // Show the intro
             Console.Clear();
             Console.WriteLine(GameData.GameIntroductionText);
