@@ -178,5 +178,17 @@ namespace GameEngine
             CharactersItems[characterName][itemName] = 1;
             return true;
         }
+
+        public Dictionary<string, int> GetCharacterItems(string characterName)
+        {
+            if (CharactersItems.ContainsKey(characterName))
+            {
+                return CharactersItems[characterName];
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
