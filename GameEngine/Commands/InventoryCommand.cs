@@ -10,7 +10,18 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            // TODO: The inventory command should simply list what the player has in their inventory and how much of each item.
+            var charaterItems = GameState.CurrentGameState.GetCharacterItems("Player");
+            // TODO: make the player charater name constant or global.
+            if(charaterItems == null)
+            {
+                Console.WriteLine("You have no items");
+                return;
+            }
+            
+            foreach(var characterItem in charaterItems)
+            {
+                Console.WriteLine(characterItem.Key + " " + characterItem.Value);
+            }
         }
 
         public bool IsActivatedBy(string word)
