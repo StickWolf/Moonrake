@@ -111,6 +111,14 @@ namespace GameEngine
                 }
             }
 
+            foreach(var locationName in GameData.DefaultLocationItems.Keys)
+            {
+                foreach(var itemname in GameData.DefaultCharacterItems[locationName].Keys)
+                {
+
+                }
+            }
+
             // Show the intro
             Console.Clear();
             Console.WriteLine(GameData.GameIntroductionText);

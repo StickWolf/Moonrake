@@ -27,6 +27,8 @@ namespace GameEngine
 
         public Dictionary<string, Dictionary<string, int>> DefaultCharacterItems = new Dictionary<string, Dictionary<string, int>>();
 
+        public Dictionary<string, Dictionary<string, int>> DefaultLocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+
         private Dictionary<string, TradeSet> TradeSets { get; set; } = new Dictionary<string, TradeSet>();
 
         private Dictionary<string, TradePost> TradePosts { get; set; } = new Dictionary<string, TradePost>();
@@ -137,6 +139,11 @@ namespace GameEngine
             }
 
             DefaultCharacterItems[characterName][itemName] = itemCount;
+        }
+
+        public void AddDefaultLocationItem(string locationName, string itemName, int itemCount)
+        {
+            DefaultLocationItems[locationName].Add(itemName, itemCount);
         }
 
         /// <summary>

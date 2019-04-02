@@ -21,6 +21,10 @@ namespace GameEngine
         [JsonProperty]
         private Dictionary<string, Dictionary<string, int>> CharactersItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
 
+        //This is for keeping track of how much items a room has.
+        [JsonProperty]
+        public Dictionary<string, Dictionary<string, int>> LocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+
         // CharacterLocations[{CharacterName}] = {LocationName}
         [JsonProperty]
         public Dictionary<string, string> CharacterLocations { get; set; } = new Dictionary<string, string>();
@@ -177,6 +181,73 @@ namespace GameEngine
             RemoveItemEveryWhere(itemName);
             CharactersItems[characterName][itemName] = 1;
             return true;
+        }
+
+        public bool TryAddRoomItemCount(string roomName, string itemName, int count, GameSourceDataBase gameData)
+        {
+            if (gameData.TryGetItem(itemName, out Item item) == false)
+            {
+                return false;
+            }
+
+            if (count == 0)
+            {
+                return true;
+            }
+
+            if (!LocationItems.ContainsKey(roomName))
+            {
+                LocationItems.Add(roomName, new Dictionary<string, int>());
+            }
+
+            if (!LocationItems[roomName].ContainsKey(itemName))
+            {
+                LocationItems[roomName].Add(itemName, 0);
+            }
+
+            var roomItemCount = GetCharacterItemCount(roomName, itemName);
+
+            if (!item.IsUnique)
+            {
+                roomItemCount += count;
+                if (roomItemCount > 0)
+                {
+                    LocationItems[roomName][itemName] = roomItemCount;
+                    return true;
+                }
+                else if (roomItemCount == 0)
+                {
+                    CharactersItems[roomName].Remove(itemName);
+                    return true;
+                }
+                return false;
+            }
+
+            if (count < 0)
+            {
+                if (roomItemCount > 0)
+                {
+                    CharactersItems[roomName].Remove(itemName);
+                    return true;
+                }
+                return false;
+            }
+
+            RemoveItemEveryWhere(itemName);
+            CharactersItems[roomName][itemName] = 1;
+            return true;
+        }
+
+        private int GetCharacterItemCount(string characterName, string itemName)
+        {
+            if (CharactersItems.ContainsKey(characterName))
+            {
+                if (CharactersItems[characterName].ContainsKey(itemName))
+                {
+                    return CharactersItems[characterName][itemName];
+                }
+            }
+            return 0;
         }
     }
 }
