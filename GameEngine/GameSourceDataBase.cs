@@ -17,8 +17,6 @@ namespace GameEngine
 
         private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
 
-        public string StartingLocationName { get; protected set; }
-
         public List<Portal> Portals { get; private set; } = new List<Portal>();
 
         public Dictionary<string, string> DefaultGameVars { get; private set; } = new Dictionary<string, string>();
@@ -34,6 +32,8 @@ namespace GameEngine
         private Dictionary<string, TradePost> TradePosts { get; set; } = new Dictionary<string, TradePost>();
 
         public Dictionary<string, string> DefaultTradePostLocations { get; private set; } = new Dictionary<string, string>();
+
+        public Dictionary<string, string> DefaultCharacterLocations { get; set; } = new Dictionary<string, string>();
 
         // TODO: Decide how to represent eventing systems like in the example below
         //      e.g.
@@ -148,6 +148,11 @@ namespace GameEngine
                 DefaultLocationItems[locationName] = new Dictionary<string, int>();
             }
             DefaultLocationItems[locationName][itemName] = itemCount;
+        }
+
+        public void AddDefaultCharacterLocation(string characterName, string locationName)
+        {
+            DefaultCharacterLocations.Add(characterName, locationName);
         }
 
         /// <summary>

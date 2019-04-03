@@ -329,5 +329,19 @@ namespace GameEngine
                 return null;
             }
         }
+
+        public List<string> GetCharactersInPlayersLocation(string playersLocation)
+        {
+            List<string> NPCsInPlayerLocation = new List<string>();
+            foreach(var characterName in CharacterLocations.Keys)
+            {
+                if(CharacterLocations[characterName] == playersLocation)
+                {
+                    NPCsInPlayerLocation.Add(characterName);
+                }
+            }
+            NPCsInPlayerLocation.Remove("Player");
+            return NPCsInPlayerLocation;
+        }
     }
 }

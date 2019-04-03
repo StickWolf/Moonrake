@@ -56,6 +56,18 @@ namespace GameEngine.Commands
                 }
                 Console.WriteLine();
             }
+
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInPlayersLocation(playerLocationName);
+            if(otherCharactersInLocation.Count != 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("The following people are here:");
+                foreach(var characterName in otherCharactersInLocation)
+                {
+                    Console.WriteLine($"{characterName}");
+                }
+
+            }
         }
 
         public bool IsActivatedBy(string word)
