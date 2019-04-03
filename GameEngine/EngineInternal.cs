@@ -89,14 +89,12 @@ namespace GameEngine
             // Transfer all defaults from the game data to game state
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
 
-            // Set the default locations ( has to be here, won't work if put with others )
+            // Set the default locations for each character ( has to be here, won't work if put with others )
             foreach (var playerName in GameData.DefaultCharacterLocations.Keys)
             {
                 string locationName = GameData.DefaultCharacterLocations[playerName];
                 GameState.CurrentGameState.CharacterLocations.Add(playerName, locationName);
             }
-
-            GameState.CurrentGameState.CharacterLocations["Player"] = GameData.DefaultCharacterLocations["Player"];
 
             // Add game vars that represent the inital game state
             foreach (var gv in GameData.DefaultGameVars)

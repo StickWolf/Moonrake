@@ -57,7 +57,7 @@ namespace GameEngine.Commands
                 Console.WriteLine();
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInPlayersLocation(playerLocationName);
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLocationName);
             if(otherCharactersInLocation.Count != 0)
             {
                 Console.WriteLine();
