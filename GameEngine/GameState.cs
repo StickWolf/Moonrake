@@ -332,16 +332,12 @@ namespace GameEngine
 
         public List<string> GetCharactersInLocation(string locationName)
         {
-            List<string> charactersInPlayerLocation = new List<string>();
-            foreach(var characterName in CharacterLocations.Keys)
-            {
-                if(CharacterLocations[characterName] == locationName)
-                {
-                    charactersInPlayerLocation.Add(characterName);
-                }
-            }
-            charactersInPlayerLocation.Remove("Player");
-            return charactersInPlayerLocation;
+            var npcsInLocation = CharacterLocations
+                .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase))
+                .Select(kvp => kvp.Key)
+                .Except(new List<string>() { "Player" })
+                .ToList();
+            return npcsInLocation;
         }
     }
 }
