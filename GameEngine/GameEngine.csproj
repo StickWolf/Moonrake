@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\GrabCommand.cs" />
     <Compile Include="Commands\InventoryCommand.cs" />
     <Compile Include="Commands\ShopCommand.cs" />
     <Compile Include="Commands\ClearCommand.cs" />
@@ -79,6 +80,8 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

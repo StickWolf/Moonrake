@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GameEngine
 {
@@ -20,6 +21,10 @@ namespace GameEngine
         // and how MUCH the player has.
         [JsonProperty]
         private Dictionary<string, Dictionary<string, int>> CharactersItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+
+        //This is for keeping track of how much items a room has.
+        [JsonProperty]
+        public Dictionary<string, Dictionary<string, int>> LocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
 
         // CharacterLocations[{CharacterName}] = {LocationName}
         [JsonProperty]
@@ -100,26 +105,34 @@ namespace GameEngine
             CurrentGameState = new GameState();
         }
 
-        private int GetCharacterItemCount(string characterName, string itemName)
+        public void RemoveItemEveryWhere(string itemName)
         {
-            if (CharactersItems.ContainsKey(characterName))
+            // Remove the item from all characters
+            foreach (var characterName in CharactersItems.Keys)
             {
                 if (CharactersItems[characterName].ContainsKey(itemName))
                 {
-                   return CharactersItems[characterName][itemName];
-                }
-            }
-            return 0;
-        }
-
-        public void RemoveItemEveryWhere(string itemName)
-        {
-            foreach(var characterName in CharactersItems.Keys)
-            {
-                if(CharactersItems[characterName].ContainsKey(itemName))
-                {
                     CharactersItems[characterName].Remove(itemName);
                 }
+            }
+            var zeroCharKeys = CharactersItems.Where(kvp => !kvp.Value.Any()).Select(kvp => kvp.Key).ToList();
+            foreach (var key in zeroCharKeys)
+            {
+                CharactersItems.Remove(key);
+            }
+
+            // Remove the item from all locations
+            foreach (var locationName in LocationItems.Keys)
+            {
+                if(LocationItems[locationName].ContainsKey(itemName))
+                {
+                    LocationItems[locationName].Remove(itemName);
+                }
+            }
+            var zeroLocationKeys = LocationItems.Where(kvp => !kvp.Value.Any()).Select(kvp => kvp.Key).ToList();
+            foreach (var key in zeroLocationKeys)
+            {
+                LocationItems.Remove(key);
             }
         }
 
@@ -131,51 +144,165 @@ namespace GameEngine
                 return false;
             }
 
-            if(count == 0)
+            if (count == 0)
             {
                 return true;
             }
 
-            if(!CharactersItems.ContainsKey(characterName))
+            void setCharacterItemCount(string sCharacterName, string sItemName, int sCount)
             {
-                CharactersItems.Add(characterName, new Dictionary<string, int>());
+                if (!CharactersItems.ContainsKey(sCharacterName))
+                {
+                    CharactersItems.Add(sCharacterName, new Dictionary<string, int>());
+                }
+                if (!CharactersItems[sCharacterName].ContainsKey(sItemName))
+                {
+                    CharactersItems[sCharacterName].Add(sItemName, sCount);
+                }
             }
 
-            if (!CharactersItems[characterName].ContainsKey(itemName))
+            void removeCharacterItem(string sCharacterName, string sItemName)
             {
-                CharactersItems[characterName].Add(itemName, 0);
+                if (!CharactersItems.ContainsKey(sCharacterName))
+                {
+                    return;
+                }
+                if (CharactersItems[sCharacterName].ContainsKey(sItemName))
+                {
+                    CharactersItems[sCharacterName].Remove(sItemName);
+                    if (!CharactersItems[sCharacterName].Any())
+                    {
+                        CharactersItems.Remove(sCharacterName);
+                    }
+                }
             }
 
-            var characterItemCount = GetCharacterItemCount(characterName, itemName);
+            // The goal is to only keep records in the dictionary for counts greater than 0
+            // Even if we do temporarily add keys here, they should be cleaned up before returning if needed
+            var characterItemCount = 0;
+            if (CharactersItems.ContainsKey(characterName) && CharactersItems[characterName].ContainsKey(itemName))
+            {
+                characterItemCount = CharactersItems[characterName][itemName];
+            }
 
+            // Non-unique items can be added and removed from characters without worrying about the count
             if (!item.IsUnique)
             {
                 characterItemCount += count;
-                if(characterItemCount > 0)
+                if (characterItemCount > 0)
                 {
-                    CharactersItems[characterName][itemName] = characterItemCount;
+                    setCharacterItemCount(characterName, itemName, characterItemCount);
                     return true;
                 }
-                else if(characterItemCount == 0)
+                else if (characterItemCount == 0)
                 {
-                    CharactersItems[characterName].Remove(itemName);
+                    removeCharacterItem(characterName, itemName);
                     return true;
                 }
                 return false;
             }
 
-            if(count < 0)
+            // The item is unique, and we're removing it.
+            // Since this is a removal we don't need to worry about checking for duplicates being made
+            if (count < 0)
             {
-                if(characterItemCount > 0)
+                if (characterItemCount > 0)
                 {
-                    CharactersItems[characterName].Remove(itemName);
+                    removeCharacterItem(characterName, itemName);
                     return true;
                 }
                 return false;
             }
 
+            // The only other option is that this is a unique item being added to the character
+            // First remove it from everywhere else, then add it here.
             RemoveItemEveryWhere(itemName);
-            CharactersItems[characterName][itemName] = 1;
+            setCharacterItemCount(characterName, itemName, 1);
+            return true;
+        }
+
+        public bool TryAddLocationItemCount(string locationName, string itemName, int count, GameSourceDataBase gameData)
+        {
+            if (gameData.TryGetItem(itemName, out Item item) == false)
+            {
+                return false;
+            }
+
+            if (count == 0)
+            {
+                return true;
+            }
+
+            void setLocationItemCount(string sLocationName, string sItemName, int sCount)
+            {
+                if (!LocationItems.ContainsKey(sLocationName))
+                {
+                    LocationItems.Add(sLocationName, new Dictionary<string, int>());
+                }
+                if (!LocationItems[sLocationName].ContainsKey(sItemName))
+                {
+                    LocationItems[sLocationName].Add(sItemName, sCount);
+                }
+            }
+
+            void removeLocationItem(string sLocationName, string sItemName)
+            {
+                if (!LocationItems.ContainsKey(sLocationName))
+                {
+                    return;
+                }
+                if (LocationItems[sLocationName].ContainsKey(sItemName))
+                {
+                    LocationItems[sLocationName].Remove(sItemName);
+                    if (!LocationItems[sLocationName].Any())
+                    {
+                        LocationItems.Remove(sLocationName);
+                    }
+                }
+            }
+
+            // The goal is to only keep records in the dictionary for counts greater than 0
+            // Even if we do temporarily add keys here, they should be cleaned up before returning if needed
+            var locationItemCount = 0;
+            if (LocationItems.ContainsKey(locationName) && LocationItems[locationName].ContainsKey(itemName))
+            {
+                locationItemCount = LocationItems[locationName][itemName];
+            }
+
+            // Non-unique items can be added and removed from locations without worrying about the count
+            if (!item.IsUnique)
+            {
+                locationItemCount += count;
+                if (locationItemCount > 0)
+                {
+                    setLocationItemCount(locationName, itemName, locationItemCount);
+                    return true;
+                }
+                else if (locationItemCount == 0)
+                {
+                    removeLocationItem(locationName, itemName);
+                    return true;
+                }
+                return false;
+            }
+
+            // The item is unique, and we're removing it.
+            // Since this is a removal we don't need to worry about checking for duplicates being made
+            if (count < 0)
+            {
+                // Double check to make sure there really is an item here
+                if (locationItemCount > 0)
+                {
+                    removeLocationItem(locationName, itemName);
+                    return true;
+                }
+                return false;
+            }
+
+            // The only other option is that this is a unique item being added to a location
+            // First remove it from everywhere else, then add it here.
+            RemoveItemEveryWhere(itemName);
+            setLocationItemCount(locationName, itemName, 1);
             return true;
         }
 
@@ -184,6 +311,18 @@ namespace GameEngine
             if (CharactersItems.ContainsKey(characterName))
             {
                 return CharactersItems[characterName];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Dictionary<string, int> GetLocationItems(string locationName)
+        {
+            if (LocationItems.ContainsKey(locationName))
+            {
+                return LocationItems[locationName];
             }
             else
             {
