@@ -23,6 +23,7 @@ namespace GameEngine.Commands
                 .Select(p => p.GetDestination(location.Name))
                 .OrderBy(d => d.Destination);
 
+            Console.WriteLine();
             // Loop through all destinations in that location 
             foreach (var portalDest in portalDesinations)
             {
@@ -42,6 +43,18 @@ namespace GameEngine.Commands
                     engine.GameData.TryGetLocation(portalDest.Destination, out var remoteLocation);
                     Console.WriteLine($"[{portalDest.Destination}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
+            }
+
+            var locationItems = GameState.CurrentGameState.GetLocationItems(playerLocationName);
+            if (locationItems != null)
+            {
+                Console.WriteLine();
+                Console.Write("You see the following items on the floor: ");
+                foreach (var locationItem in locationItems)
+                {
+                    Console.Write($"{locationItem.Key}({locationItem.Value}) ");
+                }
+                Console.WriteLine();
             }
         }
 
