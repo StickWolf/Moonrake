@@ -37,7 +37,7 @@ namespace GameData
                 "White wooden planks smashed together make up the walls and the floor. " +
                 "You have a very certain feeling the tree house is going to break. "
                 ));
-            StartingLocationName = locTreeHouse; // This is the starting location
+            AddDefaultCharacterLocation(charPlayer, locTreeHouse);
 
             var locField = AddLocation(new Location("Field", "a beautifuly trimmed field of lime-green grass and flowers.",
                 "You are in an open field, flowers and lime-green grass surround you. A number of benches provide a resting place for visitors. " +

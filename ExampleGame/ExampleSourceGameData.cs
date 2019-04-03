@@ -37,7 +37,7 @@ namespace ExampleGame
                 "You stand in the midsts of a miniture marble colleseum. " +
                 "The pillars appear to have been carved by hand and you sense that this area is very old."
                 ));
-            StartingLocationName = locStart; // This is the starting location
+            AddDefaultCharacterLocation(charPlayer, locStart);
 
             var locBanquetHall = AddLocation(new Location("Banquet Hall", "a large hall filled with several tables",
                 "Around you are several tables full of delicious looking food. " +

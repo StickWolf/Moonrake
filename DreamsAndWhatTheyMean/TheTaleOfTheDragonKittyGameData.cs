@@ -22,11 +22,14 @@ namespace DreamsAndWhatTheyMean
 
             #region Characters
             var charPlayer = AddCharacter(new Character("Player", 20));
+            var charPlayersDad = AddCharacter(new Character("Tom", 60));
+            var charPlayersMom = AddCharacter(new Character("Ana", 40));
+
             #endregion
 
             #region Locations
             var locPlayersLivingRoom = AddLocation(new Location("Your House (Living Room)", "a regular room that blends in with anything.",
-               "You are in the living room of your house, you find nothing of use here, except to throw things at your parents. " +
+               "You are in the living room of your house, you find nothing of use here, except to throw things. " +
                "As you go explore, you find out that most of the plants here are made of plastic. "
                 ));
 
@@ -34,7 +37,6 @@ namespace DreamsAndWhatTheyMean
                 "You are in your room, yet you find nothing of use here, except the paper on your table." +
                 " You feel proud of your knowlege of folding ninja-stars when you see the paper."
                 ));
-            StartingLocationName = locPlayersRoom;
 
             var locPlayersBackyard = AddLocation(new Location("Your House (The Backyard)", "a nice area to go to calm down when having a fight.",
                 "You stand in your backyard, the rushing air and the sound of the birds relaxes you. " + 
@@ -91,6 +93,12 @@ namespace DreamsAndWhatTheyMean
             #region Room Items
             AddDefaultLocationItem(locPlayersRoom, moneyItem, 30);
             AddDefaultLocationItem(locPlayersRoom, paperitem, 100);
+            #endregion
+
+            #region Character Locations
+            AddDefaultCharacterLocation(charPlayer, locPlayersRoom);
+            AddDefaultCharacterLocation(charPlayersDad, locPlayersBackyard);
+            AddDefaultCharacterLocation(charPlayersMom, locPlayersLivingRoom);
             #endregion
         }
     }
