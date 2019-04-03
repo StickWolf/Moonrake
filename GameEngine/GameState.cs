@@ -159,6 +159,10 @@ namespace GameEngine
                 {
                     CharactersItems[sCharacterName].Add(sItemName, sCount);
                 }
+                else
+                {
+                    CharactersItems[sCharacterName][sItemName] = sCount;
+                }
             }
 
             void removeCharacterItem(string sCharacterName, string sItemName)
@@ -242,6 +246,10 @@ namespace GameEngine
                 if (!LocationItems[sLocationName].ContainsKey(sItemName))
                 {
                     LocationItems[sLocationName].Add(sItemName, sCount);
+                }
+                else
+                {
+                    LocationItems[sLocationName][sItemName] = sCount;
                 }
             }
 
