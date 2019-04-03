@@ -11,20 +11,21 @@ namespace GameEngine.Commands
         public void Exceute(EngineInternal engine)
         {
             var playersLoc = GameState.CurrentGameState.CharacterLocations["Player"];
-            var roomItems = GameState.CurrentGameState.GetLocationItems(playersLoc);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc);
             
-            if (roomItems.Keys.Count == 0)
+            if (locationItems == null || locationItems.Keys.Count == 0)
             {
-                Console.WriteLine("There is nothing to grab");
+                Console.WriteLine("There is nothing to grab.");
                 return;
             }
 
-            
-            var itemToPickUp = Console.Choose("What do you want to pick up?", roomItems.Keys.ToList());
-            var itemAmount = roomItems[itemToPickUp];
-            GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToPickUp, itemAmount, engine.GameData);
-            GameState.CurrentGameState.TryAddLocationItemCount(playersLoc, itemToPickUp, -itemAmount, engine.GameData);
+            var itemToPickUp = Console.Choose("What do you want to pick up?", locationItems.Keys.ToList());
+            var itemAmount = locationItems[itemToPickUp];
 
+            // Remove it from the floor
+            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(playersLoc, itemToPickUp, -itemAmount, engine.GameData);
+            // And place it in the player's inventory
+            var addCharResult = GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToPickUp, itemAmount, engine.GameData);
         }
 
         public bool IsActivatedBy(string word)
