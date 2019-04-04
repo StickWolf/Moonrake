@@ -8,12 +8,18 @@ namespace GameEngine.Commands
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("New Save");
+            validSlotNames.Add("Cancel");
 
             var slotToSave = Console.Choose("What slot do you want to save to?", validSlotNames);
             if (slotToSave.Equals("New Save"))
             {
                 Console.WriteLine("Slot name?");
                 slotToSave = Console.ReadLine();
+            }
+            if (slotToSave == "Cancel")
+            {
+                Console.WriteLine("Canceled Save");
+                return;
             }
 
             Console.WriteLine($"Saving {slotToSave}.");

@@ -14,8 +14,15 @@ namespace GameEngine.Commands
                 .Where(d => d.Destination != null)
                 .Select(d =>  d.Destination)
                 .ToList();
+            var placeToMove = originPortalsDestinations;
+            placeToMove.Add("Cancel");
+            var placeToMoveTo = Console.Choose("Where would you like to move to?", placeToMove);
 
-            var placeToMoveTo = Console.Choose("Where would you like to move to?", originPortalsDestinations);
+            if (placeToMove.Equals("Cancel"))
+            {
+                Console.WriteLine("Canceled Move");
+                return;
+            }
             GameState.CurrentGameState.CharacterLocations["Player"] = placeToMoveTo;
 
             // Make the player automatically look after they move to the new location

@@ -19,7 +19,16 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var itemToDrop = Console.Choose("What do you want to drop?", characterItems.Keys.ToList());
+            var availableItems = characterItems.Keys.ToList();
+            availableItems.Add("Cancel");
+            var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
+            
+            if (itemToDrop == "Cancel")
+            {
+                Console.WriteLine("Canceled Drop");
+                return;
+            }
+
             var itemAmount = characterItems[itemToDrop];
             Console.WriteLine("How many do you want to drop?");
             int itemAmountToDrop = int.Parse(Console.ReadLine());
