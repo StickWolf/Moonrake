@@ -19,7 +19,7 @@ namespace GameEngine.Commands
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
             var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
             engine.GameData.TryGetCharacter(playerToHit, out Character defendingCharacter);
-            playerCharacter.Attack(playerCharacter, defendingCharacter);
+            defendingCharacter.Attack(playerCharacter);
         }
 
         bool ICommand.IsActivatedBy(string word)

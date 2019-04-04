@@ -22,16 +22,16 @@ namespace GameEngine
             MaxAttack = attack;
         }
 
-        public void Attack(Character attackingCharacter, Character defendingCharacter)
+        public void Attack(Character attackingCharacter)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            if(defendingCharacter.Hp <= 0)
+            if(Hp <= 0)
             {
-                Console.WriteLine($"{defendingCharacter.Name} is dead.");
+                Console.WriteLine($"{Name} is dead.");
                 return;
             }
-            defendingCharacter.Hp = defendingCharacter.Hp - attackDamage;
-            Console.WriteLine($"{defendingCharacter.Name} has been attacked for {attackDamage} dammage. {defendingCharacter.Name} now has {defendingCharacter.Hp}/{defendingCharacter.FullHp}");
+            Hp = Hp - attackDamage;
+            Console.WriteLine($"{Name} has been attacked for {attackDamage} dammage. {Name} now has {Hp}/{FullHp}");
         }
 
         private int GetAttackDamage(int maxAttack)
