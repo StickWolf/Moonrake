@@ -9,6 +9,7 @@ namespace GameEngine.Commands
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("Start a new game");
+            validSlotNames.Add("Cancel");
 
             var slotToLoad = Console.Choose("Load or start new game?", validSlotNames);
             if (slotToLoad.Equals("Start a new game"))
@@ -21,6 +22,11 @@ namespace GameEngine.Commands
                 Console.WriteLine($"Loading {slotToLoad}.");
                 GameState.LoadGameState(slotToLoad);
                 Console.WriteLine("Loading complete.");
+            }
+            if(slotToLoad == "Cancel")
+            {
+                Console.WriteLine("Canceled Load");
+                return;
             }
         }
 
