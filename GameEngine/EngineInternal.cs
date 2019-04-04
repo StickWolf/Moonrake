@@ -88,7 +88,13 @@ namespace GameEngine
 
             // Transfer all defaults from the game data to game state
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
-            GameState.CurrentGameState.CharacterLocations["Player"] = GameData.StartingLocationName;
+
+            // Set the default locations for each character ( has to be here, won't work if put with others )
+            foreach (var playerName in GameData.DefaultCharacterLocations.Keys)
+            {
+                string locationName = GameData.DefaultCharacterLocations[playerName];
+                GameState.CurrentGameState.CharacterLocations.Add(playerName, locationName);
+            }
 
             // Add game vars that represent the inital game state
             foreach (var gv in GameData.DefaultGameVars)
@@ -111,9 +117,9 @@ namespace GameEngine
                 }
             }
 
-            foreach(var locationName in GameData.DefaultLocationItems.Keys)
+            foreach (var locationName in GameData.DefaultLocationItems.Keys)
             {
-                foreach(var itemname in GameData.DefaultLocationItems[locationName].Keys)
+                foreach (var itemname in GameData.DefaultLocationItems[locationName].Keys)
                 {
                     GameState.CurrentGameState.TryAddLocationItemCount(locationName, itemname, GameData.DefaultLocationItems[locationName][itemname], GameData);
                 }

@@ -337,5 +337,15 @@ namespace GameEngine
                 return null;
             }
         }
+
+        public List<string> GetCharactersInLocation(string locationName)
+        {
+            var npcsInLocation = CharacterLocations
+                .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase))
+                .Select(kvp => kvp.Key)
+                .Except(new List<string>() { "Player" })
+                .ToList();
+            return npcsInLocation;
+        }
     }
 }

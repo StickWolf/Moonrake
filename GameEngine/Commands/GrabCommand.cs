@@ -19,7 +19,15 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var itemToPickUp = Console.Choose("What do you want to pick up?", locationItems.Keys.ToList());
+            var availableItems = locationItems.Keys.ToList();
+            availableItems.Add("Cancel");
+            var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
+
+            if(itemToPickUp == "Cancel")
+            {
+                Console.WriteLine("Canceled Grab");
+                return;
+            }
             var itemAmount = locationItems[itemToPickUp];
 
             // Remove it from the floor
