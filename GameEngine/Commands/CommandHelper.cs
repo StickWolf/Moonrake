@@ -24,7 +24,8 @@ namespace GameEngine.Commands
                 new InventoryCommand(),
                 new GrabCommand(),
                 new DropCommand(),
-                new AttackCommand()
+                new AttackCommand(),
+                new StatsCommand()
             };
         }
 

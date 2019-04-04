@@ -10,7 +10,7 @@ namespace GameEngine
     {
         public string Name { get; private set; }
 
-        private int Hp, FullHp, MaxAttack;
+        public int Hp, FullHp, MaxAttack;
 
         private static Random rnd = new Random();
 
@@ -31,7 +31,7 @@ namespace GameEngine
                 return;
             }
             Hp = Hp - attackDamage;
-            Console.WriteLine($"{Name} has been attacked for {attackDamage} dammage. {Name} now has {Hp}/{FullHp}");
+            Console.WriteLine($"{Name} has been attacked for {attackDamage} dammage. {Name} now has {Hp}/{FullHp} HP");
         }
 
         private int GetAttackDamage(int maxAttack)
