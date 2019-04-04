@@ -20,7 +20,7 @@ namespace ExampleGame
 
             #region Characters
 
-            var charPlayer = AddCharacter(new Character("Player", 50));
+            var charPlayer = AddCharacter(new Character("Player", 50, 40));
 
             #endregion
 
