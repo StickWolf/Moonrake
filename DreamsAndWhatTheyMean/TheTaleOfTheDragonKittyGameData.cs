@@ -21,10 +21,10 @@ namespace DreamsAndWhatTheyMean
                 " Welcome to The Tale of The DragonKitty.";
 
             #region Characters
-            var charPlayer = AddCharacter(new Character("Player", 20));
-            var charPlayersDad = AddCharacter(new Character("Tom", 60));
-            var charPlayersMom = AddCharacter(new Character("Ana", 40));
-
+            var charPlayer = AddCharacter(new Character("Player", 50, 40));
+            var charPlayersDad = AddCharacter(new Character("Dad", 500, 250));
+            var charPlayersMom = AddCharacter(new Character("Mom", 400, 150));
+            var charBlackSmith = AddCharacter(new Character("The Black-Smith", 1000, 700));
             #endregion
 
             #region Locations
@@ -52,6 +52,10 @@ namespace DreamsAndWhatTheyMean
                 "You stand in the middle of a street less familiar to you, there are stores all over the place." +
                 " But you are also standing in the middle of the road, move fast, there are cars beeping at you."
                 ));
+
+            var locTheBlackSmith = AddLocation(new Location("The Black-Smith", "a shop that makes metal for you",
+                "You stand in the Black-Smith store, you wish you had ice-cream here, because it is very hot."
+                ));
             #endregion
 
             #region Portals
@@ -78,12 +82,19 @@ namespace DreamsAndWhatTheyMean
 
                 new PortalAlwaysOpenRule(locStreetNextToBRStreet, locPlayersStreetHeLivesOn, "To the corner of the road you see")
                 );
+
+            AddPortal(
+                new PortalAlwaysOpenRule(locStreetNextToBRStreet, locTheBlackSmith, "To a side of the road you see"),
+
+                new PortalAlwaysOpenRule(locTheBlackSmith, locStreetNextToBRStreet, "Out the exit of the shop you see")
+                );
             #endregion
 
             #region Items
             var moneyItem = AddItem(new Item("Dollars") { IsUnique = false });
-            var paperitem = AddItem(new Item("Paper") { IsUnique = false });
-
+            var paperItem = AddItem(new Item("Paper") { IsUnique = false });
+            var bronzeSlabItem = AddItem(new Item("Bronze Slab") { IsUnique = false });
+            var bronzeBarItem = AddItem(new Item("Bronze Bar") { IsUnique = false });
             #endregion
 
             #region Starter Items
@@ -92,13 +103,31 @@ namespace DreamsAndWhatTheyMean
 
             #region Room Items
             AddDefaultLocationItem(locPlayersRoom, moneyItem, 30);
-            AddDefaultLocationItem(locPlayersRoom, paperitem, 100);
+            AddDefaultLocationItem(locPlayersRoom, paperItem, 100);
+            AddDefaultLocationItem(locPlayersBackyard, bronzeSlabItem, 10);
+            AddDefaultLocationItem(locPlayersBackyard, moneyItem, 1);
+            AddDefaultLocationItem(locTheBlackSmith, bronzeBarItem, 3);
             #endregion
 
             #region Character Locations
             AddDefaultCharacterLocation(charPlayer, locPlayersRoom);
             AddDefaultCharacterLocation(charPlayersDad, locPlayersBackyard);
             AddDefaultCharacterLocation(charPlayersMom, locPlayersLivingRoom);
+            AddDefaultCharacterLocation(charBlackSmith, locTheBlackSmith);
+            #endregion
+
+            #region Trade-Sets
+            var tsBlackSmith = AddTradeSet("Metal",
+                new ItemRecipe(bronzeBarItem,
+                    new ItemRecipeIngredient(bronzeSlabItem, 3),
+                    new ItemRecipeIngredient(moneyItem, 50)
+                    ));
+            #endregion
+
+            #region Trade-Posts
+            var tpBlackSmith = AddTradePost("The Black-Smith",
+                tsBlackSmith);
+            DefaultTradePostLocations[tpBlackSmith] = locTheBlackSmith; 
             #endregion
         }
     }

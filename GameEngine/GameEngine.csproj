@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DropCommand.cs" />
     <Compile Include="Commands\GrabCommand.cs" />
     <Compile Include="Commands\InventoryCommand.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Commands\LookCommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
+    <Compile Include="Commands\StatsCommand.cs" />
     <Compile Include="Console.cs" />
     <Compile Include="GameSourceDataBase.cs" />
     <Compile Include="Item.cs" />

@@ -20,7 +20,7 @@ namespace GameData
 
             #region Characters
 
-            var charPlayer = AddCharacter(new Character("Player", 50));
+            var charPlayer = AddCharacter(new Character("Player", 50, 100));
 
             #endregion
 
