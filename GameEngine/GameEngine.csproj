@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DropCommand.cs" />
     <Compile Include="Commands\GrabCommand.cs" />
     <Compile Include="Commands\InventoryCommand.cs" />

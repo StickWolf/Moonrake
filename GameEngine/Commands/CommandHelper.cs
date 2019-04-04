@@ -23,7 +23,8 @@ namespace GameEngine.Commands
                 new ClearCommand(),
                 new InventoryCommand(),
                 new GrabCommand(),
-                new DropCommand()
+                new DropCommand(),
+                new AttackCommand()
             };
         }
 

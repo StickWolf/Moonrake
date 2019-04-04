@@ -21,10 +21,10 @@ namespace DreamsAndWhatTheyMean
                 " Welcome to The Tale of The DragonKitty.";
 
             #region Characters
-            var charPlayer = AddCharacter(new Character("Player", 20));
-            var charPlayersDad = AddCharacter(new Character("Tom", 60));
-            var charPlayersMom = AddCharacter(new Character("Ana", 40));
-
+            var charPlayer = AddCharacter(new Character("Player", 50, 40));
+            var charPlayersDad = AddCharacter(new Character("Dad", 500, 250));
+            var charPlayersMom = AddCharacter(new Character("Mom", 400, 150));
+            var charBlackSmith = AddCharacter(new Character("The Black-Smith", 1000, 700));
             #endregion
 
             #region Locations
@@ -104,12 +104,16 @@ namespace DreamsAndWhatTheyMean
             #region Room Items
             AddDefaultLocationItem(locPlayersRoom, moneyItem, 30);
             AddDefaultLocationItem(locPlayersRoom, paperItem, 100);
+            AddDefaultLocationItem(locPlayersBackyard, bronzeSlabItem, 10);
+            AddDefaultLocationItem(locPlayersBackyard, moneyItem, 1);
+            AddDefaultLocationItem(locTheBlackSmith, bronzeBarItem, 3);
             #endregion
 
             #region Character Locations
             AddDefaultCharacterLocation(charPlayer, locPlayersRoom);
             AddDefaultCharacterLocation(charPlayersDad, locPlayersBackyard);
             AddDefaultCharacterLocation(charPlayersMom, locPlayersLivingRoom);
+            AddDefaultCharacterLocation(charBlackSmith, locTheBlackSmith);
             #endregion
 
             #region Trade-Sets
