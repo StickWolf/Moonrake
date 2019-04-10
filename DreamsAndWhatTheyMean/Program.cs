@@ -1,9 +1,4 @@
 ﻿using GameEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean
 {
@@ -14,7 +9,7 @@ namespace DreamsAndWhatTheyMean
             EngineFactory.Start(CreateDragonKittyGameData);
         }
 
-        static GameSourceDataBase CreateDragonKittyGameData()
+        static GameSourceData CreateDragonKittyGameData()
         {
             return new TheTaleOfTheDragonKittyGameData();
         }

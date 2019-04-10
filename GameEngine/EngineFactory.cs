@@ -1,5 +1,4 @@
-﻿using GameEngine.Commands;
-using System;
+﻿using System;
 
 namespace GameEngine
 {
@@ -10,7 +9,7 @@ namespace GameEngine
         /// The factory will create games and start them over and over until stopped.
         /// </summary>
         /// <param name="gameDataFactory">A method that returns a GameData</param>
-        public static void Start(Func<GameSourceDataBase> gameDataFactory)
+        public static void Start(Func<GameSourceData> gameDataFactory)
         {
             EngineInternal engine;
             do

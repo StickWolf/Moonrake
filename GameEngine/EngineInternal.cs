@@ -1,9 +1,4 @@
 ﻿using GameEngine.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine
 {
@@ -22,9 +17,9 @@ namespace GameEngine
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
-        public GameSourceDataBase GameData { get; set; }
+        public GameSourceData GameData { get; set; }
 
-        public EngineInternal(GameSourceDataBase gameData)
+        public EngineInternal(GameSourceData gameData)
         {
             GameData = gameData;
         }
