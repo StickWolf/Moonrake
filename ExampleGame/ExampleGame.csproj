@@ -43,7 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExampleSourceGameData.cs" />
+    <Compile Include="ExampleItems.cs" />
+    <Compile Include="ExampleLocations.cs" />
+    <Compile Include="ExampleGameSourceData.cs" />
+    <Compile Include="ExampleCharacters.cs" />
+    <Compile Include="ExampleGameVariables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

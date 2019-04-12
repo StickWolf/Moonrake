@@ -9,9 +9,9 @@ namespace Moonrake
             EngineFactory.Start(CreateMoonrakeGameData);
         }
 
-        static GameSourceDataBase CreateMoonrakeGameData()
+        static GameSourceData CreateMoonrakeGameData()
         {
-            return new GameData.MoonrakeGameData();
+            return new MoonrakeGameData();
         }
     }
 }

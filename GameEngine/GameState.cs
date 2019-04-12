@@ -136,7 +136,7 @@ namespace GameEngine
             }
         }
 
-        public bool TryAddCharacterItemCount(string characterName, string itemName, int count, GameSourceDataBase gameData)
+        public bool TryAddCharacterItemCount(string characterName, string itemName, int count, GameSourceData gameData)
         {
             // If the item we are trying to get does not even exist, we will stop the process of this method
             if (gameData.TryGetItem(itemName, out Item item) == false)
@@ -225,7 +225,7 @@ namespace GameEngine
             return true;
         }
 
-        public bool TryAddLocationItemCount(string locationName, string itemName, int count, GameSourceDataBase gameData)
+        public bool TryAddLocationItemCount(string locationName, string itemName, int count, GameSourceData gameData)
         {
             if (gameData.TryGetItem(itemName, out Item item) == false)
             {
