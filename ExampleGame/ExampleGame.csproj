@@ -48,6 +48,7 @@
     <Compile Include="ExampleGameSourceData.cs" />
     <Compile Include="ExampleCharacters.cs" />
     <Compile Include="ExampleGameVariables.cs" />
+    <Compile Include="Items\ItemRedGreenLight.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,5 +61,6 @@
       <Name>GameEngine</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,10 +5,14 @@
         public string BanquetElevatorFloor { get; private set; }
         public string BanquetSecretHallOpen { get; private set; }
 
+        public string RedGreenLightColor { get; private set; }
+
         public ExampleGameVariables(ExampleGameSourceData gameData)
         {
             BanquetElevatorFloor = gameData.AddDefaultGameVar("BanquetElevatorFloor", "1");
             BanquetSecretHallOpen = gameData.AddDefaultGameVar("BanquetSecretHallOpen", "false");
+
+            RedGreenLightColor = gameData.AddDefaultGameVar("RedGreenLightColor", "red");
         }
     }
 }
