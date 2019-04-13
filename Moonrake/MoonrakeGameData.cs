@@ -5,7 +5,13 @@ namespace Moonrake
 {
     public class MoonrakeGameData : GameSourceData
     {
-        public MoonrakeGameData()
+
+        public PortalOpenGameVarRule PortalOpenGameVarRule { get; private set; }
+        public Character Character { get; private set; }
+        public Location Location { get; private set; }
+        public Item Item { get; private set; }
+
+        public MoonrakeGameData(Character character,Location location, Item item, PortalOpenGameVarRule portalOpenGameVarRule)
         {
             DefaultPlayerName = "Eric";
 
@@ -112,6 +118,11 @@ namespace Moonrake
             DefaultTradePostLocations[tpIceCreamShop] = locIceCreamShop;
 
             #endregion
+
+            Character = character;
+            Location = location;
+            Item = item;
+            PortalOpenGameVarRule = portalOpenGameVarRule;
         }
     }
 }
