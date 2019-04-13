@@ -12,7 +12,7 @@ namespace Moonrake
 
         public MoonRakeCharacters(MoonrakeGameData gameData)
         {
-            Player = gameData.AddCharacter(new GameEngine.Character("Player", 50, 40));
+            Player = gameData.AddCharacter(new GameEngine.Character("Player", 50, 100));
         }
     }
 }
