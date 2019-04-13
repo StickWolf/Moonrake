@@ -36,7 +36,7 @@ namespace GameEngine
 
         private int GetAttackDamage(int maxAttack)
         {
-            int damage = rnd.Next(0, MaxAttack);
+            int damage = rnd.Next(0, maxAttack);
             return damage;
         }
     }

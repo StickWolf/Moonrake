@@ -18,9 +18,10 @@ namespace GameEngine.Commands
             placeToMove.Add("Cancel");
             var placeToMoveTo = Console.Choose("Where would you like to move to?", placeToMove);
 
-            if (placeToMove.Equals("Cancel"))
+            if (placeToMoveTo.Equals("Cancel"))
             {
                 Console.WriteLine("Canceled Move");
+                GameState.CurrentGameState.CharacterLocations["Player"] = playerLoc;
                 return;
             }
             GameState.CurrentGameState.CharacterLocations["Player"] = placeToMoveTo;

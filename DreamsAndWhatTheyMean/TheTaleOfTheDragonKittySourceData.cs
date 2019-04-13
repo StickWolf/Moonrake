@@ -35,6 +35,7 @@ namespace DreamsAndWhatTheyMean
             AddDefaultLocationItem(Locations.PlayersBackyard, Items.BronzeChunk, 10);
             AddDefaultLocationItem(Locations.PlayersBackyard, Items.Money, 1);
             AddDefaultLocationItem(Locations.BlackSmithShop, Items.BronzeBar, 3);
+            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlasticChunk, 50);
             #endregion
 
             #region Character Locations
