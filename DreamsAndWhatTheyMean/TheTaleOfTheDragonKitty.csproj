@@ -43,7 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TheTaleOfTheDragonKittyGameData.cs" />
+    <Compile Include="DragonKittyCharacters.cs" />
+    <Compile Include="DragonKittyGameVarables.cs" />
+    <Compile Include="DragonKittyItems.cs" />
+    <Compile Include="DragonKittyLocations.cs" />
+    <Compile Include="TheTaleOfTheDragonKittySourceData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
