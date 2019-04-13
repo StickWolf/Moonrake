@@ -30,6 +30,7 @@ namespace ExampleGame
 
             // Default locations where items are
             AddDefaultLocationItem(Locations.Start, Items.DullBronzeKey, 1);
+            AddDefaultLocationItem(Locations.Start, Items.RedGreenLight, 1);
 
             #region Events
 
