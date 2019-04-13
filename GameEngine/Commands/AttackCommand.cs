@@ -17,7 +17,13 @@ namespace GameEngine.Commands
                 // TODO: why can't we get the player char?? weird error
             }
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
+            otherCharactersInLoc.Add("Cancel");
             var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
+            if (playerToHit.Equals("Cancel"))
+            {
+                Console.WriteLine("Stopped Attack.");
+                return;
+            }
             engine.GameData.TryGetCharacter(playerToHit, out Character defendingCharacter);
             defendingCharacter.Attack(playerCharacter);
         }

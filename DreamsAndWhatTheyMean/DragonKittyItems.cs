@@ -17,6 +17,8 @@ namespace DreamsAndWhatTheyMean
 
         public string BronzeBar { get; private set; }
 
+        public string PlasticChunk { get; private set; }
+
         public DragonKittyItems(TheTaleOfTheDragonKittySourceData gameData)
         {
             Money = gameData.AddItem(new Item("Dollar") { IsUnique = false });
@@ -26,6 +28,8 @@ namespace DreamsAndWhatTheyMean
             BronzeChunk = gameData.AddItem(new Item("Bronze Chunk") { IsUnique = false });
 
             BronzeBar = gameData.AddItem(new Item("Bronze Bar") { IsUnique = false });
+
+            PlasticChunk = gameData.AddItem(new Item("Leftover Plastic Part") { IsUnique = false });
         }
     }
 }
