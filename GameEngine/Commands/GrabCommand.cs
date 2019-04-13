@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -12,14 +10,25 @@ namespace GameEngine.Commands
         {
             var playersLoc = GameState.CurrentGameState.CharacterLocations["Player"];
             var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc);
-            
-            if (locationItems == null || locationItems.Keys.Count == 0)
+
+            var availableItems = locationItems?.Keys?.ToList();
+
+            // Filter out bound items
+            if (availableItems != null)
+            {
+                availableItems = availableItems
+                    .Select(i => engine.GameData.GetItem(i))
+                    .Where(i => i != null && !i.IsBound)
+                    .Select(i => i.Name)
+                    .ToList();
+            }
+
+            if (availableItems == null || availableItems.Count == 0)
             {
                 Console.WriteLine("There is nothing to grab.");
                 return;
             }
 
-            var availableItems = locationItems.Keys.ToList();
             availableItems.Add("Cancel");
             var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
 
