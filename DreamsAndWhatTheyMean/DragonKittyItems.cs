@@ -21,7 +21,7 @@ namespace DreamsAndWhatTheyMean
         {
             Money = gameData.AddItem(new Item("Dollar") { IsUnique = false });
 
-            Paper = gameData.AddItem(new Item("Dollar") { IsUnique = false });
+            Paper = gameData.AddItem(new Item("Paper") { IsUnique = false });
 
             BronzeChunk = gameData.AddItem(new Item("Bronze Chunk") { IsUnique = false });
 
