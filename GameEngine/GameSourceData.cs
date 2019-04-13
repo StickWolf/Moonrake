@@ -1,13 +1,14 @@
 ﻿using GameEngine.Locations;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace GameEngine
 {
     /// <summary>
     /// This class provides methods that help create a GameSourceData
     /// </summary>
-    public abstract class GameSourceDataBase
+    public abstract class GameSourceData
     {
         public string DefaultPlayerName { get; protected set; }
 

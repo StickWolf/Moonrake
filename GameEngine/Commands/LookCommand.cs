@@ -48,13 +48,23 @@ namespace GameEngine.Commands
             var locationItems = GameState.CurrentGameState.GetLocationItems(playerLocationName);
             if (locationItems != null)
             {
-                Console.WriteLine();
-                Console.Write("You see the following items on the floor: ");
+                string itemDescriptions = string.Empty;
+                var currentItemIndex = 0;
                 foreach (var locationItem in locationItems)
                 {
-                    Console.Write($"{locationItem.Key}({locationItem.Value}) ");
+                    currentItemIndex++;
+                    if (engine.GameData.TryGetItem(locationItem.Key, out Item item))
+                    {
+                        if (itemDescriptions != string.Empty)
+                        {
+                            itemDescriptions += (currentItemIndex == locationItems.Count) ? " and " : ", ";
+                        }
+                        itemDescriptions += item.GetDescription(locationItem.Value, engine.GameData, GameState.CurrentGameState);
+                    }
                 }
+
                 Console.WriteLine();
+                Console.WriteLine($"You see {itemDescriptions}.");
             }
 
             var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLocationName);
@@ -66,7 +76,6 @@ namespace GameEngine.Commands
                 {
                     Console.WriteLine($"{characterName}");
                 }
-
             }
         }
 

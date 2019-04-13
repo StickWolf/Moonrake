@@ -1,14 +1,9 @@
 ﻿using GameEngine;
 using GameEngine.Locations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean
 {
-    class TheTaleOfTheDragonKittyGameData : GameSourceDataBase
+    class TheTaleOfTheDragonKittyGameData : GameSourceData
     {
         public TheTaleOfTheDragonKittyGameData()
         {

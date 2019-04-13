@@ -60,7 +60,7 @@
     <Compile Include="Commands\SaveCommand.cs" />
     <Compile Include="Commands\StatsCommand.cs" />
     <Compile Include="Console.cs" />
-    <Compile Include="GameSourceDataBase.cs" />
+    <Compile Include="GameSourceData.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemRecipe.cs" />
     <Compile Include="ItemRecipeIngredient.cs" />

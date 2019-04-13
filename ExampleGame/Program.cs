@@ -9,9 +9,9 @@ namespace ExampleGame
             EngineFactory.Start(CreateExampleGameData);
         }
 
-        static GameSourceDataBase CreateExampleGameData()
+        static GameSourceData CreateExampleGameData()
         {
-            return new ExampleSourceGameData();
+            return new ExampleGameSourceData();
         }
     }
 }

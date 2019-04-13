@@ -1,10 +1,9 @@
 ﻿using GameEngine;
 using GameEngine.Locations;
-using System.Collections.Generic;
 
-namespace GameData
+namespace Moonrake
 {
-    public class MoonrakeGameData : GameSourceDataBase
+    public class MoonrakeGameData : GameSourceData
     {
         public MoonrakeGameData()
         {

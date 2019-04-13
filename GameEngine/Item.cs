@@ -24,11 +24,20 @@ namespace GameEngine
             Name = name;
         }
 
-        // TODO: Implement location items
-        //      Location items are items that are simply on the floor of a specified location. They can get there
-        //      by default when the game starts or by a character dropping an item and leaving it there. Location
-        //      items are different than tradeposts in that you don't have to trade for them to get them, instead
-        //      all you need to do is pick it up.
-        //      After location items are implemented, the drop and pickup command can also be implemented.
+        /// <summary>
+        /// Gets a description of what the item looks like.
+        /// </summary>
+        /// <param name="count">The number of items that are present</param>
+        /// <param name="gameData">The gamedata for the game</param>
+        /// <returns>A description</returns>
+        public virtual string GetDescription(int count, GameSourceData gameData, GameState currentGameState)
+        {
+            if (count == 1)
+            {
+                return $"a {Name}";
+            }
+
+            return $"{count} {Name}s";
+        }
     }
 }
