@@ -6,7 +6,10 @@ namespace ExampleGame.Items
     {
         public ItemRedGreenLight() : base("Colored light")
         {
-            IsUnique = true;
+            // TODO: This is not a unique items, however not that in the description all instances of the redgreen light
+            // TODO: are controlled by the same GameVariable. This needs to be resolved so that each individual light
+            // TODO: can be controlled by different game variables.
+            IsUnique = false;
 
             // TODO: add another property to the base item class that makes it so items like this cannot be picked up or dropped.
         }
