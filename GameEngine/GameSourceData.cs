@@ -127,6 +127,16 @@ namespace GameEngine
         }
 
         /// <summary>
+        /// Gets an item if it exists
+        /// </summary>
+        /// <param name="itemName">The name of the item to get</param>
+        /// <returns>The item or null if it doesn't exist</returns>
+        public Item GetItem(string itemName)
+        {
+            return Items.ContainsKey(itemName) ? Items[itemName] : null;
+        }
+
+        /// <summary>
         /// Adds an item that a character will be holding when the game starts
         /// </summary>
         /// <param name="characterName">The character to add the item to</param>

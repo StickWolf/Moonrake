@@ -25,10 +25,13 @@ namespace ExampleGame
             DefaultPlayerName = "Sally";
             GameIntroductionText = "There once was an example game.";
 
-            // Default locations where characters are
+            // Default character items
+            AddDefaultCharacterItem(Characters.Player, Items.CrystalDiviner, 1);
+
+            // Default character locations
             AddDefaultCharacterLocation(Characters.Player, Locations.Start);
 
-            // Default locations where items are
+            // Default item locations
             AddDefaultLocationItem(Locations.Start, Items.DullBronzeKey, 1);
             AddDefaultLocationItem(Locations.Start, Items.RedGreenLight, 1);
 

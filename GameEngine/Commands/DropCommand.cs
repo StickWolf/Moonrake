@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -13,13 +11,24 @@ namespace GameEngine.Commands
             var characterItems = GameState.CurrentGameState.GetCharacterItems("Player");
             var playersLoc = GameState.CurrentGameState.CharacterLocations["Player"];
 
-            if (characterItems == null || characterItems.Keys.Count == 0)
+            var availableItems = characterItems?.Keys?.ToList();
+
+            // Filter out bound items
+            if (availableItems != null)
             {
-                Console.WriteLine("You have nothing to drop.");
+                availableItems = availableItems
+                    .Select(i => engine.GameData.GetItem(i))
+                    .Where(i => i != null && !i.IsBound)
+                    .Select(i => i.Name)
+                    .ToList();
+            }
+
+            if (availableItems == null || availableItems.Count == 0)
+            {
+                Console.WriteLine("You have nothing that can be dropped.");
                 return;
             }
 
-            var availableItems = characterItems.Keys.ToList();
             availableItems.Add("Cancel");
             var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
             

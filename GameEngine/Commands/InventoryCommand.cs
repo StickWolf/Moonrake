@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -11,16 +9,21 @@ namespace GameEngine.Commands
         public void Exceute(EngineInternal engine)
         {
             var charaterItems = GameState.CurrentGameState.GetCharacterItems("Player");
-            // TODO: make the player charater name constant or global.
-            if(charaterItems == null)
+            // TODO: make the player character name constant or global.
+            if(charaterItems == null || !charaterItems.Any())
             {
-                Console.WriteLine("You have no items");
+                Console.WriteLine("You have no items.");
                 return;
             }
-            
-            foreach(var characterItem in charaterItems)
+
+            Console.WriteLine("You are currently holding:");
+            foreach (var characterItem in charaterItems)
             {
-                Console.WriteLine(characterItem.Key + " - " + characterItem.Value);
+                if (engine.GameData.TryGetItem(characterItem.Key, out Item item))
+                {
+                    var description = item.GetDescription(characterItem.Value, engine.GameData, GameState.CurrentGameState);
+                    Console.WriteLine(description);
+                }
             }
         }
 

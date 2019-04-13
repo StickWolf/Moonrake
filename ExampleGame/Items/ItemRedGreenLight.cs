@@ -10,8 +10,7 @@ namespace ExampleGame.Items
             // TODO: are controlled by the same GameVariable. This needs to be resolved so that each individual light
             // TODO: can be controlled by different game variables.
             IsUnique = false;
-
-            // TODO: add another property to the base item class that makes it so items like this cannot be picked up or dropped.
+            IsBound = true;
         }
 
         public override string GetDescription(int count, GameSourceData gameData, GameState gameState)

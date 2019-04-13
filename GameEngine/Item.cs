@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameEngine
+﻿namespace GameEngine
 {
     public class Item
     {
@@ -18,6 +12,11 @@ namespace GameEngine
         /// The game will take care of assuring that only 1 is held by any character at a time.
         /// </summary>
         public bool IsUnique { get; set;}
+
+        /// <summary>
+        /// Indicates if an item can be picked up, moved locations and dropped or if it is stuck to where it is.
+        /// </summary>
+        public bool IsBound { get; set; }
 
         public Item(string name)
         {

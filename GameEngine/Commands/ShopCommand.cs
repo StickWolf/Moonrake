@@ -47,6 +47,8 @@ namespace GameEngine.Commands
             //     modify their inventory if so. Otherwise it should tell them they can't buy it.
             //  7. After purchasing the current shop list should be re-caclulated and shown again.
             //  8. If the user exits the shop then the command ends and they are back at the location the were previously.
+
+            // TODO: determine how bound items will be presented in shops
         }
 
         public bool IsActivatedBy(string word)
