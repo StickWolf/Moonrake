@@ -11,7 +11,7 @@ namespace DreamsAndWhatTheyMean
 
         static GameSourceData CreateDragonKittyGameData()
         {
-            return new TheTaleOfTheDragonKittyGameData();
+            return new TheTaleOfTheDragonKittySourceData();
         }
     }
 }
