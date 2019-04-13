@@ -2,9 +2,9 @@
 
 namespace ExampleGame.Items
 {
-    public class CrystaalDiviner : Item
+    public class CrystalDiviner : Item
     {
-        public CrystaalDiviner() : base("Crystal Diviner")
+        public CrystalDiviner() : base("Crystal Diviner")
         {
             IsUnique = true;
             IsBound = true;

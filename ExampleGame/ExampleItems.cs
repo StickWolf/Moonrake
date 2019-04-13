@@ -11,7 +11,7 @@ namespace ExampleGame
 
         public ExampleItems(ExampleGameSourceData gameData)
         {
-            CrystalDiviner = gameData.AddItem(new CrystaalDiviner());
+            CrystalDiviner = gameData.AddItem(new CrystalDiviner());
             DullBronzeKey = gameData.AddItem(new Item("Dull Bronze Key") { IsUnique = true });
             RedGreenLight = gameData.AddItem(new ItemRedGreenLight());
         }
