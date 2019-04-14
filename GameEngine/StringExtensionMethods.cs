@@ -71,5 +71,20 @@ namespace GameEngine
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Returns a string with the first character set to uppercase.
+        /// </summary>
+        /// <param name="input">The string to modify</param>
+        /// <returns>a string with the first character set to uppercase.</returns>
+        public static string UppercaseFirstChar(this string input)
+        {
+            if (string.IsNullOrWhiteSpace(input) || input.Length < 1)
+            {
+                return input;
+            }
+
+            return input[0].ToString().ToUpper() + input.Substring(1);
+        }
     }
 }

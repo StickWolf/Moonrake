@@ -55,8 +55,9 @@ namespace GameEngine.Locations
                 else if (destRule is PortalOpenGameVarRule)
                 {
                     var gameVarRule = destRule as PortalOpenGameVarRule;
-                    if (GameState.CurrentGameState.GameVars.ContainsKey(gameVarRule.GameVarName) &&
-                        GameState.CurrentGameState.GameVars[gameVarRule.GameVarName].Equals(gameVarRule.ExpectedValue, StringComparison.OrdinalIgnoreCase))
+                    var gameVarRuleValue = GameState.CurrentGameState.GetGameVarValue(gameVarRule.GameVarName);
+                    if (gameVarRuleValue != null &&
+                        gameVarRuleValue.Equals(gameVarRule.ExpectedValue, StringComparison.OrdinalIgnoreCase))
                     {
                         destDetails.Description = destRule.Description;
                         destDetails.Destination = destRule.Destination;

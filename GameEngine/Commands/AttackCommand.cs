@@ -10,7 +10,7 @@ namespace GameEngine.Commands
     {
         void ICommand.Exceute(EngineInternal engine)
         {
-            var playerLoc = GameState.CurrentGameState.CharacterLocations["Player"];
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
 
             if (!engine.GameData.TryGetCharacter("Player", out Character playerCharacter))
             {

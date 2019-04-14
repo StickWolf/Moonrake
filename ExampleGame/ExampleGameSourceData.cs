@@ -33,7 +33,11 @@ namespace ExampleGame
 
             // Default item locations
             AddDefaultLocationItem(Locations.Start, Items.DullBronzeKey, 1);
-            AddDefaultLocationItem(Locations.Start, Items.RedGreenLight, 1);
+            AddDefaultLocationItem(Locations.Start, Items.ColoredLightA, 1);
+            AddDefaultLocationItem(Locations.Start, Items.ColoredLightSwitchA, 1);
+
+            AddDefaultLocationItem(Locations.BanquetElevator, Items.ColoredLightB, 1);
+            AddDefaultLocationItem(Locations.BanquetElevator, Items.ColoredLightSwitchB, 1);
 
             #region Events
 

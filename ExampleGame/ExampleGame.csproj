@@ -48,8 +48,9 @@
     <Compile Include="ExampleGameSourceData.cs" />
     <Compile Include="ExampleCharacters.cs" />
     <Compile Include="ExampleGameVariables.cs" />
+    <Compile Include="Items\ColoredLightSwitch.cs" />
     <Compile Include="Items\CrystalDiviner.cs" />
-    <Compile Include="Items\ItemRedGreenLight.cs" />
+    <Compile Include="Items\ColoredLight.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

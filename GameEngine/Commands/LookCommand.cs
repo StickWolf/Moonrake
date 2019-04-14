@@ -8,7 +8,7 @@ namespace GameEngine.Commands
         public void Exceute(EngineInternal engine)
         {
             // Figure out the location name of where the player is at
-            var playerLocationName = GameState.CurrentGameState.CharacterLocations["Player"];
+            var playerLocationName = GameState.CurrentGameState.GetCharacterLocation("Player");
 
             // Get a referience to that location from the GameData
             engine.GameData.TryGetLocation(playerLocationName, out var location);

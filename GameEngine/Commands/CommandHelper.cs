@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -25,7 +22,8 @@ namespace GameEngine.Commands
                 new GrabCommand(),
                 new DropCommand(),
                 new AttackCommand(),
-                new StatsCommand()
+                new StatsCommand(),
+                new InteractCommand()
             };
         }
 

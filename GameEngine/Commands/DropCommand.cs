@@ -8,46 +8,52 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
             var characterItems = GameState.CurrentGameState.GetCharacterItems("Player");
-            var playersLoc = GameState.CurrentGameState.CharacterLocations["Player"];
-
-            var availableItems = characterItems?.Keys?.ToList();
-
-            // Filter out bound items
-            if (availableItems != null)
+            if (characterItems == null || characterItems.Count == 0)
             {
-                availableItems = availableItems
-                    .Select(i => engine.GameData.GetItem(i))
-                    .Where(i => i != null && !i.IsBound)
-                    .Select(i => i.Name)
-                    .ToList();
+                Console.WriteLine("You have nothing to drop.");
+                return;
             }
 
-            if (availableItems == null || availableItems.Count == 0)
+            var availableItems = characterItems
+                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Where(i => i.Item1 != null && !i.Item1.IsBound) // Filter out bound items because these cannot be dropped
+                .Select(i => new KeyValuePair<string, string>(
+                                 i.Item1.TrackingName,
+                                 i.Item1.GetDescription(i.Item2, engine.GameData, GameState.CurrentGameState).UppercaseFirstChar()
+                                 ))
+                .ToDictionary(i => i.Key, i => i.Value);
+
+            if (!availableItems.Any())
             {
                 Console.WriteLine("You have nothing that can be dropped.");
                 return;
             }
 
-            availableItems.Add("Cancel");
+            availableItems.Add("CancelChoice", "Cancel");
+
             var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
             
-            if (itemToDrop == "Cancel")
+            if (itemToDrop == "CancelChoice")
             {
                 Console.WriteLine("Canceled Drop");
                 return;
             }
 
-            var itemAmount = characterItems[itemToDrop];
-            Console.WriteLine("How many do you want to drop?");
-            int itemAmountToDrop = int.Parse(Console.ReadLine());
-            if (itemAmountToDrop < 0)
+            var itemAmountToDrop = characterItems[itemToDrop];
+            if (itemAmountToDrop > 1)
             {
-                return;
-            }
-            if(itemAmountToDrop > itemAmount)
-            {
-                itemAmountToDrop = itemAmount;
+                Console.WriteLine("How many do you want to drop?");
+                itemAmountToDrop = int.Parse(Console.ReadLine());
+                if (itemAmountToDrop <= 0)
+                {
+                    return;
+                }
+                if (itemAmountToDrop > characterItems[itemToDrop])
+                {
+                    itemAmountToDrop = characterItems[itemToDrop];
+                }
             }
 
             // Remove it from the player's inventory

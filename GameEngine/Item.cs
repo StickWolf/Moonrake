@@ -3,9 +3,14 @@
     public class Item
     {
         /// <summary>
-        /// Name of the item
+        /// Name used to track the item in gamestate, this value is not displayed
         /// </summary>
-        public string Name { get; private set; }
+        public string TrackingName { get; private set; }
+
+        /// <summary>
+        /// Name that is displayed in the game
+        /// </summary>
+        public string DisplayName { get; private set; }
 
         /// <summary>
         /// Tells if the item is unique (there can be only 1), or not, in which case there could be many.
@@ -18,9 +23,15 @@
         /// </summary>
         public bool IsBound { get; set; }
 
-        public Item(string name)
+        /// <summary>
+        /// Indicates if an item can be interacted with.
+        /// </summary>
+        public bool IsInteractable { get; set;  }
+
+        public Item(string trackingName, string displayName)
         {
-            Name = name;
+            TrackingName = trackingName;
+            DisplayName = displayName;
         }
 
         /// <summary>
@@ -28,15 +39,21 @@
         /// </summary>
         /// <param name="count">The number of items that are present</param>
         /// <param name="gameData">The gamedata for the game</param>
+        /// <param name="currentGameState">The current game state</param>
         /// <returns>A description</returns>
-        public virtual string GetDescription(int count, GameSourceData gameData, GameState currentGameState)
+        public virtual string GetDescription(int count, GameSourceData gameData, GameState gameState)
         {
             if (count == 1)
             {
-                return $"a {Name}";
+                return $"a {DisplayName}";
             }
 
-            return $"{count} {Name}s";
+            return $"{count} {DisplayName}s";
+        }
+
+        public virtual void Interact(GameSourceData gameData, GameState gameState)
+        {
+            Console.WriteLine("You find nothing special.");
         }
     }
 }

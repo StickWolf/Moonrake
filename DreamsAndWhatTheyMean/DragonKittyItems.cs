@@ -1,9 +1,4 @@
 ﻿using GameEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean
 {
@@ -21,15 +16,15 @@ namespace DreamsAndWhatTheyMean
 
         public DragonKittyItems(TheTaleOfTheDragonKittySourceData gameData)
         {
-            Money = gameData.AddItem(new Item("Dollar") { IsUnique = false });
+            Money = gameData.AddItem(new Item("Dollar", "Dollar"));
 
-            Paper = gameData.AddItem(new Item("Paper") { IsUnique = false });
+            Paper = gameData.AddItem(new Item("Paper", "Paper"));
 
-            BronzeChunk = gameData.AddItem(new Item("Bronze Chunk") { IsUnique = false });
+            BronzeChunk = gameData.AddItem(new Item("BronzeChunk", "Bronze Chunk"));
 
-            BronzeBar = gameData.AddItem(new Item("Bronze Bar") { IsUnique = false });
+            BronzeBar = gameData.AddItem(new Item("BronzeBar", "Bronze Bar"));
 
-            PlasticChunk = gameData.AddItem(new Item("Leftover Plastic Part") { IsUnique = false });
+            PlasticChunk = gameData.AddItem(new Item("LeftoverPlasticPart", "Leftover Plastic Part"));
         }
     }
 }

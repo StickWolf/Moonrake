@@ -1,9 +1,4 @@
 ﻿using GameEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moonrake
 {
@@ -19,14 +14,13 @@ namespace Moonrake
 
         public string VanillaIceCream { get; private set; }
 
-
         public MoonRakeItems(MoonrakeGameData gameData)
         {
-            WaterEye = gameData.AddItem(new Item("Water Eye") { IsUnique = true });
-            Money = gameData.AddItem(new Item("Money") { IsUnique = false });
-            ChocolateIceCream = gameData.AddItem(new Item("Chocolate Ice Cream") { IsUnique = false });
-            StrawberryIceCream = gameData.AddItem(new Item("Strawberry Ice Cream") { IsUnique = false });
-            VanillaIceCream = gameData.AddItem(new Item("Vanilla Ice Cream") { IsUnique = false });
+            WaterEye = gameData.AddItem(new Item("WaterEye","Water Eye") { IsUnique = true });
+            Money = gameData.AddItem(new Item("Money","Money"));
+            ChocolateIceCream = gameData.AddItem(new Item("ChocolateIceCream","Chocolate Ice Cream"));
+            StrawberryIceCream = gameData.AddItem(new Item("StrawberryIceCream","Strawberry Ice Cream"));
+            VanillaIceCream = gameData.AddItem(new Item("VanillaIceCream","Vanilla Ice Cream"));
         }
     }
 }

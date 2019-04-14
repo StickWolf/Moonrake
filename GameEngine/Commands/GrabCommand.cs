@@ -8,31 +8,34 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            var playersLoc = GameState.CurrentGameState.CharacterLocations["Player"];
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
             var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc);
-
-            var availableItems = locationItems?.Keys?.ToList();
-
-            // Filter out bound items
-            if (availableItems != null)
-            {
-                availableItems = availableItems
-                    .Select(i => engine.GameData.GetItem(i))
-                    .Where(i => i != null && !i.IsBound)
-                    .Select(i => i.Name)
-                    .ToList();
-            }
-
-            if (availableItems == null || availableItems.Count == 0)
+            if (locationItems == null || locationItems.Count == 0)
             {
                 Console.WriteLine("There is nothing to grab.");
                 return;
             }
 
-            availableItems.Add("Cancel");
+            var availableItems = locationItems
+                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Where(i => i.Item1 != null && !i.Item1.IsBound) // Filter out bound items because these cannot be picked up
+                .Select(i => new KeyValuePair<string, string>(
+                                 i.Item1.TrackingName,
+                                 i.Item1.GetDescription(i.Item2, engine.GameData, GameState.CurrentGameState).UppercaseFirstChar()
+                                 ))
+                .ToDictionary(i => i.Key, i => i.Value);
+
+            if (!availableItems.Any())
+            {
+                Console.WriteLine("There is nothing that can be grabed.");
+                return;
+            }
+
+            availableItems.Add("CancelChoice", "Cancel");
+
             var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
 
-            if(itemToPickUp == "Cancel")
+            if(itemToPickUp == "CancelChoice")
             {
                 Console.WriteLine("Canceled Grab");
                 return;
