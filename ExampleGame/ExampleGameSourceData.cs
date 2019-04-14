@@ -43,11 +43,6 @@ namespace ExampleGame
 
             #region Events
 
-            // TODO: From the banquet hall the user will see a locked door. (the one leading into the warped hall)
-            // TODO: The player can use the key (itemDullBronzeKey) on the door with the use command. Other keys should not work to open the door.
-            // TODO: This should trigger an event that sets gvBanquetSecretHallOpen to true if it is false and false if it is true.
-            // TODO: The event should also describe the door opening or closing.
-
             // TODO: From the cemetary theatre you'll need to set the numbers on a combination lock to 1234 through a command.
             // TODO: The command that lets the user change the combination is yet to be defined.
             // TODO: When a new game starts the combination should be initially set to 8734.
