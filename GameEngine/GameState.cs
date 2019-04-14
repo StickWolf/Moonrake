@@ -136,7 +136,7 @@ namespace GameEngine
             }
         }
 
-        public bool TryAddCharacterItemCount(string characterName, string itemTrackingName, int count, GameSourceData gameData) // mcbtodo: make sure all refs using tracking item
+        public bool TryAddCharacterItemCount(string characterName, string itemTrackingName, int count, GameSourceData gameData)
         {
             // If the item we are trying to get does not even exist, we will stop the process of this method
             if (gameData.TryGetItem(itemTrackingName, out Item item) == false)
@@ -225,7 +225,7 @@ namespace GameEngine
             return true;
         }
 
-        public bool TryAddLocationItemCount(string locationName, string itemTrackingName, int count, GameSourceData gameData) //mcbtodo: make sure all refs use tracking item
+        public bool TryAddLocationItemCount(string locationName, string itemTrackingName, int count, GameSourceData gameData)
         {
             if (gameData.TryGetItem(itemTrackingName, out Item item) == false)
             {

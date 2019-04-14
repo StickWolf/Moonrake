@@ -11,15 +11,17 @@ namespace ExampleGame
         public string ColoredLightB { get; private set; }
         public string ColoredLightSwitchA { get; private set; }
         public string ColoredLightSwitchB { get; private set; }
+        public string BanquetToSecretWarpedHallKeyhole { get; private set; }
 
         public ExampleItems(ExampleGameSourceData gameData)
         {
             CrystalDiviner = gameData.AddItem(new CrystalDiviner());
-            DullBronzeKey = gameData.AddItem(new Item("DullBronzeKey", "Dull Bronze Key") { IsUnique = true });
+            DullBronzeKey = gameData.AddItem(new Item("DullBronzeKey", "Dull Bronze Key") { IsUnique = true, IsInteractable = true });
             ColoredLightA = gameData.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightAColor));
             ColoredLightB = gameData.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightBColor));
             ColoredLightSwitchA = gameData.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightAColor));
             ColoredLightSwitchB = gameData.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightBColor));
+            BanquetToSecretWarpedHallKeyhole = gameData.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
         }
     }
 }

@@ -69,11 +69,11 @@ namespace ExampleGame
 
             // Banquet Hall <--> Warped Hall
             gameData.AddPortal(
-                new PortalOpenGameVarRule(BanquetHall, SecretWarpedHall, "Through the now open passageway you see", gameData.GameVariables.BanquetSecretHallOpen, "true"),
-                new PortalAlwaysClosedRule(BanquetHall, SecretWarpedHall, "You see a large closed stone door with a keyhole. The door is locked."),
+                new PortalOpenGameVarRule(BanquetHall, SecretWarpedHall, "Through the now open passageway you see", gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, "true"),
+                new PortalAlwaysClosedRule(BanquetHall, null, "You see a large closed stone door with a keyhole. The door is locked."),
 
-                new PortalOpenGameVarRule(SecretWarpedHall, BanquetHall, "Through the now open passageway you see", gameData.GameVariables.BanquetSecretHallOpen, "true"),
-                new PortalAlwaysClosedRule(SecretWarpedHall, BanquetHall, "You see the end of the hallway. There is currently no way through in this direction.")
+                new PortalOpenGameVarRule(SecretWarpedHall, BanquetHall, "Through the now open passageway you see", gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, "true"),
+                new PortalAlwaysClosedRule(SecretWarpedHall, null, "You see the end of the hallway. There is currently no way through in this direction.")
                 );
         }
     }

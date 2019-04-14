@@ -55,16 +55,25 @@ namespace GameEngine.Commands
                     currentItemIndex++;
                     if (engine.GameData.TryGetItem(locationItem.Key, out Item item))
                     {
+                        // Skip items that are not visible
+                        if (!item.IsVisible)
+                        {
+                            continue;
+                        }
+
                         if (itemDescriptions != string.Empty)
                         {
                             itemDescriptions += (currentItemIndex == locationItems.Count) ? " and " : ", ";
                         }
-                        itemDescriptions += item.GetDescription(locationItem.Value, engine.GameData, GameState.CurrentGameState);
+                        itemDescriptions += item.GetDescription(locationItem.Value, GameState.CurrentGameState);
                     }
                 }
 
-                Console.WriteLine();
-                Console.WriteLine($"You see {itemDescriptions}.");
+                if (!string.IsNullOrWhiteSpace(itemDescriptions))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"You see {itemDescriptions}.");
+                }
             }
 
             var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLocationName);

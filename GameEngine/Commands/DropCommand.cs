@@ -18,10 +18,10 @@ namespace GameEngine.Commands
 
             var availableItems = characterItems
                 .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
-                .Where(i => i.Item1 != null && !i.Item1.IsBound) // Filter out bound items because these cannot be dropped
+                .Where(i => i.Item1 != null && !i.Item1.IsBound && i.Item1.IsVisible) // Filter out bound and invisible items because these cannot be dropped
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
-                                 i.Item1.GetDescription(i.Item2, engine.GameData, GameState.CurrentGameState).UppercaseFirstChar()
+                                 i.Item1.GetDescription(i.Item2, GameState.CurrentGameState).UppercaseFirstChar()
                                  ))
                 .ToDictionary(i => i.Key, i => i.Value);
 

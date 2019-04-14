@@ -21,7 +21,13 @@ namespace GameEngine.Commands
             {
                 if (engine.GameData.TryGetItem(characterItem.Key, out Item item))
                 {
-                    var description = item.GetDescription(characterItem.Value, engine.GameData, GameState.CurrentGameState).UppercaseFirstChar();
+                    // Don't show invisible items
+                    if (!item.IsVisible)
+                    {
+                        continue;
+                    }
+
+                    var description = item.GetDescription(characterItem.Value, GameState.CurrentGameState).UppercaseFirstChar();
                     Console.WriteLine(description);
                 }
             }
