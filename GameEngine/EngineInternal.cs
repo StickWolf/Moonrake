@@ -84,39 +84,39 @@ namespace GameEngine
             // Transfer all defaults from the game data to game state
             GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
 
-            // Set the default locations for each character ( has to be here, won't work if put with others )
-            foreach (var playerName in GameData.DefaultCharacterLocations.Keys)
+            // Set the default locations for each character
+            foreach (var characterName in GameData.DefaultCharacterLocations.Keys)
             {
-                string locationName = GameData.DefaultCharacterLocations[playerName];
-                GameState.CurrentGameState.CharacterLocations.Add(playerName, locationName);
+                string locationName = GameData.DefaultCharacterLocations[characterName];
+                GameState.CurrentGameState.SetCharacterLocation(characterName, locationName);
             }
 
             // Add game vars that represent the inital game state
             foreach (var gv in GameData.DefaultGameVars)
             {
-                GameState.CurrentGameState.GameVars.Add(gv.Key, gv.Value);
+                GameState.CurrentGameState.SetGameVarValue(gv.Key, gv.Value);
             }
 
             // Set the default locations of where trade posts exist at
             foreach (var tp in GameData.DefaultTradePostLocations)
             {
-                GameState.CurrentGameState.CurrentTradePostLocations.Add(tp.Key, tp.Value);
+                GameState.CurrentGameState.SetTradePostLocation(tp.Key, tp.Value);
             }
 
             // Set the default items that all characters have
             foreach (var characterName in GameData.DefaultCharacterItems.Keys)
             {
-                foreach (var itemName in GameData.DefaultCharacterItems[characterName].Keys)
+                foreach (var itemTrackingName in GameData.DefaultCharacterItems[characterName].Keys)
                 {
-                    GameState.CurrentGameState.TryAddCharacterItemCount(characterName, itemName, GameData.DefaultCharacterItems[characterName][itemName], GameData);
+                    GameState.CurrentGameState.TryAddCharacterItemCount(characterName, itemTrackingName, GameData.DefaultCharacterItems[characterName][itemTrackingName], GameData);
                 }
             }
 
             foreach (var locationName in GameData.DefaultLocationItems.Keys)
             {
-                foreach (var itemname in GameData.DefaultLocationItems[locationName].Keys)
+                foreach (var itemTrackingName in GameData.DefaultLocationItems[locationName].Keys)
                 {
-                    GameState.CurrentGameState.TryAddLocationItemCount(locationName, itemname, GameData.DefaultLocationItems[locationName][itemname], GameData);
+                    GameState.CurrentGameState.TryAddLocationItemCount(locationName, itemTrackingName, GameData.DefaultLocationItems[locationName][itemTrackingName], GameData);
                 }
             }
 

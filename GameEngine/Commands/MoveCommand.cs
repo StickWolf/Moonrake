@@ -7,7 +7,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine)
         {
-            var playerLoc = GameState.CurrentGameState.CharacterLocations["Player"];
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
             var originPortalsDestinations = engine.GameData.Portals
                 .Where(p => p.HasOriginLocation(playerLoc))
                 .Select(p => p.GetDestination(playerLoc))
@@ -23,7 +23,7 @@ namespace GameEngine.Commands
                 Console.WriteLine("Canceled Move");
                 return;
             }
-            GameState.CurrentGameState.CharacterLocations["Player"] = placeToMoveTo;
+            GameState.CurrentGameState.SetCharacterLocation("Player", placeToMoveTo);
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();

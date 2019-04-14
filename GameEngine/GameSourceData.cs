@@ -1,7 +1,7 @@
 ﻿using GameEngine.Locations;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 
 namespace GameEngine
 {
@@ -22,10 +22,13 @@ namespace GameEngine
 
         public Dictionary<string, string> DefaultGameVars { get; private set; } = new Dictionary<string, string>();
 
+        // Items[{ItemTrackingName}] = {Item}
         private Dictionary<string, Item> Items { get; set; } = new Dictionary<string, Item>();
 
+        // DefaultCharacterItems[{CharacterName}][{ItemTrackingName}] = {Count}
         public Dictionary<string, Dictionary<string, int>> DefaultCharacterItems = new Dictionary<string, Dictionary<string, int>>();
 
+        // DefaultCharacterItems[{LocationName}][{ItemTrackingName}] = {Count}
         public Dictionary<string, Dictionary<string, int>> DefaultLocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
 
         private Dictionary<string, TradeSet> TradeSets { get; set; } = new Dictionary<string, TradeSet>();
@@ -56,6 +59,8 @@ namespace GameEngine
         /// <returns>The location name</returns>
         public string AddLocation(Location location)
         {
+            Debug.Assert(!Locations.ContainsKey(location.Name), $"A location with the same name '{location.Name}' is being added twice to the game data. Check the code to make sure this doesn't happen.");
+
             Locations[location.Name] = location;
             return location.Name;
         }
@@ -94,6 +99,8 @@ namespace GameEngine
         /// <returns>The game variable name</returns>
         public string AddDefaultGameVar(string gameVarName, string gameVarValue)
         {
+            Debug.Assert(!DefaultGameVars.ContainsKey(gameVarName), $"A default game var with the same name '{gameVarName}' is being added twice to the game data. Check the code to make sure this doesn't happen.");
+
             DefaultGameVars[gameVarName] = gameVarValue;
             return gameVarName;
         }
@@ -105,21 +112,23 @@ namespace GameEngine
         /// <returns>the name of the item</returns>
         public string AddItem(Item item)
         {
-            Items[item.Name] = item;
-            return item.Name;
+            Debug.Assert(!Items.ContainsKey(item.TrackingName), $"An item with the same tracking name '{item.TrackingName}' is being added twice to the game data. Check the code to make sure this doesn't happen.");
+
+            Items[item.TrackingName] = item;
+            return item.TrackingName;
         }
 
         /// <summary>
         /// Gets an item if it exists
         /// </summary>
-        /// <param name="itemName">The item name to try and get</param>
+        /// <param name="itemTrackingName">The tracking item name to try and get</param>
         /// <param name="item">The item if it exists</param>
         /// <returns>True/False depending on if the item exists</returns>
-        public bool TryGetItem(string itemName, out Item item)
+        public bool TryGetItem(string itemTrackingName, out Item item)
         {
-            if (Items.ContainsKey(itemName))
+            if (Items.ContainsKey(itemTrackingName))
             {
-                item = Items[itemName];
+                item = Items[itemTrackingName];
                 return true;
             }
             item = null;
@@ -129,40 +138,45 @@ namespace GameEngine
         /// <summary>
         /// Gets an item if it exists
         /// </summary>
-        /// <param name="itemName">The name of the item to get</param>
+        /// <param name="itemTrackingName">The tracking name of the item to get</param>
         /// <returns>The item or null if it doesn't exist</returns>
-        public Item GetItem(string itemName)
+        public Item GetItem(string itemTrackingName)
         {
-            return Items.ContainsKey(itemName) ? Items[itemName] : null;
+            return Items.ContainsKey(itemTrackingName) ? Items[itemTrackingName] : null;
         }
 
         /// <summary>
         /// Adds an item that a character will be holding when the game starts
         /// </summary>
         /// <param name="characterName">The character to add the item to</param>
-        /// <param name="itemName">The name of the item</param>
+        /// <param name="itemTrackingName">The tracking name of the item</param>
         /// <param name="itemCount">How many of the item to add</param>
-        public void AddDefaultCharacterItem(string characterName, string itemName, int itemCount)
+        public void AddDefaultCharacterItem(string characterName, string itemTrackingName, int itemCount)
         {
             if (!DefaultCharacterItems.ContainsKey(characterName))
             {
                 DefaultCharacterItems[characterName] = new Dictionary<string, int>();
             }
 
-            DefaultCharacterItems[characterName][itemName] = itemCount;
+            Debug.Assert(!DefaultCharacterItems[characterName].ContainsKey(itemTrackingName), $"Default character item '{itemTrackingName}' for character '{characterName}' has already been set. Check the code and make sure this item is only set 1 time for this character.");
+            DefaultCharacterItems[characterName][itemTrackingName] = itemCount;
         }
 
-        public void AddDefaultLocationItem(string locationName, string itemName, int itemCount)
+        public void AddDefaultLocationItem(string locationName, string itemTrackingName, int itemCount)
         {
             if (!DefaultLocationItems.ContainsKey(locationName))
             {
                 DefaultLocationItems[locationName] = new Dictionary<string, int>();
             }
-            DefaultLocationItems[locationName][itemName] = itemCount;
+
+            Debug.Assert(!DefaultLocationItems[locationName].ContainsKey(itemTrackingName), $"Default location item '{itemTrackingName}' for location '{locationName}' has already been set. Check the code and make sure this item is only set 1 time for this location.");
+            DefaultLocationItems[locationName][itemTrackingName] = itemCount;
         }
 
         public void AddDefaultCharacterLocation(string characterName, string locationName)
         {
+            Debug.Assert(!DefaultCharacterLocations.ContainsKey(characterName), $"A default character location has already been added for character '{characterName}'. Check the code to make sure it only gets added 1 time.");
+
             DefaultCharacterLocations.Add(characterName, locationName);
         }
 
@@ -173,6 +187,8 @@ namespace GameEngine
         /// <returns>The name of the character</returns>
         public string AddCharacter(Character character)
         {
+            Debug.Assert(!Characters.ContainsKey(character.Name), $"A character with the name '{character.Name}' has already been added. Check the code to make sure it only gets added 1 time.");
+
             Characters[character.Name] = character;
             return character.Name;
         }
@@ -202,6 +218,8 @@ namespace GameEngine
         /// <returns>The name of the trade set</returns>
         public string AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)
         {
+            Debug.Assert(!TradeSets.ContainsKey(tradesetName), $"A tradeset with the name '{tradesetName}' has already been added. Check the code to make sure it only gets added 1 time.");
+
             var tradeSet = new TradeSet(tradesetName, itemRecipes);
             TradeSets[tradeSet.Name] = tradeSet;
             return tradeSet.Name;
@@ -232,6 +250,8 @@ namespace GameEngine
         /// <returns>The name of the trade set</returns>
         public string AddTradePost(string tradePostName, params string[] tradeSetNames)
         {
+            Debug.Assert(!TradePosts.ContainsKey(tradePostName), $"A tradepost with the name '{tradePostName}' has already been added. Check the code to make sure it only gets added 1 time.");
+
             var tradePost = new TradePost(tradePostName, tradeSetNames);
             TradePosts[tradePost.Name] = tradePost;
             return tradePost.Name;

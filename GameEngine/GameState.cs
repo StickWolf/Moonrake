@@ -17,28 +17,28 @@ namespace GameEngine
         [JsonProperty]
         public string PlayerName { get; set; }
 
-        // This dictionary is for storing WHO has an item, WHAT the item is,
-        // and how MUCH the player has.
+        // CharacterItems[{CharacterName}][{ItemTrackingName}] = {ItemCount}
         [JsonProperty]
         private Dictionary<string, Dictionary<string, int>> CharactersItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
 
-        //This is for keeping track of how much items a room has.
+        // LocationItems[{LocationName}][{ItemTrackingName}] = {ItemCount}
         [JsonProperty]
-        public Dictionary<string, Dictionary<string, int>> LocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+        private Dictionary<string, Dictionary<string, int>> LocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
 
         // CharacterLocations[{CharacterName}] = {LocationName}
         [JsonProperty]
-        public Dictionary<string, string> CharacterLocations { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> CharacterLocations { get; set; } = new Dictionary<string, string>();
 
         // GameVars[{GameVarName}] = {GameVarValue}
         [JsonProperty]
-        public Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
 
         // CurrentTradePostLocations[{TradePostName}] = {LocationName}
         [JsonProperty]
-        public Dictionary<string, string> CurrentTradePostLocations { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> CurrentTradePostLocations { get; set; } = new Dictionary<string, string>();
 
-        // This data does NOT go into save files
+        // Everything below (that does not have a [JsonProperty]) is excluded from save files
+
         public static GameState CurrentGameState { get; private set; }
         private static string SaveFileName { get; set; } = "GameSaves.json";
 
@@ -105,14 +105,14 @@ namespace GameEngine
             CurrentGameState = new GameState();
         }
 
-        public void RemoveItemEveryWhere(string itemName)
+        public void RemoveItemEveryWhere(string itemTrackingName)
         {
             // Remove the item from all characters
             foreach (var characterName in CharactersItems.Keys)
             {
-                if (CharactersItems[characterName].ContainsKey(itemName))
+                if (CharactersItems[characterName].ContainsKey(itemTrackingName))
                 {
-                    CharactersItems[characterName].Remove(itemName);
+                    CharactersItems[characterName].Remove(itemTrackingName);
                 }
             }
             var zeroCharKeys = CharactersItems.Where(kvp => !kvp.Value.Any()).Select(kvp => kvp.Key).ToList();
@@ -124,9 +124,9 @@ namespace GameEngine
             // Remove the item from all locations
             foreach (var locationName in LocationItems.Keys)
             {
-                if(LocationItems[locationName].ContainsKey(itemName))
+                if(LocationItems[locationName].ContainsKey(itemTrackingName))
                 {
-                    LocationItems[locationName].Remove(itemName);
+                    LocationItems[locationName].Remove(itemTrackingName);
                 }
             }
             var zeroLocationKeys = LocationItems.Where(kvp => !kvp.Value.Any()).Select(kvp => kvp.Key).ToList();
@@ -136,10 +136,10 @@ namespace GameEngine
             }
         }
 
-        public bool TryAddCharacterItemCount(string characterName, string itemName, int count, GameSourceData gameData)
+        public bool TryAddCharacterItemCount(string characterName, string itemTrackingName, int count, GameSourceData gameData) // mcbtodo: make sure all refs using tracking item
         {
             // If the item we are trying to get does not even exist, we will stop the process of this method
-            if (gameData.TryGetItem(itemName, out Item item) == false)
+            if (gameData.TryGetItem(itemTrackingName, out Item item) == false)
             {
                 return false;
             }
@@ -149,31 +149,31 @@ namespace GameEngine
                 return true;
             }
 
-            void setCharacterItemCount(string sCharacterName, string sItemName, int sCount)
+            void setCharacterItemCount(string sCharacterName, string sItemTrackingName, int sCount)
             {
                 if (!CharactersItems.ContainsKey(sCharacterName))
                 {
                     CharactersItems.Add(sCharacterName, new Dictionary<string, int>());
                 }
-                if (!CharactersItems[sCharacterName].ContainsKey(sItemName))
+                if (!CharactersItems[sCharacterName].ContainsKey(sItemTrackingName))
                 {
-                    CharactersItems[sCharacterName].Add(sItemName, sCount);
+                    CharactersItems[sCharacterName].Add(sItemTrackingName, sCount);
                 }
                 else
                 {
-                    CharactersItems[sCharacterName][sItemName] = sCount;
+                    CharactersItems[sCharacterName][sItemTrackingName] = sCount;
                 }
             }
 
-            void removeCharacterItem(string sCharacterName, string sItemName)
+            void removeCharacterItem(string sCharacterName, string sItemTrackingName)
             {
                 if (!CharactersItems.ContainsKey(sCharacterName))
                 {
                     return;
                 }
-                if (CharactersItems[sCharacterName].ContainsKey(sItemName))
+                if (CharactersItems[sCharacterName].ContainsKey(sItemTrackingName))
                 {
-                    CharactersItems[sCharacterName].Remove(sItemName);
+                    CharactersItems[sCharacterName].Remove(sItemTrackingName);
                     if (!CharactersItems[sCharacterName].Any())
                     {
                         CharactersItems.Remove(sCharacterName);
@@ -184,9 +184,9 @@ namespace GameEngine
             // The goal is to only keep records in the dictionary for counts greater than 0
             // Even if we do temporarily add keys here, they should be cleaned up before returning if needed
             var characterItemCount = 0;
-            if (CharactersItems.ContainsKey(characterName) && CharactersItems[characterName].ContainsKey(itemName))
+            if (CharactersItems.ContainsKey(characterName) && CharactersItems[characterName].ContainsKey(itemTrackingName))
             {
-                characterItemCount = CharactersItems[characterName][itemName];
+                characterItemCount = CharactersItems[characterName][itemTrackingName];
             }
 
             // Non-unique items can be added and removed from characters without worrying about the count
@@ -195,12 +195,12 @@ namespace GameEngine
                 characterItemCount += count;
                 if (characterItemCount > 0)
                 {
-                    setCharacterItemCount(characterName, itemName, characterItemCount);
+                    setCharacterItemCount(characterName, itemTrackingName, characterItemCount);
                     return true;
                 }
                 else if (characterItemCount == 0)
                 {
-                    removeCharacterItem(characterName, itemName);
+                    removeCharacterItem(characterName, itemTrackingName);
                     return true;
                 }
                 return false;
@@ -212,7 +212,7 @@ namespace GameEngine
             {
                 if (characterItemCount > 0)
                 {
-                    removeCharacterItem(characterName, itemName);
+                    removeCharacterItem(characterName, itemTrackingName);
                     return true;
                 }
                 return false;
@@ -220,14 +220,14 @@ namespace GameEngine
 
             // The only other option is that this is a unique item being added to the character
             // First remove it from everywhere else, then add it here.
-            RemoveItemEveryWhere(itemName);
-            setCharacterItemCount(characterName, itemName, 1);
+            RemoveItemEveryWhere(itemTrackingName);
+            setCharacterItemCount(characterName, itemTrackingName, 1);
             return true;
         }
 
-        public bool TryAddLocationItemCount(string locationName, string itemName, int count, GameSourceData gameData)
+        public bool TryAddLocationItemCount(string locationName, string itemTrackingName, int count, GameSourceData gameData) //mcbtodo: make sure all refs use tracking item
         {
-            if (gameData.TryGetItem(itemName, out Item item) == false)
+            if (gameData.TryGetItem(itemTrackingName, out Item item) == false)
             {
                 return false;
             }
@@ -237,31 +237,31 @@ namespace GameEngine
                 return true;
             }
 
-            void setLocationItemCount(string sLocationName, string sItemName, int sCount)
+            void setLocationItemCount(string sLocationName, string sItemTrackingName, int sCount)
             {
                 if (!LocationItems.ContainsKey(sLocationName))
                 {
                     LocationItems.Add(sLocationName, new Dictionary<string, int>());
                 }
-                if (!LocationItems[sLocationName].ContainsKey(sItemName))
+                if (!LocationItems[sLocationName].ContainsKey(sItemTrackingName))
                 {
-                    LocationItems[sLocationName].Add(sItemName, sCount);
+                    LocationItems[sLocationName].Add(sItemTrackingName, sCount);
                 }
                 else
                 {
-                    LocationItems[sLocationName][sItemName] = sCount;
+                    LocationItems[sLocationName][sItemTrackingName] = sCount;
                 }
             }
 
-            void removeLocationItem(string sLocationName, string sItemName)
+            void removeLocationItem(string sLocationName, string sItemTrackingName)
             {
                 if (!LocationItems.ContainsKey(sLocationName))
                 {
                     return;
                 }
-                if (LocationItems[sLocationName].ContainsKey(sItemName))
+                if (LocationItems[sLocationName].ContainsKey(sItemTrackingName))
                 {
-                    LocationItems[sLocationName].Remove(sItemName);
+                    LocationItems[sLocationName].Remove(sItemTrackingName);
                     if (!LocationItems[sLocationName].Any())
                     {
                         LocationItems.Remove(sLocationName);
@@ -272,9 +272,9 @@ namespace GameEngine
             // The goal is to only keep records in the dictionary for counts greater than 0
             // Even if we do temporarily add keys here, they should be cleaned up before returning if needed
             var locationItemCount = 0;
-            if (LocationItems.ContainsKey(locationName) && LocationItems[locationName].ContainsKey(itemName))
+            if (LocationItems.ContainsKey(locationName) && LocationItems[locationName].ContainsKey(itemTrackingName))
             {
-                locationItemCount = LocationItems[locationName][itemName];
+                locationItemCount = LocationItems[locationName][itemTrackingName];
             }
 
             // Non-unique items can be added and removed from locations without worrying about the count
@@ -283,12 +283,12 @@ namespace GameEngine
                 locationItemCount += count;
                 if (locationItemCount > 0)
                 {
-                    setLocationItemCount(locationName, itemName, locationItemCount);
+                    setLocationItemCount(locationName, itemTrackingName, locationItemCount);
                     return true;
                 }
                 else if (locationItemCount == 0)
                 {
-                    removeLocationItem(locationName, itemName);
+                    removeLocationItem(locationName, itemTrackingName);
                     return true;
                 }
                 return false;
@@ -301,7 +301,7 @@ namespace GameEngine
                 // Double check to make sure there really is an item here
                 if (locationItemCount > 0)
                 {
-                    removeLocationItem(locationName, itemName);
+                    removeLocationItem(locationName, itemTrackingName);
                     return true;
                 }
                 return false;
@@ -309,8 +309,8 @@ namespace GameEngine
 
             // The only other option is that this is a unique item being added to a location
             // First remove it from everywhere else, then add it here.
-            RemoveItemEveryWhere(itemName);
-            setLocationItemCount(locationName, itemName, 1);
+            RemoveItemEveryWhere(itemTrackingName);
+            setLocationItemCount(locationName, itemTrackingName, 1);
             return true;
         }
 
@@ -346,6 +346,64 @@ namespace GameEngine
                 .Except(new List<string>() { "Player" })
                 .ToList();
             return npcsInLocation;
+        }
+
+        /// <summary>
+        /// Gets the location of the specified character
+        /// </summary>
+        /// <param name="characterName">The character name</param>
+        /// <returns>Character location or null</returns>
+        public string GetCharacterLocation(string characterName)
+        {
+            if (CharacterLocations.ContainsKey(characterName))
+            {
+                return CharacterLocations[characterName];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets the location of the specified character
+        /// </summary>
+        /// <param name="characterName">The Name of the character</param>
+        /// <param name="locationName">The location to place the character at</param>
+        public void SetCharacterLocation(string characterName, string locationName)
+        {
+            CharacterLocations[characterName] = locationName;
+        }
+
+        /// <summary>
+        /// Gets a game variable by its full name
+        /// </summary>
+        /// <param name="gameVariableName">The name of the game variable to get</param>
+        /// <returns>The value or null if it's not set.</returns>
+        public string GetGameVarValue(string gameVariableName)
+        {
+            if (GameVars.ContainsKey(gameVariableName))
+            {
+                return GameVars[gameVariableName];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets the game variable to the specified value
+        /// </summary>
+        /// <param name="gameVariableName">The game variable to set</param>
+        /// <param name="value">The value to set the game variable to</param>
+        public void SetGameVarValue(string gameVariableName, string value)
+        {
+            GameVars[gameVariableName] = value;
+        }
+
+        /// <summary>
+        /// Adds/sets a tradepost to be at the specified location
+        /// </summary>
+        /// <param name="tradePostName">The name of the trade post</param>
+        /// <param name="locationName">The location the trade post is at</param>
+        public void SetTradePostLocation(string tradePostName, string locationName)
+        {
+            CurrentTradePostLocations[tradePostName] = locationName;
         }
     }
 }

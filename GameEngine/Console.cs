@@ -6,7 +6,7 @@ namespace GameEngine
     /// <summary>
     /// Specialized console for writing out game text
     /// </summary>
-    internal static class Console
+    public static class Console
     {
         public static void Write(string text)
         {
@@ -46,15 +46,31 @@ namespace GameEngine
         /// <returns>The chosen item</returns>
         public static string Choose(string prompt, List<string> choices)
         {
+            Dictionary<string, string> choicesDictionary = new Dictionary<string, string>();
+            foreach (var choice in choices)
+            {
+                choicesDictionary.Add(choice, choice);
+            }
+            return Choose(prompt, choicesDictionary);
+        }
+
+        /// <summary>
+        /// Writes out a list of items and lets the user choose 1 of them.
+        /// </summary>
+        /// <param name="choices">All the available choices</param>
+        /// <param name="prompt">The text to display above the choices</param>
+        /// <returns>The chosen key</returns>
+        public static string Choose(string prompt, Dictionary<string, string> choices)
+        {
             WriteLine(prompt);
 
-            Dictionary<int, string> numberedChoices = new Dictionary<int, string>();
+            Dictionary<int, string> numberedKeys = new Dictionary<int, string>();
             int itemIndex = 1;
-            foreach (var item in choices)
+            foreach (var choice in choices)
             {
                 WriteLine();
-                WriteLine($"{itemIndex}. {item}");
-                numberedChoices.Add(itemIndex++, item);
+                WriteLine($"{itemIndex}. {choice.Value}");
+                numberedKeys.Add(itemIndex++, choice.Key);
             }
             WriteLine("-----------------------------------------");
 
@@ -63,7 +79,7 @@ namespace GameEngine
                 Write("> ");
                 if (int.TryParse(ReadLine(), out int userChoiceIndex) && userChoiceIndex >= 1 && userChoiceIndex <= itemIndex)
                 {
-                    return numberedChoices[userChoiceIndex];
+                    return numberedKeys[userChoiceIndex];
                 }
                 WriteLine("Please pick one of the numbers above.");
             }
