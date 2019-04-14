@@ -14,12 +14,12 @@ namespace ExampleGame.Items
             IsInteractable = true;
         }
 
-        public override string GetDescription(int count, GameSourceData gameData, GameState gameState)
+        public override string GetDescription(int count, GameState gameState)
         {
             return $"a light switch";
         }
 
-        public override void Interact(GameSourceData gameData, GameState gameState)
+        public override void Interact(GameState gameState, string otherItemTrackingName)
         {
             string lightColor = gameState.GetGameVarValue(GameVariableColor);
             if (lightColor == null)

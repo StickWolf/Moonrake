@@ -48,6 +48,7 @@
     <Compile Include="ExampleGameSourceData.cs" />
     <Compile Include="ExampleCharacters.cs" />
     <Compile Include="ExampleGameVariables.cs" />
+    <Compile Include="Items\Keyhole.cs" />
     <Compile Include="Items\ColoredLightSwitch.cs" />
     <Compile Include="Items\CrystalDiviner.cs" />
     <Compile Include="Items\ColoredLight.cs" />
@@ -63,6 +64,8 @@
       <Name>GameEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

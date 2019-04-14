@@ -39,9 +39,10 @@ namespace ExampleGame
             AddDefaultLocationItem(Locations.BanquetElevator, Items.ColoredLightB, 1);
             AddDefaultLocationItem(Locations.BanquetElevator, Items.ColoredLightSwitchB, 1);
 
+            AddDefaultLocationItem(Locations.BanquetHall, Items.BanquetToSecretWarpedHallKeyhole, 1);
+
             #region Events
 
-            // TODO: Implement the "use" command before doing this
             // TODO: From the banquet hall the user will see a locked door. (the one leading into the warped hall)
             // TODO: The player can use the key (itemDullBronzeKey) on the door with the use command. Other keys should not work to open the door.
             // TODO: This should trigger an event that sets gvBanquetSecretHallOpen to true if it is false and false if it is true.

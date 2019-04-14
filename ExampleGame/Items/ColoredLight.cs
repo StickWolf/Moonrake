@@ -13,7 +13,7 @@ namespace ExampleGame.Items
             IsBound = true;
         }
 
-        public override string GetDescription(int count, GameSourceData gameData, GameState gameState)
+        public override string GetDescription(int count, GameState gameState)
         {
             string lightColor = gameState.GetGameVarValue(GameVariableColor) ?? "blue";
             return $"a light neatly fastened to the wall, covered in metal mesh that glows bright {lightColor}";

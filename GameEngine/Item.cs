@@ -26,7 +26,13 @@
         /// <summary>
         /// Indicates if an item can be interacted with.
         /// </summary>
-        public bool IsInteractable { get; set;  }
+        public bool IsInteractable { get; set; }
+
+        /// <summary>
+        /// Indicates if the item is visible or not.
+        /// Only visible items can be picked up or seen.
+        /// </summary>
+        public bool IsVisible { get; set; } = true;
 
         public Item(string trackingName, string displayName)
         {
@@ -41,7 +47,7 @@
         /// <param name="gameData">The gamedata for the game</param>
         /// <param name="currentGameState">The current game state</param>
         /// <returns>A description</returns>
-        public virtual string GetDescription(int count, GameSourceData gameData, GameState gameState)
+        public virtual string GetDescription(int count, GameState gameState)
         {
             if (count == 1)
             {
@@ -51,7 +57,14 @@
             return $"{count} {DisplayName}s";
         }
 
-        public virtual void Interact(GameSourceData gameData, GameState gameState)
+        /// <summary>
+        /// Interacts with an item
+        /// </summary>
+        /// <param name="gameState">The current game state</param>
+        /// <param name="otherItemTrackingName">
+        /// If another item is being used on this item, this is the tracking name of the other item
+        /// </param>
+        public virtual void Interact(GameState gameState, string otherItemTrackingName)
         {
             Console.WriteLine("You find nothing special.");
         }
