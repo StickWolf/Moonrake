@@ -12,7 +12,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
         private string LightColor { get; set; }
         private bool IsOn { get; set; }
 
-        public RoomLight(string lightColor, bool isOn, int roomLightNumber) : base($"RoomLight[{roomLightNumber}]", "A Room Light")
+        public RoomLight(string lightColor, bool isOn, int roomLightNumber) : base($"RoomLight[{roomLightNumber}]", "room light")
         {
             LightColor = lightColor;
             IsOn = isOn;
@@ -21,20 +21,20 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsInteractable = true;
         }
 
-        public override string GetDescription(int count, GameSourceData gameData, GameState gameState)
+        public string GetDescription(int count, GameSourceData gameData, GameState gameState)
         {
             if(IsOn)
             {
-                return $"A light that is on";
+                return $"a light that is on";
             }
             else if(!IsOn)
             {
-                return $"A light that is off";
+                return $"a light that is off";
             }
-            return "A strange, flashing light";
+            return "strange, flashing light";
         }
 
-        public override void Interact(GameSourceData gameData, GameState gameState)
+        public void Interact(GameSourceData gameData, GameState gameState)
         {
             if(IsOn)
             {
