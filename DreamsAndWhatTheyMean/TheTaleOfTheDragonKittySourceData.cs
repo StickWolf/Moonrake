@@ -30,11 +30,15 @@ namespace DreamsAndWhatTheyMean
 
             #region Room Items
             AddDefaultLocationItem(Locations.PlayersRoom, Items.Money, 30);
-            AddDefaultLocationItem(Locations.PlayersRoom, Items.Paper, 100);
-            AddDefaultLocationItem(Locations.PlayersBackyard, Items.BronzeChunk, 10);
-            AddDefaultLocationItem(Locations.PlayersBackyard, Items.Money, 1);
-            AddDefaultLocationItem(Locations.BlackSmithShop, Items.BronzeBar, 3);
-            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlasticChunk, 50);
+            AddDefaultLocationItem(Locations.PlayersRoom, Items.Paper, 21);
+            AddDefaultLocationItem(Locations.PlayersBackyard, Items.BronzeChunk, 9);
+            AddDefaultLocationItem(Locations.PlayersBackyard, Items.Money, 2);
+            AddDefaultLocationItem(Locations.BlackSmithShop, Items.BronzeBar, 1);
+            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlasticChunk, 23);
+            AddDefaultLocationItem(Locations.PlayersRoom, Items.PlayersRoomLight, 1);
+            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlayersLivingRoomLight, 1);
+            AddDefaultLocationItem(Locations.ESStreet, Items.BronzeTalisman, 1);
+            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.Apple, 10);
             #endregion
 
             #region Character Locations

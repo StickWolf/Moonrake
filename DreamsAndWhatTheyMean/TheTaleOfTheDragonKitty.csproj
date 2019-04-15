@@ -47,6 +47,9 @@
     <Compile Include="DragonKittyGameVarables.cs" />
     <Compile Include="DragonKittyItems.cs" />
     <Compile Include="DragonKittyLocations.cs" />
+    <Compile Include="DragonKittyStrangeItems\Apple.cs" />
+    <Compile Include="DragonKittyStrangeItems\BronzeTalisman.cs" />
+    <Compile Include="DragonKittyStrangeItems\RoomLight.cs" />
     <Compile Include="TheTaleOfTheDragonKittySourceData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
