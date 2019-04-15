@@ -26,6 +26,7 @@ namespace DreamsAndWhatTheyMean
 
             #region Starter Items
             AddDefaultCharacterItem(Characters.Player, Items.Money, 200);
+            AddDefaultCharacterItem(Characters.Player, Items.PlayersSpareLight, 1);
             #endregion
 
             #region Room Items
@@ -35,6 +36,8 @@ namespace DreamsAndWhatTheyMean
             AddDefaultLocationItem(Locations.PlayersBackyard, Items.Money, 1);
             AddDefaultLocationItem(Locations.BlackSmithShop, Items.BronzeBar, 3);
             AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlasticChunk, 50);
+            AddDefaultLocationItem(Locations.PlayersRoom, Items.PlayersRoomLight, 1);
+            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlayersLivingRoomLight, 1);
             #endregion
 
             #region Character Locations
