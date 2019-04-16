@@ -19,10 +19,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsVisible = true;
         }
 
-        public override void Interact(GameState gameState, string otherItemTrackingName)
-        {
-            Interacting(gameState, otherItemTrackingName, GameData);
-        }
+        public override voi  
 
         public void Interacting(GameState gameState, string otherItemTrackingName, GameSourceData gameData)
         {
