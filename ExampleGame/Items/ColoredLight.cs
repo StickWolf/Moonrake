@@ -16,7 +16,7 @@ namespace ExampleGame.Items
         public override string GetDescription(int count, GameState gameState)
         {
             string lightColor = gameState.GetGameVarValue(GameVariableColor) ?? "blue";
-            return $"a light neatly fastened to the wall, covered in metal mesh that glows bright {lightColor}";
+            return $"a light neatly fastened to the wall that is covered in metal mesh which is glowing {lightColor}";
         }
     }
 }

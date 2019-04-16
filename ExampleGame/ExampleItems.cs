@@ -17,7 +17,7 @@ namespace ExampleGame
         {
             CrystalDiviner = gameData.AddItem(new CrystalDiviner());
             {
-                gameData.AddDefaultCharacterItem(gameData.Characters.Player, CrystalDiviner, 1);
+                gameData.AddDefaultLocationItem(gameData.Locations.Start, CrystalDiviner, 1);
             }
 
             // Light and light switch A in Start
