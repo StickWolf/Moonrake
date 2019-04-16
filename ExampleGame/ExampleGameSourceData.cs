@@ -8,8 +8,8 @@ namespace ExampleGame
     public class ExampleGameSourceData : GameSourceData
     {
         public ExampleGameVariables GameVariables { get; private set; }
-        public ExampleCharacters Characters { get; private set; }
         public ExampleLocations Locations { get; private set; }
+        public ExampleCharacters Characters { get; private set; }
         public ExampleItems Items { get; private set; }
 
         /// <summary>
@@ -17,38 +17,27 @@ namespace ExampleGame
         /// </summary>
         public ExampleGameSourceData()
         {
+            // Note that the properties should be defined in this order due to how they reference each other
             GameVariables = new ExampleGameVariables(this);
-            Characters = new ExampleCharacters(this);
             Locations = new ExampleLocations(this);
+            Characters = new ExampleCharacters(this);
             Items = new ExampleItems(this);
 
             DefaultPlayerName = "Sally";
             GameIntroductionText = "There once was an example game.";
 
-            // Default character items
-            AddDefaultCharacterItem(Characters.Player, Items.CrystalDiviner, 1);
-
-            // Default character locations
-            AddDefaultCharacterLocation(Characters.Player, Locations.Start);
-
-            // Default item locations
-            AddDefaultLocationItem(Locations.Start, Items.DullBronzeKey, 1);
-            AddDefaultLocationItem(Locations.Start, Items.ColoredLightA, 1);
-            AddDefaultLocationItem(Locations.Start, Items.ColoredLightSwitchA, 1);
-
-            AddDefaultLocationItem(Locations.BanquetElevator, Items.ColoredLightB, 1);
-            AddDefaultLocationItem(Locations.BanquetElevator, Items.ColoredLightSwitchB, 1);
-
-            AddDefaultLocationItem(Locations.BanquetHall, Items.BanquetToSecretWarpedHallKeyhole, 1);
-
-            #region Events
-
-            // TODO: From the cemetary theatre you'll need to set the numbers on a combination lock to 1234 through a command.
-            // TODO: The command that lets the user change the combination is yet to be defined.
+            // TODO: From the cemetary theatre you'll need to set the numbers on a combination lock to 1234 through the use command.
             // TODO: When a new game starts the combination should be initially set to 8734.
             // TODO: getting the combination right should lead to the warped hall
 
-            #endregion
+            // TODO: Chanage the dull bronze key in the start room to be discovered like this:
+            //         1. The Start Room initially has no location items in it.
+            //         2. The player pulls a lever on the wall (use lever).
+            //         3. The lever interact code calls
+            //              AddLocationItem("Start", "Key", 1);
+            //              And Console.WriteLine  "You see a shiny key fall from a now open crack in the wall"
+            //              Plus it keeps track if this has already happened in a gamevariable so it doesn't spit out multiple keys
+            //              The lever stays visible and can be moved up and down still, but the 2nd attempt produces no result.
         }
     }
 }
