@@ -14,6 +14,7 @@ namespace DreamsAndWhatTheyMean
         public string PlayersLivingRoomLight { get; private set; }
         public string BronzeTalisman { get; private set; }
         public string Apple { get; private set; }
+        public string DadsWallet { get; private set; }
 
         public DragonKittyItems(TheTaleOfTheDragonKittySourceData gameData)
         {
@@ -26,6 +27,7 @@ namespace DreamsAndWhatTheyMean
             PlayersLivingRoomLight = gameData.AddItem(new RoomLight("White", true, 2));
             BronzeTalisman = gameData.AddItem(new BronzeTalisman(gameData));
             Apple = gameData.AddItem(new Apple(gameData));
+            DadsWallet = gameData.AddItem(new Wallet("Dad", gameData, 10000));
         }
     }
 }

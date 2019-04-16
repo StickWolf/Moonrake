@@ -19,11 +19,6 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsBound = false;
         }
 
-        public override string GetDescription(int count, GameState gameState)
-        {
-            return "talisman made of bronze metal";
-        }
-
         public override void Interact(GameState gameState, string otherItemTrackingName)
         {
             Interacting(gameState, otherItemTrackingName, GameData);
