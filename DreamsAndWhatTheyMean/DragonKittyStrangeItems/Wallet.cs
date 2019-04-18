@@ -17,8 +17,8 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             GameData = gameData;
             CharacterName = characterName;
             MoneyWalletContains = moneyInWallet;
-            IsBound = true;
-            IsInteractable = true;
+            IsBound = false;
+            IsInteractable = false;
             IsUnique = false;
             IsVisible = true;
         }
@@ -28,17 +28,17 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             return $"{CharacterName}'s wallet";
         }
 
-        public override void Interact(GameState gameState, string otherItemTrackingName)
+        public override void Grab(int count, string grabbingCharacterName, GameState gameState)
         {
             GameData.TryGetCharacter(CharacterName, out Character attackingCharacter);
             GameData.TryGetCharacter("Player", out Character playerCharacter);
-            if(attackingCharacter.Hp > 0)
+            if (attackingCharacter.Hp > 0)
             {
                 GameEngine.Console.WriteLine($"You have tried to steal {CharacterName}'s wallet, now you will suffer,");
                 playerCharacter.Attack(attackingCharacter);
                 GameEngine.Console.WriteLine($"{CharacterName} has hit you.");
             }
-            if(attackingCharacter.Hp <= 0)
+            if (attackingCharacter.Hp <= 0)
             {
                 GameEngine.Console.WriteLine($"Since {CharacterName} is dead, you get {MoneyWalletContains} dollars!");
                 gameState.TryAddCharacterItemCount("Player", "Dollar", MoneyWalletContains, GameData);
