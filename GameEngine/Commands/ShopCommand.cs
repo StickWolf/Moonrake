@@ -8,7 +8,7 @@ namespace GameEngine.Commands
 {
     internal class ShopCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             // TODO: The shopping command lets you go shopping!
             //

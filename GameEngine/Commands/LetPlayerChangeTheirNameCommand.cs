@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    class LetPlayerChangeTheirNameCommand : ICommand
+    internal class LetPlayerChangeTheirNameCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             Console.Write($"What would you like your name to be?: ");
             GameState.CurrentGameState.PlayerName = Console.ReadLine();

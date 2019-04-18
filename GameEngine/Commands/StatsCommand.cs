@@ -8,7 +8,7 @@ namespace GameEngine.Commands
 {
     class StatsCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             engine.GameData.TryGetCharacter("Player", out Character charPlayer);
             Console.WriteLine("Here are your stats:");

@@ -6,7 +6,7 @@ namespace GameEngine.Commands
 {
     internal class InventoryCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var charaterItems = GameState.CurrentGameState.GetCharacterItems("Player");
             // TODO: make the player character name constant or global.

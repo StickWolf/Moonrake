@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Commands
 {
-    class LookCommand : ICommand
+    internal class LookCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             // Figure out the location name of where the player is at
             var playerLocationName = GameState.CurrentGameState.GetCharacterLocation("Player");
