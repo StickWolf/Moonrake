@@ -68,5 +68,30 @@
         {
             Console.WriteLine("You find nothing special.");
         }
+
+        /// <summary>
+        /// Allows an item to specify what happens when it is grabbed.
+        /// </summary>
+        /// <param name="count">The number of items being grabbed</param>
+        /// <param name="grabbingCharacterName">The name of the character who is grabbing</param>
+        /// <param name="gameState">The current game state</param>
+        /// <param name="gameData">The current game data</param>
+        public virtual void Grab(int count, string grabbingCharacterName, GameState gameState)
+        {
+            var description = GetDescription(count, gameState);
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacterName);
+            // Remove it from the floor
+            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc, TrackingName, -count, this);
+            // And place it in the player's inventory, but only if it was removed from the floor successfully
+            if (removeLocationResult)
+            {
+                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacterName, TrackingName, count, this);
+                Console.WriteLine($"You grabbed {description}.");
+            }
+            else
+            {
+                Console.WriteLine($"Something prevented you from grabbing {description}.");
+            }
+        }
     }
 }
