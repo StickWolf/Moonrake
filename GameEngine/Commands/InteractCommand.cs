@@ -6,17 +6,6 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        private class WordItemPair
-        {
-            public string Word { get; set; }
-            public Item Item { get; set; }
-            public WordItemPair(string word, Item item)
-            {
-                Word = word;
-                Item = item;
-            }
-        }
-
         /// <summary>
         /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
         /// to match them to an item name.
@@ -88,7 +77,7 @@ namespace GameEngine.Commands
             // Create a list of extra words that we will try to map items to
             var extraItems = extraWords
                 .Except(skipWords)
-                .Select(w => new WordItemPair(w.ToLower(), null))
+                .Select(w => new MutablePair<string, Item>(w.ToLower(), null))
                 .ToList();
 
             bool itemsFound = true;
@@ -98,14 +87,14 @@ namespace GameEngine.Commands
                 foreach (var extraItem in extraItems)
                 {
                     // If this word is already mapped to an item them skip it.
-                    if (extraItem.Item != null)
+                    if (extraItem.Value != null)
                     {
                         continue;
                     }
 
                     // Get a set of items that match this word
                     var wordItemMatches = interactableItems
-                        .Where(i => i.DisplayName.ToLower().Contains(extraItem.Word))
+                        .Where(i => i.DisplayName.ToLower().Contains(extraItem.Key))
                         .ToList();
 
                     // If there is just one item it matches then assign that word to
@@ -113,18 +102,18 @@ namespace GameEngine.Commands
                     if (wordItemMatches.Count == 1)
                     {
                         itemsFound = true;
-                        extraItem.Item = wordItemMatches.First();
+                        extraItem.Value = wordItemMatches.First();
                         interactableItems.Remove(wordItemMatches.First());
                     }
                 }
             }
 
             var foundExtraItems = extraItems
-                .Where(i => i.Item != null)
+                .Where(i => i.Value != null)
                 .ToList();
 
-            item1 = foundExtraItems.Count > 0 ? foundExtraItems[0].Item : null;
-            item2 = foundExtraItems.Count > 1 ? foundExtraItems[1].Item : null;
+            item1 = foundExtraItems.Count > 0 ? foundExtraItems[0].Value : null;
+            item2 = foundExtraItems.Count > 1 ? foundExtraItems[1].Value : null;
         }
 
         private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
