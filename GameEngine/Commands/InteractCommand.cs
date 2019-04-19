@@ -6,6 +6,17 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
+        private class WordItemPair
+        {
+            public string Word { get; set; }
+            public Item Item { get; set; }
+            public WordItemPair(string word, Item item)
+            {
+                Word = word;
+                Item = item;
+            }
+        }
+
         /// <summary>
         /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
         /// to match them to an item name.
@@ -69,77 +80,51 @@ namespace GameEngine.Commands
 
         private void TryGetItemsFromExtraWords(List<string> extraWords, Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
         {
-            // We look for words using sentences both backwards and forwards to increase the matching logic
-            // e.g. "use key in keyhole" - key is present in both of these item descriptions.
-            // We aren't guaranteed that the items will be in any order when we loop through them so the first
-            // one in the list may be the keyhole and we'd end up with item1=keyhole, item2=null
-            // reversing the words "keyhole in key" and then trying again results in: item1=key, item2=keyhole
-            // Not sure if this will work well in other cases, probably needs improvement
-
-            var set1 = GetItemsFromExtraWords(extraWords, allInteractableItems, engine);
-            extraWords.Reverse();
-            var set2 = GetItemsFromExtraWords(extraWords, allInteractableItems, engine);
-
-            if (set1.Count >= set2.Count)
-            {
-                item1 = set1.Count > 0 ? set1[0] : null;
-                item2 = set1.Count > 1 ? set1[1] : null;
-            }
-            else if (set2.Count > 1)
-            {
-                item1 = set2[1];
-                item2 = set2[0];
-            }
-            else if (set2.Count == 1)
-            {
-                item1 = set2[0];
-                item2 = null;
-            }
-            else
-            {
-                item1 = null;
-                item2 = null;
-            }
-        }
-
-        private List<Item> GetItemsFromExtraWords(List<string> extraWords, Dictionary<string, string> allInteractableItems, EngineInternal engine)
-        {
-            var response = new List<Item>();
-            if (!extraWords.Any())
-            {
-                return response;
-            }
-
-            var usedTrackingNames = new List<string>();
+            // Get a list of all items that can be interacted with
             var interactableItems = allInteractableItems.Keys
                 .Select(i => engine.GameData.GetItem(i))
                 .ToList();
 
-            foreach (var extraWord in extraWords)
-            {
-                if (skipWords.Contains(extraWord.ToLower()))
-                {
-                    continue;
-                }
+            // Create a list of extra words that we will try to map items to
+            var extraItems = extraWords
+                .Except(skipWords)
+                .Select(w => new WordItemPair(w.ToLower(), null))
+                .ToList();
 
-                // Look through all interactable items and see if we can find one that looks right
-                foreach (var item in interactableItems)
+            bool itemsFound = true;
+            while (itemsFound)
+            {
+                itemsFound = false;
+                foreach (var extraItem in extraItems)
                 {
-                    if (usedTrackingNames.Contains(item.TrackingName))
+                    // If this word is already mapped to an item them skip it.
+                    if (extraItem.Item != null)
                     {
                         continue;
                     }
 
-                    if (item.DisplayName.ToLower().Contains(extraWord.ToLower()))
+                    // Get a set of items that match this word
+                    var wordItemMatches = interactableItems
+                        .Where(i => i.DisplayName.ToLower().Contains(extraItem.Word))
+                        .ToList();
+
+                    // If there is just one item it matches then assign that word to
+                    // that item and remove the item from the remaining choices
+                    if (wordItemMatches.Count == 1)
                     {
-                        usedTrackingNames.Add(item.TrackingName);
-                        response.Add(item);
-                        break;
+                        itemsFound = true;
+                        extraItem.Item = wordItemMatches.First();
+                        interactableItems.Remove(wordItemMatches.First());
                     }
                 }
             }
 
-            return response;
+            var foundExtraItems = extraItems
+                .Where(i => i.Item != null)
+                .ToList();
+
+            item1 = foundExtraItems.Count > 0 ? foundExtraItems[0].Item : null;
+            item2 = foundExtraItems.Count > 1 ? foundExtraItems[1].Item : null;
         }
 
         private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
