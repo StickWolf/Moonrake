@@ -54,7 +54,7 @@ namespace GameEngine
                 else if (PlayerHasWon)
                 {
                     Console.WriteLine(GameData.GameEndingText);
-                    Console.WriteLine("               The End                ");
+                    Console.WriteLine("             |--The End--|             ");
                     Console.ReadLine();
                     RunGameLoop = false;
                 }
