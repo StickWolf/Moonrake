@@ -39,6 +39,11 @@ namespace GameEngine
                 ProcessUserInput();
 
                 // TODO: Fix this to check the actual player instead of hardcoding true here.
+                GameData.TryGetCharacter("Player", out Character player);
+                if (player.Hp <= 0)
+                {
+                    PlayerIsDead = true;
+                }
                 if (PlayerIsDead)
                 {
                     Console.WriteLine();

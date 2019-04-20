@@ -8,14 +8,17 @@ namespace GameEngine
 {
     public class Character
     {
+        public GameSourceData GameData { get; set; }
+
         public string Name { get; private set; }
 
         public int Hp, FullHp, MaxAttack;
 
         private static Random rnd = new Random();
 
-        public Character(string name, int hp, int attack)
+        public Character(string name, int hp, int attack, GameSourceData gameData)
         {
+            GameData = gameData;
             Name = name;
             Hp = hp;
             FullHp = hp;
@@ -29,12 +32,24 @@ namespace GameEngine
             {
                 return;
             }
+            var locationName = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
+            charactersInLocation.Add("Player");
+            List<Character> characterList = new List<Character>();
+            foreach(var characterName in charactersInLocation)
+            {
+                GameData.TryGetCharacter(characterName, out Character character);
+                characterList.Add(character);
+            }
             if (Hp <= 0)
             {
                 Console.WriteLine($"{Name} is dead.");
                 return;
             }
-            Console.WriteLine($"{Name} has {Hp}/{FullHp} left");
+            if (charactersInLocation.Contains(Name))
+            {
+                Console.WriteLine($"{Name} has {Hp}/{FullHp} left");
+            }
             Hp = Hp - attackDamage;
         }
 
@@ -43,5 +58,7 @@ namespace GameEngine
             int damage = rnd.Next(0, maxAttack);
             return damage;
         }
+
+        //ZABTODO: Make a heal fuction and add a healing power method
     }
 }
