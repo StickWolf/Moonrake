@@ -14,6 +14,8 @@ namespace GameEngine
 
         public string GameIntroductionText { get; protected set; }
 
+        public string GameEndingText { get; protected set; }
+
         private Dictionary<string, Character> Characters { get; set; } = new Dictionary<string, Character>();
 
         private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
