@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace GameEngine.Commands
 {
-    class GrabCommand : ICommand
+    internal class GrabCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var grabbingCharacter = "Player";
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter);

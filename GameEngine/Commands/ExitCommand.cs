@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.Commands
 {
     internal class ExitCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             while (true)
             {
@@ -27,7 +29,7 @@ namespace GameEngine.Commands
                 {
                     // Save and then exit
                     var saveCommand = CommandHelper.GetCommand("save");
-                    saveCommand.Exceute(engine);
+                    saveCommand.Exceute(engine, new List<string>());
                     engine.RunGameLoop = false;
                     engine.RunFactory = false;
                     return;

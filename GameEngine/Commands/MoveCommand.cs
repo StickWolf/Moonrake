@@ -5,7 +5,7 @@ namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
             var originPortalsDestinations = engine.GameData.Portals
@@ -28,7 +28,7 @@ namespace GameEngine.Commands
             // Make the player automatically look after they move to the new location
             Console.WriteLine();
             var lookCommand = CommandHelper.GetCommand("look");
-            lookCommand.Exceute(engine);
+            lookCommand.Exceute(engine, new List<string>());
         }
 
         public bool IsActivatedBy(string word)

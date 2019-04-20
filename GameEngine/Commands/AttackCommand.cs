@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    class AttackCommand : ICommand
+    internal class AttackCommand : ICommand
     {
-        void ICommand.Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
 
@@ -36,11 +34,10 @@ namespace GameEngine.Commands
             defendingCharacter.Attack(playerCharacter);
         }
 
-        bool ICommand.IsActivatedBy(string word)
+        public bool IsActivatedBy(string word)
         {
             var activators = new List<string>() { "attack", "hit", "fight", "injure" };
             return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
-
     }
 }
