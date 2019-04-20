@@ -16,10 +16,10 @@ namespace DreamsAndWhatTheyMean
 
         public DragonKittyCharacters(TheTaleOfTheDragonKittySourceData gameData)
         {
-            Player = gameData.AddCharacter(new Character("Player", 50, 10, gameData));
-            MomCharacter = gameData.AddCharacter(new Character("Mom", 4000, 150, gameData));
-            DadCharacter = gameData.AddCharacter(new Character("Dad", 5000, 250, gameData));
-            BlackSmithCharacter = gameData.AddCharacter(new Character("The Black-Smith", 10000, 700, gameData));
+            Player = gameData.AddCharacter(new Character("Player", 50, 10));
+            MomCharacter = gameData.AddCharacter(new Character("Mom", 4000, 150));
+            DadCharacter = gameData.AddCharacter(new Character("Dad", 5000, 250));
+            BlackSmithCharacter = gameData.AddCharacter(new Character("The Black-Smith", 10000, 700));
         }
     }
 }

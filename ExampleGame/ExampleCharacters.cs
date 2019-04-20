@@ -8,7 +8,7 @@ namespace ExampleGame
 
         public ExampleCharacters(ExampleGameSourceData gameData)
         {
-            Player = gameData.AddCharacter(new Character("Player", 50, 40, gameData));
+            Player = gameData.AddCharacter(new Character("Player", 50, 40));
 
             // Default character locations
             gameData.AddDefaultCharacterLocation(Player, gameData.Locations.Start);

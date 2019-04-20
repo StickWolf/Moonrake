@@ -8,7 +8,6 @@ namespace GameEngine
 {
     public class Character
     {
-        public GameSourceData GameData { get; set; }
 
         public string Name { get; private set; }
 
@@ -16,16 +15,15 @@ namespace GameEngine
 
         private static Random rnd = new Random();
 
-        public Character(string name, int hp, int attack, GameSourceData gameData)
+        public Character(string name, int hp, int attack)
         {
-            GameData = gameData;
             Name = name;
             Hp = hp;
             FullHp = hp;
             MaxAttack = attack;
         }
 
-        public void Attack(Character attackingCharacter)
+        public void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
             if (attackingCharacter.Hp == 0)
@@ -38,7 +36,7 @@ namespace GameEngine
             List<Character> characterList = new List<Character>();
             foreach(var characterName in charactersInLocation)
             {
-                GameData.TryGetCharacter(characterName, out Character character);
+                gameData.TryGetCharacter(characterName, out Character character);
                 characterList.Add(character);
             }
             if (Hp <= 0)
