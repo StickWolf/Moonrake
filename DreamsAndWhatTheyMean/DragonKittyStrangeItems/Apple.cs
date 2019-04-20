@@ -33,7 +33,8 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
                 gameData.TryGetCharacter("Player", out Character player);
                 if(player.Hp == player.FullHp)
                 {
-                    GameEngine.Console.WriteLine("you can't eat the apple, you are at full health.");
+                    GameEngine.Console.WriteLine("You can't eat the apple, you are at full health.");
+                    return;
                 }
                 player.Hp = player.Hp + 20;
                 if(player.Hp > player.FullHp)

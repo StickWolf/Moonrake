@@ -39,6 +39,7 @@ namespace DreamsAndWhatTheyMean
             AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlayersLivingRoomLight, 1);
             AddDefaultLocationItem(Locations.ESStreet, Items.BronzeTalisman, 1);
             AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.Apple, 10);
+            AddDefaultLocationItem(Locations.PlayersBackyard, Items.DadsWallet, 1);
             #endregion
 
             #region Character Locations
