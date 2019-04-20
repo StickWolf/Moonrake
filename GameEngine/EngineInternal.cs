@@ -39,7 +39,11 @@ namespace GameEngine
             {
                 ProcessUserInput();
 
-                // TODO: Fix this to check the actual player instead of hardcoding true here.
+                GameData.TryGetCharacter("Player", out Character player);
+                if (player.Hp <= 0)
+                {
+                    PlayerIsDead = true;
+                }
                 if (PlayerIsDead)
                 {
                     Console.WriteLine();
@@ -47,9 +51,12 @@ namespace GameEngine
                     Console.ReadKey();
                     RunGameLoop = false;
                 }
+                // TODO: Find a way to figure out when the player has won.
                 else if (PlayerHasWon)
                 {
-                    // TODO: Print out the end of game story. This should be provided by the game data.
+                    Console.WriteLine(GameData.GameEndingText);
+                    Console.WriteLine("             |--The End--|             ");
+                    Console.ReadLine();
                     RunGameLoop = false;
                 }
             }

@@ -31,7 +31,7 @@ namespace GameEngine.Commands
                 return;
             }
             engine.GameData.TryGetCharacter(playerToHit, out Character defendingCharacter);
-            defendingCharacter.Attack(playerCharacter);
+            defendingCharacter.Attack(playerCharacter, engine.GameData);
         }
 
         public bool IsActivatedBy(string word)

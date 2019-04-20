@@ -24,6 +24,8 @@ namespace DreamsAndWhatTheyMean
                 " Their names are: Zach, and Amaya." +
                 " Welcome to The Tale of The DragonKitty.";
 
+            GameEndingText = "You have saved the last of the dragonkittys and you have won the game.";
+
             #region Starter Items
             AddDefaultCharacterItem(Characters.Player, Items.Money, 200);
             #endregion

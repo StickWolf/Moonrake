@@ -35,7 +35,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             if (attackingCharacter.Hp > 0)
             {
                 GameEngine.Console.WriteLine($"You have tried to steal {CharacterName}'s wallet, now you will suffer,");
-                playerCharacter.Attack(attackingCharacter);
+                playerCharacter.Attack(attackingCharacter, GameData);
                 GameEngine.Console.WriteLine($"{CharacterName} has hit you.");
             }
             if (attackingCharacter.Hp <= 0)
