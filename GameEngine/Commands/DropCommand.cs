@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace GameEngine.Commands
 {
-    class DropCommand : ICommand
+    internal class DropCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
             var characterItems = GameState.CurrentGameState.GetCharacterItems("Player");

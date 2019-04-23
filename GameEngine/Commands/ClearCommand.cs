@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
-    class ClearCommand : ICommand
+    internal class ClearCommand : ICommand
     {
-        void ICommand.Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             Console.Clear();
         }
 
-        bool ICommand.IsActivatedBy(string word)
+        public bool IsActivatedBy(string word)
         {
             return word.Equals("clear", StringComparison.OrdinalIgnoreCase);
         }

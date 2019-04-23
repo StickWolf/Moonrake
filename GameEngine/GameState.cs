@@ -143,7 +143,11 @@ namespace GameEngine
             {
                 return false;
             }
+            return TryAddCharacterItemCount(characterName, itemTrackingName, count, item);
+        }
 
+        public bool TryAddCharacterItemCount(string characterName, string itemTrackingName, int count, Item item)
+        {
             if (count == 0)
             {
                 return true;
@@ -231,7 +235,11 @@ namespace GameEngine
             {
                 return false;
             }
+            return TryAddLocationItemCount(locationName, itemTrackingName, count, item);
+        }
 
+        public bool TryAddLocationItemCount(string locationName, string itemTrackingName, int count, Item item)
+        {
             if (count == 0)
             {
                 return true;
@@ -313,6 +321,7 @@ namespace GameEngine
             setLocationItemCount(locationName, itemTrackingName, 1);
             return true;
         }
+
 
         public Dictionary<string, int> GetCharacterItems(string characterName)
         {

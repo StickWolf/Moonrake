@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
     internal class SaveCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("New Save");

@@ -1,4 +1,5 @@
 ﻿using GameEngine.Commands;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
@@ -31,14 +32,18 @@ namespace GameEngine
         {
             // Ask the player to pick to load a saved game if there are any
             var loadCommand = CommandHelper.GetCommand("load");
-            loadCommand.Exceute(this);
+            loadCommand.Exceute(this, new List<string>());
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
             {
                 ProcessUserInput();
 
-                // TODO: Fix this to check the actual player instead of hardcoding true here.
+                GameData.TryGetCharacter("Player", out Character player);
+                if (player.Hp <= 0)
+                {
+                    PlayerIsDead = true;
+                }
                 if (PlayerIsDead)
                 {
                     Console.WriteLine();
@@ -46,9 +51,12 @@ namespace GameEngine
                     Console.ReadKey();
                     RunGameLoop = false;
                 }
+                // TODO: Find a way to figure out when the player has won.
                 else if (PlayerHasWon)
                 {
-                    // TODO: Print out the end of game story. This should be provided by the game data.
+                    Console.WriteLine(GameData.GameEndingText);
+                    Console.WriteLine("             |--The End--|             ");
+                    Console.ReadLine();
                     RunGameLoop = false;
                 }
             }
@@ -60,7 +68,7 @@ namespace GameEngine
             Console.Write(">");
             input = Console.ReadLine();
             Console.WriteLine();
-            var partsOfInput = input.Split(' ');
+            var partsOfInput = new List<string>(input.Split(' '));
             var firstWord = partsOfInput[0];
 
             var commandToRun = CommandHelper.GetCommand(firstWord);
@@ -71,7 +79,8 @@ namespace GameEngine
             }
 
             // The command is a real command if we got this far
-            commandToRun.Exceute(this);
+            partsOfInput.RemoveAt(0);
+            commandToRun.Exceute(this, partsOfInput);
         }
 
         /// <summary>
@@ -126,7 +135,7 @@ namespace GameEngine
             Console.WriteLine();
 
             var lookCommand = CommandHelper.GetCommand("look");
-            lookCommand.Exceute(this);
+            lookCommand.Exceute(this, new List<string>());
         }
     }
 }

@@ -8,6 +8,7 @@ namespace GameEngine
 {
     public class Character
     {
+
         public string Name { get; private set; }
 
         public int Hp, FullHp, MaxAttack;
@@ -22,16 +23,32 @@ namespace GameEngine
             MaxAttack = attack;
         }
 
-        public void Attack(Character attackingCharacter)
+        public void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            if(Hp <= 0)
+            if (attackingCharacter.Hp == 0)
+            {
+                return;
+            }
+            var locationName = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
+            charactersInLocation.Add("Player");
+            List<Character> characterList = new List<Character>();
+            foreach(var characterName in charactersInLocation)
+            {
+                gameData.TryGetCharacter(characterName, out Character character);
+                characterList.Add(character);
+            }
+            if (Hp <= 0)
             {
                 Console.WriteLine($"{Name} is dead.");
                 return;
             }
+            if (charactersInLocation.Contains(Name))
+            {
+                Console.WriteLine($"{Name} has {Hp}/{FullHp} left");
+            }
             Hp = Hp - attackDamage;
-            Console.WriteLine($"{Name} has been attacked for {attackDamage} dammage. {Name} now has {Hp}/{FullHp} HP");
         }
 
         private int GetAttackDamage(int maxAttack)
@@ -39,5 +56,7 @@ namespace GameEngine
             int damage = rnd.Next(0, maxAttack);
             return damage;
         }
+
+        //ZABTODO: Make a heal fuction and add a healing power method
     }
 }

@@ -4,12 +4,13 @@ using System.Linq;
 
 namespace GameEngine.Commands
 {
-    class GrabCommand : ICommand
+    internal class GrabCommand : ICommand
     {
-        public void Exceute(EngineInternal engine)
+        public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
-            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc);
+            var grabbingCharacter = "Player";
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc);
             if (locationItems == null || locationItems.Count == 0)
             {
                 Console.WriteLine("There is nothing to grab.");
@@ -42,10 +43,8 @@ namespace GameEngine.Commands
             }
             var itemAmount = locationItems[itemToPickUp];
 
-            // Remove it from the floor
-            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(playersLoc, itemToPickUp, -itemAmount, engine.GameData);
-            // And place it in the player's inventory
-            var addCharResult = GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToPickUp, itemAmount, engine.GameData);
+            var item = engine.GameData.GetItem(itemToPickUp);
+            item.Grab(itemAmount, grabbingCharacter, GameState.CurrentGameState);
         }
 
         public bool IsActivatedBy(string word)

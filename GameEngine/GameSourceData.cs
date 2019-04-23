@@ -14,6 +14,8 @@ namespace GameEngine
 
         public string GameIntroductionText { get; protected set; }
 
+        public string GameEndingText { get; protected set; }
+
         private Dictionary<string, Character> Characters { get; set; } = new Dictionary<string, Character>();
 
         private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
@@ -38,19 +40,6 @@ namespace GameEngine
         public Dictionary<string, string> DefaultTradePostLocations { get; private set; } = new Dictionary<string, string>();
 
         public Dictionary<string, string> DefaultCharacterLocations { get; set; } = new Dictionary<string, string>();
-
-        // TODO: Decide how to represent eventing systems like in the example below
-        //      e.g.
-        //         1. The Furnace Room initially has no location items in it.
-        //         2. The player pulls a lever on the wall. This triggers an "Event", there can be many different things that happen
-        //            during an event, however the only thing that this event does is:
-        //              AddLocationItem("Furnace Room", "Key", 1, "You see a shiny key fall from a now open crack in the wall", KeyNotFoundCondition)
-        //              This particular even shows the message and adds the location item to the location, but only if the KeyNotFoundCondition is true
-        //              (whatever that is)
-        //      etc. Events would be able to do a number of other things based on game var conditions.
-        //      Another example would be that the player could use the key at a certain portal (door), which would trigger an event and the event would
-        //          ModifyGameVar("FurnaceRoomDoorOpen", "true", "You hear a loud creaking sounds as the door slowly budges open")
-        //      Portal rules then could reference this game var to determine if the portal is open or not.
 
         /// <summary>
         /// Helper method to add a location
