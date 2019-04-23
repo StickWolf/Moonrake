@@ -33,7 +33,12 @@ namespace Moonrake
             AddDefaultCharacterItem(MoonRakeCharacters.Player, MoonRakeItems.Money, 35);
 
             #region TradeSets
-            var tsIceCream = AddTradeSet("Ice Cream",
+
+            #endregion
+
+            #region TradePosts
+
+            var IceCream = AddTradeSet("Ice Cream",
                 new ItemRecipe(MoonRakeItems.ChocolateIceCream,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 10)
                 ),
@@ -44,12 +49,8 @@ namespace Moonrake
                     new ItemRecipeIngredient(MoonRakeItems.Money, 15)
                 )
             );
-            #endregion
-
-            #region TradePosts
-
-            var tpIceCreamShop = AddTradePost("Ice Cream Shop", tsIceCream);
-            DefaultTradePostLocations[tpIceCreamShop] = MoonRakeLocations.IceCreamShop;
+            var IceCreamShop = AddTradePost("Ice Cream Shop", IceCream);
+            DefaultTradePostLocations[IceCreamShop] = MoonRakeLocations.IceCreamShop;
 
             #endregion
         }
