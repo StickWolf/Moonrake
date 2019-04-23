@@ -32,18 +32,26 @@ namespace GameEngine.Commands
                 return;
             }
 
-            availableItems.Add("CancelChoice", "Cancel");
-
-            var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
-
-            if(itemToPickUp == "CancelChoice")
+            // Try to auto-determine what the player is trying to grab
+            var foundItems = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            Item item;
+            if (foundItems.Count > 0)
             {
-                Console.WriteLine("Canceled Grab");
-                return;
+                item = foundItems[0];
             }
-            var itemAmount = locationItems[itemToPickUp];
+            else
+            {
+                availableItems.Add("CancelChoice", "Cancel");
+                var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
+                if (itemToPickUp == "CancelChoice")
+                {
+                    Console.WriteLine("Canceled Grab");
+                    return;
+                }
+                item = engine.GameData.GetItem(itemToPickUp);
+            }
 
-            var item = engine.GameData.GetItem(itemToPickUp);
+            var itemAmount = locationItems[item.TrackingName];
             item.Grab(itemAmount, grabbingCharacter, GameState.CurrentGameState);
         }
 
