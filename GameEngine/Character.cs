@@ -11,25 +11,22 @@ namespace GameEngine
 
         public string Name { get; private set; }
 
-        public int Hp, FullHp, MaxAttack;
+        public int Hp, FullHp, MaxAttack, CounterAttackChance;
 
         private static Random rnd = new Random();
 
-        public Character(string name, int hp, int attack)
+        public Character(string name, int hp, int attack, int counterAttackChance)
         {
             Name = name;
             Hp = hp;
             FullHp = hp;
             MaxAttack = attack;
+            CounterAttackChance = counterAttackChance;
         }
 
         public void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            if (attackingCharacter.Hp == 0)
-            {
-                return;
-            }
             var locationName = GameState.CurrentGameState.GetCharacterLocation("Player");
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
             charactersInLocation.Add("Player");
@@ -39,8 +36,12 @@ namespace GameEngine
                 gameData.TryGetCharacter(characterName, out Character character);
                 characterList.Add(character);
             }
+            Hp = Hp - attackDamage;
             if (Hp <= 0)
             {
+                // Makes sure that the player has 0 hp, so when a heal
+                // comes in, it isn't like -100 to -50.
+                Hp = 0;
                 Console.WriteLine($"{Name} is dead.");
                 return;
             }
@@ -48,7 +49,31 @@ namespace GameEngine
             {
                 Console.WriteLine($"{Name} has {Hp}/{FullHp} left");
             }
-            Hp = Hp - attackDamage;
+
+            var counterAttackPosiblity = rnd.Next(CounterAttackChance, 100);
+            if(counterAttackPosiblity >= 75)
+            {
+                if (Hp == 0)
+                {
+                    return;
+                }
+                Console.WriteLine($"{Name} countered!");
+                var maxAttackDamage = MaxAttack / 2;
+                var counterAttackDamage = GetAttackDamage(maxAttackDamage);
+                attackingCharacter.Hp = attackingCharacter.Hp - counterAttackDamage;
+                if (attackingCharacter.Hp <= 0)
+                {
+                    // Makes sure that the player has 0 hp, so when a heal
+                    // comes in, it isn't like -100 to -50.
+                    attackingCharacter.Hp = 0;
+                    Console.WriteLine($"{attackingCharacter.Name} is dead.");
+                    return;
+                }
+                if (charactersInLocation.Contains(attackingCharacter.Name))
+                {
+                    Console.WriteLine($"{attackingCharacter.Name} has {attackingCharacter.Hp}/{attackingCharacter.FullHp} left");
+                }
+            }
         }
 
         private int GetAttackDamage(int maxAttack)
