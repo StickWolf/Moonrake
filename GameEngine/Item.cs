@@ -93,5 +93,32 @@
                 Console.WriteLine($"Something prevented you from grabbing {description}.");
             }
         }
+
+        /// <summary>
+        /// Allows an item to specify what happens when it is dropped.
+        /// </summary>
+        /// <param name="count">The number of items being dropped</param>
+        /// <param name="droppingCharacterName">The name of the character who is dropping</param>
+        /// <param name="gameState">The current game state</param>
+        /// <param name="gameData">The current game data</param>
+        public virtual void Drop(int count, string droppingCharacterName, GameState gameState)
+        {
+            var description = GetDescription(count, gameState);
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacterName);
+
+            // Remove it from the character's inventory
+            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacterName, TrackingName, -count, this);
+
+            // And place it on the floor, but only if it was removed from the inventory successfully
+            if (removeCharResult)
+            {
+                GameState.CurrentGameState.TryAddLocationItemCount(characterLoc, TrackingName, count, this);
+                Console.WriteLine($"You dropped {description}.");
+            }
+            else
+            {
+                Console.WriteLine($"Something prevented you from dropping {description}.");
+            }
+        }
     }
 }

@@ -8,8 +8,9 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
-            var characterItems = GameState.CurrentGameState.GetCharacterItems("Player");
+            var droppingCharacter = "Player";
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter);
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter);
             if (characterItems == null || characterItems.Count == 0)
             {
                 Console.WriteLine("You have nothing to drop.");
@@ -31,17 +32,27 @@ namespace GameEngine.Commands
                 return;
             }
 
-            availableItems.Add("CancelChoice", "Cancel");
-
-            var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
-            
-            if (itemToDrop == "CancelChoice")
+            // Try to auto-determine what the player is trying to drop
+            var foundItems = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            Item item;
+            if (foundItems.Count > 0)
             {
-                Console.WriteLine("Canceled Drop");
-                return;
+                item = foundItems[0];
+            }
+            else
+            {
+                availableItems.Add("CancelChoice", "Cancel");
+                var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
+                if (itemToDrop == "CancelChoice")
+                {
+                    Console.WriteLine("Canceled Drop");
+                    return;
+                }
+
+                item = engine.GameData.GetItem(itemToDrop);
             }
 
-            var itemAmountToDrop = characterItems[itemToDrop];
+            var itemAmountToDrop = characterItems[item.TrackingName];
             if (itemAmountToDrop > 1)
             {
                 Console.WriteLine("How many do you want to drop?");
@@ -50,16 +61,13 @@ namespace GameEngine.Commands
                 {
                     return;
                 }
-                if (itemAmountToDrop > characterItems[itemToDrop])
+                if (itemAmountToDrop > characterItems[item.TrackingName])
                 {
-                    itemAmountToDrop = characterItems[itemToDrop];
+                    itemAmountToDrop = characterItems[item.TrackingName];
                 }
             }
 
-            // Remove it from the player's inventory
-            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToDrop, -itemAmountToDrop, engine.GameData);
-            // And place it on the floor
-            var addLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(playersLoc, itemToDrop, itemAmountToDrop, engine.GameData);
+            item.Drop(itemAmountToDrop, droppingCharacter, GameState.CurrentGameState);
         }
 
         public bool IsActivatedBy(string word)

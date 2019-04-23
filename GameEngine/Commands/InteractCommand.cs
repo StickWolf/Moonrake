@@ -6,12 +6,6 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        /// <summary>
-        /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
-        /// to match them to an item name.
-        /// </summary>
-        private List<string> skipWords { get; set; } = new List<string>() { "the", "on", "with", "in" };
-
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
@@ -45,7 +39,9 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine the choices if extra words are typed in
-            TryGetItemsFromExtraWords(extraWords, allInteractableItems, engine, out Item item1, out Item item2);
+            var foundItems = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), engine);
+            var item1 = foundItems.Count > 0 ? foundItems[0] : null;
+            var item2 = foundItems.Count > 1 ? foundItems[1] : null;
 
             // If we weren't able to determine at-least the first item through extra words, then try via prompt mode
             if (item1 == null)
@@ -65,55 +61,6 @@ namespace GameEngine.Commands
             {
                 item2.Interact(GameState.CurrentGameState, item1.TrackingName);
             }
-        }
-
-        private void TryGetItemsFromExtraWords(List<string> extraWords, Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
-        {
-            // Get a list of all items that can be interacted with
-            var interactableItems = allInteractableItems.Keys
-                .Select(i => engine.GameData.GetItem(i))
-                .ToList();
-
-            // Create a list of extra words that we will try to map items to
-            var extraItems = extraWords
-                .Except(skipWords)
-                .Select(w => new MutablePair<string, Item>(w.ToLower(), null))
-                .ToList();
-
-            bool itemsFound = true;
-            while (itemsFound)
-            {
-                itemsFound = false;
-                foreach (var extraItem in extraItems)
-                {
-                    // If this word is already mapped to an item them skip it.
-                    if (extraItem.Value != null)
-                    {
-                        continue;
-                    }
-
-                    // Get a set of items that match this word
-                    var wordItemMatches = interactableItems
-                        .Where(i => i.DisplayName.ToLower().Contains(extraItem.Key))
-                        .ToList();
-
-                    // If there is just one item it matches then assign that word to
-                    // that item and remove the item from the remaining choices
-                    if (wordItemMatches.Count == 1)
-                    {
-                        itemsFound = true;
-                        extraItem.Value = wordItemMatches.First();
-                        interactableItems.Remove(wordItemMatches.First());
-                    }
-                }
-            }
-
-            var foundExtraItems = extraItems
-                .Where(i => i.Value != null)
-                .ToList();
-
-            item1 = foundExtraItems.Count > 0 ? foundExtraItems[0].Value : null;
-            item2 = foundExtraItems.Count > 1 ? foundExtraItems[1].Value : null;
         }
 
         private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
