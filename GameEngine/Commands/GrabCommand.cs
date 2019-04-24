@@ -33,7 +33,11 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine what the player is trying to grab
-            var foundItems = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            var foundItems = wordItemMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
             Item item;
             if (foundItems.Count > 0)
             {

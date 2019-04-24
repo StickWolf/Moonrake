@@ -39,7 +39,11 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine the choices if extra words are typed in
-            var foundItems = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), engine);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), engine);
+            var foundItems = wordItemMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
             var item1 = foundItems.Count > 0 ? foundItems[0] : null;
             var item2 = foundItems.Count > 1 ? foundItems[1] : null;
 

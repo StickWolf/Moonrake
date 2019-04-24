@@ -17,20 +17,32 @@ namespace GameEngine.Commands
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
             if (otherCharactersInLoc.Count == 0)
             {
-                Console.WriteLine("There is no charaters to attack");
+                Console.WriteLine("There are no charaters to attack here.");
                 return;
             }
-            if(otherCharactersInLoc.Count != 0)
+
+            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc, engine);
+            var foundCharacters = wordCharacterMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
+            Character defendingCharacter;
+            if (foundCharacters.Count > 0)
+            {
+                defendingCharacter = foundCharacters[0];
+            }
+            else
             {
                 otherCharactersInLoc.Add("Cancel");
+                var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
+                if (playerToHit.Equals("Cancel"))
+                {
+                    Console.WriteLine("Stopped Attack.");
+                    return;
+                }
+                defendingCharacter = engine.GameData.GetCharacter(playerToHit);
             }
-            var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
-            if (playerToHit.Equals("Cancel"))
-            {
-                Console.WriteLine("Stopped Attack.");
-                return;
-            }
-            engine.GameData.TryGetCharacter(playerToHit, out Character defendingCharacter);
+
             defendingCharacter.Attack(playerCharacter, engine.GameData);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GameEngine.Locations;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Commands
@@ -46,7 +47,7 @@ namespace GameEngine.Commands
         /// <param name="availableItemNames">The names of items that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of items that were matched in the order they were found</returns>
-        public static List<Item> WordsToItems(List<string> words, List<string> availableItemNames, EngineInternal engine)
+        public static List<MutablePair<string, Item>> WordsToItems(List<string> words, List<string> availableItemNames, EngineInternal engine)
         {
             // Get a list of actual items
             var availableItems = availableItemNames
@@ -87,12 +88,131 @@ namespace GameEngine.Commands
                 }
             }
 
-            var foundItems = wordItemMap
-                .Where(i => i.Value != null)
-                .Select(i => i.Value)
+            return wordItemMap;
+        }
+
+        /// <summary>
+        /// Looks at a list of words, converts to numbers where possible.
+        /// </summary>
+        /// <param name="words">The words to convert</param>
+        /// <returns>A list of words with their related number if conversion was possible</returns>
+        public static List<MutablePair<string, int?>> WordsToNumbers(List<string> words)
+        {
+            var wordNumberMap = words
+                .Select(w => new MutablePair<string, int?>(w.ToLower(), null))
                 .ToList();
 
-            return foundItems;
+            foreach (var mapping in wordNumberMap)
+            {
+                if (int.TryParse(mapping.Key, out int result))
+                {
+                    mapping.Value = result;
+                }
+            }
+
+            return wordNumberMap;
+        }
+
+        /// <summary>
+        /// Attempts to create a list of words into a list of locations.
+        /// </summary>
+        /// <param name="words">The words to convert</param>
+        /// <param name="availableLocationNames">The names of locations that are possible</param>
+        /// <param name="engine">Game engine</param>
+        /// <returns>A list of locations that were matched in the order they were found</returns>
+        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<string> availableLocationNames, EngineInternal engine)
+        {
+            // Get a list of actual locations
+            var availableLocations = availableLocationNames
+                .Select(l => engine.GameData.GetLocation(l))
+                .ToList();
+
+            // Create a list of words that we will try to map locations to
+            var wordLocationMap = words
+                .Except(SkipWords)
+                .Select(w => new MutablePair<string, Location>(w.ToLower(), null))
+                .ToList();
+
+            bool locationsFound = true;
+            while (locationsFound)
+            {
+                locationsFound = false;
+                foreach (var wlMapping in wordLocationMap)
+                {
+                    // If this word is already mapped to a location them skip it.
+                    if (wlMapping.Value != null)
+                    {
+                        continue;
+                    }
+
+                    // Get a set of locations that match this word
+                    var wordLocationMatches = availableLocations
+                        .Where(i => i.Name.ToLower().Contains(wlMapping.Key))
+                        .ToList();
+
+                    // If there is just one location it matches then assign that word to
+                    // that location and remove the location from the remaining choices
+                    if (wordLocationMatches.Count == 1)
+                    {
+                        locationsFound = true;
+                        wlMapping.Value = wordLocationMatches.First();
+                        availableLocations.Remove(wordLocationMatches.First());
+                    }
+                }
+            }
+
+            return wordLocationMap;
+        }
+
+        /// <summary>
+        /// Attempts to create a list of words into a list of characters.
+        /// </summary>
+        /// <param name="words">The words to convert</param>
+        /// <param name="availableCharacterNames">The names of character names that are possible</param>
+        /// <param name="engine">Game engine</param>
+        /// <returns>A list of characters that were matched in the order they were found</returns>
+        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<string> availableCharacterNames, EngineInternal engine)
+        {
+            // Get a list of actual characters
+            var availableCharacters = availableCharacterNames
+                .Select(c => engine.GameData.GetCharacter(c))
+                .ToList();
+
+            // Create a list of words that we will try to map characters to
+            var wordCharacterMap = words
+                .Except(SkipWords)
+                .Select(w => new MutablePair<string, Character>(w.ToLower(), null))
+                .ToList();
+
+            bool charactersFound = true;
+            while (charactersFound)
+            {
+                charactersFound = false;
+                foreach (var wcMapping in wordCharacterMap)
+                {
+                    // If this word is already mapped to a character them skip it.
+                    if (wcMapping.Value != null)
+                    {
+                        continue;
+                    }
+
+                    // Get a set of characters that match this word
+                    var wordCharacterMatches = availableCharacters
+                        .Where(i => i.Name.ToLower().Contains(wcMapping.Key))
+                        .ToList();
+
+                    // If there is just one character it matches then assign that word to
+                    // that character and remove the character from the remaining choices
+                    if (wordCharacterMatches.Count == 1)
+                    {
+                        charactersFound = true;
+                        wcMapping.Value = wordCharacterMatches.First();
+                        availableCharacters.Remove(wordCharacterMatches.First());
+                    }
+                }
+            }
+
+            return wordCharacterMap;
         }
     }
 }
