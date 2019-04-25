@@ -72,6 +72,16 @@ namespace GameEngine
         }
 
         /// <summary>
+        /// Gets the location with the specified name
+        /// </summary>
+        /// <param name="locationName">The location to get</param>
+        /// <returns>The location or null if it doesn't exist</returns>
+        public Location GetLocation(string locationName)
+        {
+            return Locations.ContainsKey(locationName) ? Locations[locationName] : null;
+        }
+
+        /// <summary>
         /// Helper method that can be used to add a portal more elegantly
         /// </summary>
         /// <param name="destinationRules">An array of portal rules to apply in order to the portal</param>
@@ -197,6 +207,16 @@ namespace GameEngine
             }
             character = null;
             return false;
+        }
+
+        /// <summary>
+        /// Gets the character with the specified name
+        /// </summary>
+        /// <param name="characterName">The character to get</param>
+        /// <returns>The character or null if they don't exist</returns>
+        public Character GetCharacter(string characterName)
+        {
+            return Characters.ContainsKey(characterName) ? Characters[characterName] : null;
         }
 
         /// <summary>

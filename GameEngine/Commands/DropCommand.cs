@@ -33,7 +33,11 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine what the player is trying to drop
-            var foundItems = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            var foundItems = wordItemMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
             Item item;
             if (foundItems.Count > 0)
             {
@@ -55,8 +59,19 @@ namespace GameEngine.Commands
             var itemAmountToDrop = characterItems[item.TrackingName];
             if (itemAmountToDrop > 1)
             {
-                Console.WriteLine("How many do you want to drop?");
-                itemAmountToDrop = int.Parse(Console.ReadLine());
+                var leftWords = wordItemMap.Where(i => i.Value == null).Select(i => i.Key).ToList();
+                var wordNumberMap = CommandHelper.WordsToNumbers(leftWords);
+                var foundNumbers = wordNumberMap.Where(i => i.Value.HasValue).Select(i => i.Value.Value).ToList();
+                if (foundNumbers.Count > 0)
+                {
+                    itemAmountToDrop = foundNumbers[0];
+                }
+                else
+                {
+                    Console.WriteLine("How many do you want to drop?");
+                    itemAmountToDrop = int.Parse(Console.ReadLine());
+                }
+
                 if (itemAmountToDrop <= 0)
                 {
                     return;
