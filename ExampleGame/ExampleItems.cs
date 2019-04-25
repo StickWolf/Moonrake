@@ -1,5 +1,6 @@
 ﻿using ExampleGame.Items;
 using GameEngine;
+using System;
 
 namespace ExampleGame
 {
@@ -12,6 +13,7 @@ namespace ExampleGame
         public string ColoredLightSwitchB { get; private set; }
         public string CrystalDiviner { get; private set; }
         public string DullBronzeKey { get; private set; }
+        public string StartRoomLever { get; private set; }
 
         public ExampleItems(ExampleGameSourceData gameData)
         {
@@ -42,12 +44,31 @@ namespace ExampleGame
 
             // Bronze key and keyhole pair
             DullBronzeKey = gameData.AddItem(new Item("DullBronzeKey", "Dull Bronze Key") { IsUnique = true, IsInteractable = true });
-            {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, DullBronzeKey, 1);
-            }
             BanquetToSecretWarpedHallKeyhole = gameData.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
             {
                 gameData.AddDefaultLocationItem(gameData.Locations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
+            }
+
+            // Start room lever
+            StartRoomLever = gameData.AddItem(
+                new Lever(gameData.GameVariables.StartRoomLever)
+                {
+                    CustomInteract = new Action<GameState, string>((gameState, fromPosition) =>
+                    {
+                        if (fromPosition.Equals("off"))
+                        {
+                            GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
+                            gameState.TryAddLocationItemCount(gameData.Locations.Start, gameData.Items.DullBronzeKey, 1, gameData);
+                            gameState.SetGameVarValue(gameData.GameVariables.StartRoomLever, "on");
+                        }
+                        else
+                        {
+                            GameEngine.Console.WriteLine($"The lever is jammed and won't budge.");
+                        }
+                    })
+                });
+            {
+                gameData.AddDefaultLocationItem(gameData.Locations.Start, StartRoomLever, 1);
             }
         }
     }
