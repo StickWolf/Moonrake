@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Locations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +14,40 @@ namespace GameEngine.Commands
             // TODO: The shopping command lets you go shopping!
             //
             // TODO: Here is the pseudo code.
-            //
+
             //  1. Determine the player's current location from the game state
-            //  2. Look in the game state for any tradeposts that are currently at this location
+            var playersLocationName = GameState.CurrentGameState.GetCharacterLocation("Player");
+            engine.GameData.TryGetLocation(playersLocationName, out Location playersLocation);
+            
+            //  2. Look in the game data for any tradeposts that are currently at this location
+            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(playersLocationName);
+            
             //  3. If there are no tradeposts here then mention that and return.
-            //  4. If there is just 1 tradepost then automatically choose that one, but if there
-            //     are multiple then give the user a choice on which one they want to shop at.
+            if (allTradePostsInPlayersLocation.Count == 0)
+            {
+                Console.WriteLine("There are no availible shops in your area.");
+                return;
+            }
+
+            //  4. If there is just 1 tradepost then automatically choose that one
+            string chosenTradePost;
+            if (allTradePostsInPlayersLocation.Count == 1)
+            {
+                chosenTradePost = allTradePostsInPlayersLocation[0];
+            }
+            else
+            {
+                // if there are multiple then give the user a choice on which one they want to shop at.
+                chosenTradePost = Console.Choose("Where would you like to shop?", allTradePostsInPlayersLocation);
+            }
+            Console.WriteLine($"Welcome, you will be shopping at {chosenTradePost}");
+
             //  5. One they have chosen a tradepost, look through each tradeset the tradepost offers
             //     and list out each item and the cost of each item in a menu that the user can choose
             //     from, but also can exit from without buying anything.
+
+
+
             //
             //     Note: for each item listed the program should check to see if it is a unique item and
             //     if so, should check to make sure that item is at no other location before listing it.
@@ -55,6 +81,7 @@ namespace GameEngine.Commands
         {
             // TODO: Should "craft" also activate this command?
             return word.Equals("shop", StringComparison.OrdinalIgnoreCase);
+            
         }
     }
 }

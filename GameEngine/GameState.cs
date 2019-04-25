@@ -414,5 +414,19 @@ namespace GameEngine
         {
             CurrentTradePostLocations[tradePostName] = locationName;
         }
+
+        /// <summary>
+        /// Gets all the trade posts at the given location
+        /// </summary>
+        /// <param name="locationName">The location to look at</param>
+        /// <returns>All the trade posts at the given location</returns>
+        public List<string> GetTradePostsAtLocation(string locationName)
+        {
+            var tradePostNames = CurrentTradePostLocations
+                .Where(kvp => kvp.Value.Equals(locationName))
+                .Select(kvp => kvp.Key)
+                .ToList();
+            return tradePostNames;
+        }
     }
 }
