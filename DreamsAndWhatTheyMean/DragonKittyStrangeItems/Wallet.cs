@@ -42,6 +42,8 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             {
                 GameEngine.Console.WriteLine($"Since {CharacterName} is dead, you get {MoneyWalletContains} dollars!");
                 gameState.TryAddCharacterItemCount("Player", "Dollar", MoneyWalletContains, GameData);
+                var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterName);
+                gameState.TryAddLocationItemCount(locationOfWallet, TrackingName, -1, GameData);
             }
         }
     }
