@@ -8,6 +8,8 @@
         public string ColoredLightAColor { get; private set; }
         public string ColoredLightBColor { get; private set; }
 
+        public string StartRoomLever { get; private set; }
+
         public ExampleGameVariables(ExampleGameSourceData gameData)
         {
             BanquetElevatorFloor = gameData.AddDefaultGameVar("BanquetElevatorFloor", "1");
@@ -15,6 +17,8 @@
 
             ColoredLightAColor = gameData.AddDefaultGameVar("ColoredLightA.Color", "red");
             ColoredLightBColor = gameData.AddDefaultGameVar("ColoredLightB.Color", "teal");
+
+            StartRoomLever = gameData.AddDefaultGameVar("StartRoomLever", "off");
         }
     }
 }
