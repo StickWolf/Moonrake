@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +9,9 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
 
-            if (!engine.GameData.TryGetCharacter("Player", out Character playerCharacter))
+            if (!engine.GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
             {
                 // TODO: why can't we get the player char?? weird error
             }

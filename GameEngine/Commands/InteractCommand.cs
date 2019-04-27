@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +9,9 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc) ?? new Dictionary<string, int>();
-            var characterItems = GameState.CurrentGameState.GetCharacterItems("Player") ?? new Dictionary<string, int>();
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName) ?? new Dictionary<string, int>();
 
             var interactableLocationItems = locationItems
                 .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))

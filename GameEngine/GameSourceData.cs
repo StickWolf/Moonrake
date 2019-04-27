@@ -1,4 +1,5 @@
-﻿using GameEngine.Locations;
+﻿using GameEngine.Characters;
+using GameEngine.Locations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;

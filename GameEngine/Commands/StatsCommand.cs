@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            engine.GameData.TryGetCharacter("Player", out Character charPlayer);
+            engine.GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character charPlayer);
             Console.WriteLine("Here are your stats:");
             Console.WriteLine($"You have {charPlayer.Hp}/{charPlayer.FullHp} HP");
             Console.WriteLine($"Your max attack is {charPlayer.MaxAttack}.");

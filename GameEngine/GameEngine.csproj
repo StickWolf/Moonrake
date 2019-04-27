@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Characters\PlayerCharacter.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DropCommand.cs" />
     <Compile Include="Commands\InteractCommand.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="Locations\PortalRule.cs" />
     <Compile Include="Locations\Portal.cs" />
     <Compile Include="EngineFactory.cs" />
-    <Compile Include="Character.cs" />
+    <Compile Include="Characters\Character.cs" />
     <Compile Include="EngineInternal.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Locations\Location.cs" />

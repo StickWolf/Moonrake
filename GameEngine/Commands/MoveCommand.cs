@@ -1,4 +1,5 @@
-﻿using GameEngine.Locations;
+﻿using GameEngine.Characters;
+using GameEngine.Locations;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var originPortalsDestinations = engine.GameData.Portals
                 .Where(p => p.HasOriginLocation(playerLoc))
                 .Select(p => p.GetDestination(playerLoc))
@@ -39,7 +40,7 @@ namespace GameEngine.Commands
                 location = engine.GameData.GetLocation(chosenLocationName);
             }
 
-            GameState.CurrentGameState.SetCharacterLocation("Player", location.Name);
+            GameState.CurrentGameState.SetCharacterLocation(PlayerCharacter.TrackingName, location.Name);
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();

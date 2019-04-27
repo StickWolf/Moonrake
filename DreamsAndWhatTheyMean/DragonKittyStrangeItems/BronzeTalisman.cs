@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,15 +27,15 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 
         public void Interacting(GameState gameState, string otherItemTrackingName, GameSourceData gameData)
         {
-            var playersItems = GameState.CurrentGameState.GetCharacterItems("Player");
+            var playersItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
             var playersItemsNames = playersItems.Keys;
             if (playersItemsNames.Contains("BronzeTalisman"))
             {
-                gameData.TryGetCharacter("Player", out Character player);
+                gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
                 player.MaxAttack = player.MaxAttack + 20;
                 player.FullHp = player.FullHp + 30;
                 GameEngine.Console.WriteLine("You put the talisman on, it vanishes and you feel stronger.");
-                GameState.CurrentGameState.TryAddCharacterItemCount("Player", "BronzeTalisman", -1, gameData);
+                GameState.CurrentGameState.TryAddCharacterItemCount(PlayerCharacter.TrackingName, "BronzeTalisman", -1, gameData);
             }
             else
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace GameEngine.Commands
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
             // Figure out the location name of where the player is at
-            var playerLocationName = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playerLocationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
 
             // Get a referience to that location from the GameData
             engine.GameData.TryGetLocation(playerLocationName, out var location);

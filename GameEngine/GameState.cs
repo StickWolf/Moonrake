@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GameEngine.Characters;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -352,7 +353,7 @@ namespace GameEngine
             var npcsInLocation = CharacterLocations
                 .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase))
                 .Select(kvp => kvp.Key)
-                .Except(new List<string>() { "Player" })
+                .Except(new List<string>() { PlayerCharacter.TrackingName })
                 .ToList();
             return npcsInLocation;
         }

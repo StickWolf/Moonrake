@@ -1,4 +1,5 @@
-﻿using GameEngine.Locations;
+﻿using GameEngine.Characters;
+using GameEngine.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace GameEngine.Commands
             // TODO: Here is the pseudo code.
 
             //  1. Determine the player's current location from the game state
-            var playersLocationName = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playersLocationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             engine.GameData.TryGetLocation(playersLocationName, out Location playersLocation);
             
             //  2. Look in the game data for any tradeposts that are currently at this location

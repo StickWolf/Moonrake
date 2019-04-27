@@ -4,32 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine
+namespace GameEngine.Characters
 {
     public class Character
     {
-
         public string Name { get; private set; }
 
         public int Hp, FullHp, MaxAttack, CounterAttackChance;
 
         private static Random rnd = new Random();
 
-        public Character(string name, int hp, int attack, int counterAttackChance)
+        public Character(string name, int hp)
         {
             Name = name;
             Hp = hp;
             FullHp = hp;
-            MaxAttack = attack;
-            CounterAttackChance = counterAttackChance;
         }
 
-        public void Attack(Character attackingCharacter, GameSourceData gameData)
+        public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            var locationName = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var locationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
-            charactersInLocation.Add("Player");
+            charactersInLocation.Add(PlayerCharacter.TrackingName);
             List<Character> characterList = new List<Character>();
             foreach(var characterName in charactersInLocation)
             {
