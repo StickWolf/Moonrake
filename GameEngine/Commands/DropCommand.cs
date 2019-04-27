@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var droppingCharacter = "Player";
+            var droppingCharacter = PlayerCharacter.TrackingName;
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter);
             var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter);
             if (characterItems == null || characterItems.Count == 0)

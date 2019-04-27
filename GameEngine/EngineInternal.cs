@@ -1,4 +1,5 @@
-﻿using GameEngine.Commands;
+﻿using GameEngine.Characters;
+using GameEngine.Commands;
 using System.Collections.Generic;
 
 namespace GameEngine
@@ -39,7 +40,7 @@ namespace GameEngine
             {
                 ProcessUserInput();
 
-                GameData.TryGetCharacter("Player", out Character player);
+                GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
                 if (player.Hp <= 0)
                 {
                     PlayerIsDead = true;

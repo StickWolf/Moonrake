@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 
 namespace ExampleGame
 {
@@ -8,7 +9,7 @@ namespace ExampleGame
 
         public ExampleCharacters(ExampleGameSourceData gameData)
         {
-            Player = gameData.AddCharacter(new Character("Player", 50, 40, 75));
+            Player = gameData.AddCharacter(new PlayerCharacter(50) { MaxAttack = 40, CounterAttackChance = 75 });
 
             // Default character locations
             gameData.AddDefaultCharacterLocation(Player, gameData.Locations.Start);

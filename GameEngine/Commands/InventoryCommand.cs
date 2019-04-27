@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
-            var charaterItems = GameState.CurrentGameState.GetCharacterItems("Player");
+            var charaterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
             // TODO: make the player character name constant or global.
             if(charaterItems == null || !charaterItems.Any())
             {

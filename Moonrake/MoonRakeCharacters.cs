@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Moonrake
 
         public MoonRakeCharacters(MoonrakeGameData gameData)
         {
-            Player = gameData.AddCharacter(new GameEngine.Character("Player", 50, 100, 75));
+            Player = gameData.AddCharacter(new PlayerCharacter(50) { MaxAttack = 100, CounterAttackChance = 75 });
         }
     }
 }
