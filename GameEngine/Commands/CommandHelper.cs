@@ -23,7 +23,8 @@ namespace GameEngine.Commands
                 new DropCommand(),
                 new AttackCommand(),
                 new StatsCommand(),
-                new InteractCommand()
+                new InteractCommand(),
+                new ShopCommand()
             };
         }
 

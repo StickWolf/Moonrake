@@ -6,7 +6,7 @@
 
         public MoonRakeGameVariables(MoonrakeGameData gameData)
         {
-            IceCreamShopDoor = gameData.AddDefaultGameVar("IceCreamShopDoor", "closed");
+            IceCreamShopDoor = gameData.AddDefaultGameVar("IceCreamShopDoor", "open");
         }
     }
 }
