@@ -63,7 +63,7 @@ namespace GameEngine.Characters
             var counterAttackPosiblity = rnd.Next(CounterAttackChance, 100);
             if(counterAttackPosiblity >= 75)
             {
-                if (Hp == 0)
+                if (IsDead())
                 {
                     return;
                 }
@@ -103,7 +103,7 @@ namespace GameEngine.Characters
 
         public void Heal(Character healingCharacter, GameSourceData gameData)
         {
-            if(Hp == 0)
+            if(IsDead())
             {
                 return;
             }
