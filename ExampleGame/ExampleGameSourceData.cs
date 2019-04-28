@@ -9,7 +9,7 @@ namespace ExampleGame
     {
         public ExampleGameVariables GameVariables { get; private set; }
         public ExampleLocations Locations { get; private set; }
-        public ExampleCharacters Characters { get; private set; }
+        public ExampleCharacters EgCharacters { get; private set; }
         public ExampleItems Items { get; private set; }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace ExampleGame
             // Note that the properties should be defined in this order due to how they reference each other
             GameVariables = new ExampleGameVariables(this);
             Locations = new ExampleLocations(this);
-            Characters = new ExampleCharacters(this);
+            EgCharacters = new ExampleCharacters(this);
             Items = new ExampleItems(this);
 
             DefaultPlayerName = "Sally";

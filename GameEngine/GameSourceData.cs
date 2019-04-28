@@ -17,7 +17,7 @@ namespace GameEngine
 
         public string GameEndingText { get; protected set; }
 
-        private Dictionary<string, Character> Characters { get; set; } = new Dictionary<string, Character>();
+        public Dictionary<string, Character> Characters { get; set; } = new Dictionary<string, Character>();
 
         private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
 
@@ -187,37 +187,11 @@ namespace GameEngine
         /// <returns>The name of the character</returns>
         public string AddCharacter(Character character)
         {
+            // TODO: migrate this assert over to GameState
             Debug.Assert(!Characters.ContainsKey(character.Name), $"A character with the name '{character.Name}' has already been added. Check the code to make sure it only gets added 1 time.");
 
             Characters[character.Name] = character;
             return character.Name;
-        }
-
-        /// <summary>
-        /// Gets a character if it exists
-        /// </summary>
-        /// <param name="characterName">The name of the character to try and get</param>
-        /// <param name="character">The character if it exists</param>
-        /// <returns>True/False depending on if the character exists</returns>
-        public bool TryGetCharacter(string characterName, out Character character)
-        {
-            if (Characters.ContainsKey(characterName))
-            {
-                character = Characters[characterName];
-                return true;
-            }
-            character = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the character with the specified name
-        /// </summary>
-        /// <param name="characterName">The character to get</param>
-        /// <returns>The character or null if they don't exist</returns>
-        public Character GetCharacter(string characterName)
-        {
-            return Characters.ContainsKey(characterName) ? Characters[characterName] : null;
         }
 
         /// <summary>

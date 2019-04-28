@@ -10,12 +10,12 @@ namespace GameEngine.Commands
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var playerCharacter = GameState.CurrentGameState.GetCharacter(PlayerCharacter.TrackingName);
 
-            if (!gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
-            {
-                return;
-            }
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
+            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: false)
+                .Select(c => c.Name)
+                .ToList();
+
             if (otherCharactersInLoc.Count == 0)
             {
                 Console.WriteLine("There are no charaters to attack here.");
@@ -35,13 +35,13 @@ namespace GameEngine.Commands
             else
             {
                 otherCharactersInLoc.Add("Cancel");
-                var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
-                if (playerToHit.Equals("Cancel"))
+                var characterToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
+                if (characterToHit.Equals("Cancel"))
                 {
                     Console.WriteLine("Stopped Attack.");
                     return;
                 }
-                defendingCharacter = gameData.GetCharacter(playerToHit);
+                defendingCharacter = GameState.CurrentGameState.GetCharacter(characterToHit);
             }
 
             defendingCharacter.Attack(playerCharacter, gameData);

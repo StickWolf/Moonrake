@@ -31,8 +31,8 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 
         public override void Grab(int count, string grabbingCharacterName, GameState gameState)
         {
-            GameData.TryGetCharacter(CharacterName, out Character attackingCharacter);
-            GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter);
+            var playerCharacter = gameState.GetCharacter(PlayerCharacter.TrackingName);
+            var attackingCharacter = gameState.GetCharacter(CharacterName);
             if (attackingCharacter.Hp > 0)
             {
                 GameEngine.Console.WriteLine($"You have tried to steal {CharacterName}'s wallet, now you will suffer,");

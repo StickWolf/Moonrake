@@ -78,14 +78,14 @@ namespace GameEngine.Commands
                 }
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLocationName);
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLocationName, includePlayer: false);
             if(otherCharactersInLocation.Count != 0)
             {
                 Console.WriteLine();
-                Console.WriteLine("The following people are here:");
-                foreach(var characterName in otherCharactersInLocation)
+                Console.WriteLine("The following other characters are here:");
+                foreach(var character in otherCharactersInLocation)
                 {
-                    Console.WriteLine($"{characterName}");
+                    Console.WriteLine($"{character.Name}");
                 }
             }
         }

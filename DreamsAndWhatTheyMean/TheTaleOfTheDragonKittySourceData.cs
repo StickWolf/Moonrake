@@ -4,14 +4,14 @@ namespace DreamsAndWhatTheyMean
 {
     class TheTaleOfTheDragonKittySourceData : GameSourceData
     {
-        public DragonKittyCharacters Characters { get; private set; }
+        public DragonKittyCharacters DkCharacters { get; private set; }
         public DragonKittyLocations Locations { get; private set; }
         public DragonKittyGameVarables GameVarables { get; private set; }
         public DragonKittyItems Items { get; private set; }
 
         public TheTaleOfTheDragonKittySourceData()
         {
-            Characters = new DragonKittyCharacters(this);
+            DkCharacters = new DragonKittyCharacters(this);
             Locations = new DragonKittyLocations(this);
             GameVarables = new DragonKittyGameVarables(this);
             Items = new DragonKittyItems(this);
@@ -27,7 +27,7 @@ namespace DreamsAndWhatTheyMean
             GameEndingText = "You have saved the last of the dragonkittys and you have won the game.";
 
             #region Starter Items
-            AddDefaultCharacterItem(Characters.Player, Items.Money, 200);
+            AddDefaultCharacterItem(DkCharacters.Player, Items.Money, 200);
             #endregion
 
             #region Room Items
@@ -45,10 +45,10 @@ namespace DreamsAndWhatTheyMean
             #endregion
 
             #region Character Locations
-            AddDefaultCharacterLocation(Characters.Player, Locations.PlayersRoom);
-            AddDefaultCharacterLocation(Characters.DadCharacter, Locations.PlayersBackyard);
-            AddDefaultCharacterLocation(Characters.MomCharacter, Locations.PlayersLivingRoom);
-            AddDefaultCharacterLocation(Characters.BlackSmithCharacter, Locations.BlackSmithShop);
+            AddDefaultCharacterLocation(DkCharacters.Player, Locations.PlayersRoom);
+            AddDefaultCharacterLocation(DkCharacters.DadCharacter, Locations.PlayersBackyard);
+            AddDefaultCharacterLocation(DkCharacters.MomCharacter, Locations.PlayersLivingRoom);
+            AddDefaultCharacterLocation(DkCharacters.BlackSmithCharacter, Locations.BlackSmithShop);
             #endregion
 
             #region Trade-Sets
