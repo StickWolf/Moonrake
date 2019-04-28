@@ -38,9 +38,10 @@ namespace GameEngine
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
             {
-                ProcessUserInput();
-
+                // mcbtodo: instead loop through all characters and process their turn
                 GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
+                player.Turn(this);
+
                 if (player.Hp <= 0)
                 {
                     PlayerIsDead = true;
@@ -61,27 +62,6 @@ namespace GameEngine
                     RunGameLoop = false;
                 }
             }
-        }
-
-        private void ProcessUserInput()
-        {
-            string input;
-            Console.Write(">");
-            input = Console.ReadLine();
-            Console.WriteLine();
-            var partsOfInput = new List<string>(input.Split(' '));
-            var firstWord = partsOfInput[0];
-
-            var commandToRun = CommandHelper.GetCommand(firstWord);
-            if (commandToRun == null)
-            {
-                Console.WriteLine($"I don't know what you mean by '{firstWord}'.");
-                return;
-            }
-
-            // The command is a real command if we got this far
-            partsOfInput.RemoveAt(0);
-            commandToRun.Exceute(this, partsOfInput);
         }
 
         /// <summary>
