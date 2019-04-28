@@ -116,14 +116,10 @@ namespace GameEngine
             DefaultLocationItems[locationName][itemTrackingName] = itemCount;
         }
 
-        public void AddDefaultCharacterLocation(Guid characterTrackingId, string locationName)
-        {
-            DefaultCharacterLocations.Add(characterTrackingId, locationName);
-        }
-
-        public Guid AddCharacter(Character character)
+        public Guid AddCharacter(Character character, string locationName)
         {
             Characters[character.TrackingId] = character;
+            DefaultCharacterLocations[character.TrackingId] = locationName;
             return character.TrackingId;
         }
 

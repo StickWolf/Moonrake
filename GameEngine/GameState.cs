@@ -338,7 +338,7 @@ namespace GameEngine
             return true;
         }
 
-        public void AddCharacter(Character character)
+        public void AddCharacter(Character character, string locationName) // TODO: instead use location tracking id
         {
             Debug.Assert(!Characters.ContainsKey(character.TrackingId), $"A character with the same tracking id '{character.TrackingId}' has already been added.");
 
@@ -349,6 +349,7 @@ namespace GameEngine
                 PlayerTrackingId = character.TrackingId;
             }
             Characters.Add(character.TrackingId, character);
+            CharacterLocations[character.TrackingId] = locationName;
         }
 
         public Character GetPlayerCharacter()
@@ -395,11 +396,9 @@ namespace GameEngine
             }
         }
 
-        public List<Character> GetCharactersInAllLocations()
+        public List<Character> GetAllCharacters()
         {
-            var characters = CharacterLocations
-                .Select(kvp => GetCharacter(kvp.Key))
-                .ToList();
+            var characters = Characters.Values.ToList();
             return characters;
         }
 
@@ -408,7 +407,7 @@ namespace GameEngine
             var characters = CharacterLocations
                 .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase)) // Where location is the one passed in
                 .Select(kvp => GetCharacter(kvp.Key));
-            
+
             // remove player if needed.
             if (!includePlayer)
             {

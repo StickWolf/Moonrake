@@ -38,7 +38,7 @@ namespace GameEngine
             while (RunGameLoop)
             {
                 // Get all characters in the game that are still alive
-                var allLocateableCharacters = GameState.CurrentGameState.GetCharactersInAllLocations();
+                var allLocateableCharacters = GameState.CurrentGameState.GetAllCharacters();
                 // TODO: save character data (hp, etc) to the save file. Track characters in game state.
                 foreach (var gameCharacter in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                 {
@@ -92,14 +92,8 @@ namespace GameEngine
             // Move all character instances into gameState
             foreach (var character in GameData.Characters.Values)
             {
-                GameState.CurrentGameState.AddCharacter(character);
-            }
-
-            // Set the default locations for each character
-            foreach (var characterName in GameData.DefaultCharacterLocations.Keys)
-            {
-                string locationName = GameData.DefaultCharacterLocations[characterName];
-                GameState.CurrentGameState.SetCharacterLocation(characterName, locationName);
+                string characterLocationName = GameData.DefaultCharacterLocations[character.TrackingId];
+                GameState.CurrentGameState.AddCharacter(character, characterLocationName);
             }
 
             // Add game vars that represent the inital game state

@@ -42,13 +42,6 @@ namespace DreamsAndWhatTheyMean
             AddDefaultLocationItem(Locations.PlayersBackyard, Items.DadsWallet, 1);
             #endregion
 
-            #region Character Locations
-            AddDefaultCharacterLocation(DkCharacters.Player, Locations.PlayersRoom);
-            AddDefaultCharacterLocation(DkCharacters.DadCharacter, Locations.PlayersBackyard);
-            AddDefaultCharacterLocation(DkCharacters.MomCharacter, Locations.PlayersLivingRoom);
-            AddDefaultCharacterLocation(DkCharacters.BlackSmithCharacter, Locations.BlackSmithShop);
-            #endregion
-
             #region Trade-Sets
             var tsBlackSmith = AddTradeSet("Metal",
                 new ItemRecipe(Items.BronzeBar,
