@@ -10,12 +10,12 @@ namespace GameEngine.Commands
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var playerCharacter = GameState.CurrentGameState.GetCharacter(PlayerCharacter.TrackingName);
 
-            if (!gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
-            {
-                return;
-            }
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
+            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: false)
+                .Select(c => c.Name)
+                .ToList();
+
             if (otherCharactersInLoc.Count == 0)
             {
                 Console.WriteLine("There are no charaters to attack here.");

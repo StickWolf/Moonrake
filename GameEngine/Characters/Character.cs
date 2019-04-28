@@ -28,24 +28,11 @@ namespace GameEngine.Characters
         {
         }
 
-        private List<Character> GetCharacters(GameSourceData gameData)
-        {
-            //TODO: This should be in the gameState
-            var locationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
-            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
-            charactersInLocation.Add(PlayerCharacter.TrackingName);
-            List<Character> characterList = new List<Character>();
-            foreach (var characterName in charactersInLocation)
-            {
-                gameData.TryGetCharacter(characterName, out Character character);
-                characterList.Add(character);
-            }
-            return characterList;
-        }
         public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            var charactersInLocation = GetCharacters(gameData);
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: true);
             Hp = Hp - attackDamage;
             if (Hp <= 0)
             {
@@ -108,7 +95,8 @@ namespace GameEngine.Characters
                 return;
             }
             var healAmount = GetHealAmount(MaxHeal);
-            var charactersInLocation = GetCharacters(gameData);
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: true);
             if ((Hp + healAmount) > FullHp)
             {
                 healAmount = FullHp - Hp;

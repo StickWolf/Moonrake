@@ -31,7 +31,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             var playersItemsNames = playersItems.Keys;
             if (playersItemsNames.Contains("Apple"))
             {
-                gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
+                var player = gameState.GetCharacter(PlayerCharacter.TrackingName);
                 if(player.Hp == player.FullHp)
                 {
                     GameEngine.Console.WriteLine("You can't eat the apple, you are at full health.");

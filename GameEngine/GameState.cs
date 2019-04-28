@@ -387,14 +387,20 @@ namespace GameEngine
             return characters;
         }
 
-        public List<string> GetCharactersInLocation(string locationName) // TODO: rename to getnpc or recode users to except player
+        public List<Character> GetCharactersInLocation(string locationName, bool includePlayer)
         {
-            var npcsInLocation = CharacterLocations
+            var characters = CharacterLocations
                 .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase))
-                .Select(kvp => kvp.Key)
-                .Except(new List<string>() { PlayerCharacter.TrackingName })
-                .ToList();
-            return npcsInLocation;
+                .Select(kvp => GetCharacter(kvp.Key));
+            
+            // remove player if needed.
+            if (!includePlayer)
+            {
+                characters = characters
+                    .Where(c => !c.Name.Equals(PlayerCharacter.TrackingName));
+            }
+
+            return characters.ToList();
         }
 
         /// <summary>
