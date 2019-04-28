@@ -80,7 +80,6 @@ namespace GameEngine.Commands
 
         public bool IsActivatedBy(string word)
         {
-            // TODO: Should "craft" also activate this command?
             return word.Equals("shop", StringComparison.OrdinalIgnoreCase);
             
         }

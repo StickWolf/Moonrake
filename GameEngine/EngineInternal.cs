@@ -43,7 +43,7 @@ namespace GameEngine
                 foreach (var gameCharacter in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                 {
                     // Only characters that are alive get a turn
-                    if (gameCharacter.Hp <= 0) // TODO: instead of defining what "alive" or "dead" is here instead add a function in the character class to return a bool for this.
+                    if (gameCharacter.IsDead())
                     {
                         continue;
                     }
