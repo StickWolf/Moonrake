@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Characters
 {
-    public class Character
+    public class Character : TrackableInstance
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         public int Hp, FullHp, MaxAttack, CounterAttackChance, MaxHeal;
 
@@ -31,7 +27,8 @@ namespace GameEngine.Characters
         public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: true);
             Hp = Hp - attackDamage;
             if (Hp <= 0)
@@ -95,7 +92,8 @@ namespace GameEngine.Characters
                 return;
             }
             var healAmount = GetHealAmount(MaxHeal);
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: true);
             if ((Hp + healAmount) > FullHp)
             {

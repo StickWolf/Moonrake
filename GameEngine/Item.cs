@@ -1,4 +1,6 @@
-﻿namespace GameEngine
+﻿using System;
+
+namespace GameEngine
 {
     public class Item
     {
@@ -73,19 +75,19 @@
         /// Allows an item to specify what happens when it is grabbed.
         /// </summary>
         /// <param name="count">The number of items being grabbed</param>
-        /// <param name="grabbingCharacterName">The name of the character who is grabbing</param>
+        /// <param name="grabbingCharacterTrackingId">The name of the character who is grabbing</param>
         /// <param name="gameState">The current game state</param>
         /// <param name="gameData">The current game data</param>
-        public virtual void Grab(int count, string grabbingCharacterName, GameState gameState)
+        public virtual void Grab(int count, Guid grabbingCharacterTrackingId, GameState gameState)
         {
             var description = GetDescription(count, gameState);
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacterName);
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacterTrackingId);
             // Remove it from the floor
             var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc, TrackingName, -count, this);
             // And place it in the player's inventory, but only if it was removed from the floor successfully
             if (removeLocationResult)
             {
-                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacterName, TrackingName, count, this);
+                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacterTrackingId, TrackingName, count, this);
                 Console.WriteLine($"You grabbed {description}.");
             }
             else
@@ -98,16 +100,16 @@
         /// Allows an item to specify what happens when it is dropped.
         /// </summary>
         /// <param name="count">The number of items being dropped</param>
-        /// <param name="droppingCharacterName">The name of the character who is dropping</param>
+        /// <param name="droppingCharacterTrackingId">The name of the character who is dropping</param>
         /// <param name="gameState">The current game state</param>
         /// <param name="gameData">The current game data</param>
-        public virtual void Drop(int count, string droppingCharacterName, GameState gameState)
+        public virtual void Drop(int count, Guid droppingCharacterTrackingId, GameState gameState)
         {
             var description = GetDescription(count, gameState);
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacterName);
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacterTrackingId);
 
             // Remove it from the character's inventory
-            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacterName, TrackingName, -count, this);
+            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacterTrackingId, TrackingName, -count, this);
 
             // And place it on the floor, but only if it was removed from the inventory successfully
             if (removeCharResult)

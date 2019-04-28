@@ -9,9 +9,9 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var droppingCharacter = PlayerCharacter.TrackingName;
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter);
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter);
+            var droppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);
             if (characterItems == null || characterItems.Count == 0)
             {
                 Console.WriteLine("You have nothing to drop.");
@@ -83,7 +83,7 @@ namespace GameEngine.Commands
                 }
             }
 
-            item.Drop(itemAmountToDrop, droppingCharacter, GameState.CurrentGameState);
+            item.Drop(itemAmountToDrop, droppingCharacter.TrackingId, GameState.CurrentGameState);
         }
 
         public bool IsActivatedBy(string word)

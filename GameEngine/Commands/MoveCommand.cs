@@ -9,10 +9,11 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var movingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var movingCharacterLoc = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
             var originPortalsDestinations = gameData.Portals
-                .Where(p => p.HasOriginLocation(playerLoc))
-                .Select(p => p.GetDestination(playerLoc))
+                .Where(p => p.HasOriginLocation(movingCharacterLoc))
+                .Select(p => p.GetDestination(movingCharacterLoc))
                 .Where(d => d.Destination != null)
                 .Select(d =>  d.Destination)
                 .ToList();
@@ -40,7 +41,7 @@ namespace GameEngine.Commands
                 location = gameData.GetLocation(chosenLocationName);
             }
 
-            GameState.CurrentGameState.SetCharacterLocation(PlayerCharacter.TrackingName, location.Name);
+            GameState.CurrentGameState.SetCharacterLocation(movingCharacter.TrackingId, location.Name);
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();

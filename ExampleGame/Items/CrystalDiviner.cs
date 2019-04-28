@@ -1,4 +1,5 @@
-﻿using GameEngine;
+﻿using System;
+using GameEngine;
 
 namespace ExampleGame.Items
 {
@@ -15,18 +16,18 @@ namespace ExampleGame.Items
             return "a device made of crystal that has an unknown purpose"; // TODO: write asserts that check the formatting of these, check for init caps and . ending sentences that shouldn't be present
         }
 
-        public override void Grab(int count, string grabbingCharacterName, GameState gameState)
+        public override void Grab(int count, Guid grabbingCharacterTrackingId, GameState gameState)
         {
             // TODO: Check a character ability or some gamevar to determine this
             bool canGrab = false;
 
             if (canGrab)
             {
-                base.Grab(count, grabbingCharacterName, gameState);
+                base.Grab(count, grabbingCharacterTrackingId, gameState);
             }
             else
             {
-                Console.WriteLine("You attempt to grab the crystal device, but your hands pass through it as though it is just a projection.");
+                GameEngine.Console.WriteLine("You attempt to grab the crystal device, but your hands pass through it as though it is just a projection.");
             }
         }
     }

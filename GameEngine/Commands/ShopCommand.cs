@@ -13,15 +13,14 @@ namespace GameEngine.Commands
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             // TODO: The shopping command lets you go shopping!
-            //
-            // TODO: Here is the pseudo code.
 
             //  1. Determine the player's current location from the game state
-            var playersLocationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
-            gameData.TryGetLocation(playersLocationName, out Location playersLocation);
+            var shoppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var shoppingLocationName = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
+            gameData.TryGetLocation(shoppingLocationName, out Location shoppersLocation);
             
             //  2. Look in the game data for any tradeposts that are currently at this location
-            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(playersLocationName);
+            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingLocationName);
             
             //  3. If there are no tradeposts here then mention that and return.
             if (allTradePostsInPlayersLocation.Count == 0)

@@ -9,12 +9,12 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
-            var playerCharacter = GameState.CurrentGameState.GetCharacter(PlayerCharacter.TrackingName);
+            var playerLoc = GameState.CurrentGameState.GetPlayerCharacterLocation();
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
 
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: false)
-                .Select(c => c.Name)
-                .ToList();
+                .Select(c => new KeyValuePair<Character, string>(c, c.Name))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             if (otherCharactersInLoc.Count == 0)
             {
@@ -22,7 +22,7 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc, gameData);
+            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList(), gameData);
             var foundCharacters = wordCharacterMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -34,14 +34,14 @@ namespace GameEngine.Commands
             }
             else
             {
-                otherCharactersInLoc.Add("Cancel");
-                var characterToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
-                if (characterToHit.Equals("Cancel"))
+                var cancelChar = new Character("Cancel", 0); // TODO: instead of this hacky adding-ness, instead update the choose method to support a cancel option natively
+                otherCharactersInLoc[cancelChar] = "Cancel";
+                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
+                if (defendingCharacter == cancelChar)
                 {
                     Console.WriteLine("Stopped Attack.");
                     return;
                 }
-                defendingCharacter = GameState.CurrentGameState.GetCharacter(characterToHit);
             }
 
             defendingCharacter.Attack(playerCharacter, gameData);

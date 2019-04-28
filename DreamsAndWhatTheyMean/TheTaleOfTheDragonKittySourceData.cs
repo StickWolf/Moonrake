@@ -16,8 +16,6 @@ namespace DreamsAndWhatTheyMean
             GameVarables = new DragonKittyGameVarables(this);
             Items = new DragonKittyItems(this);
 
-            DefaultPlayerName = "James";
-
             GameIntroductionText = "Once, there was a group of kids." +
                 " These kids played around every day, they even had a youtube channel that they shared." +
                 " Now, in this story, you will join these kids and go on a journey with them." +
