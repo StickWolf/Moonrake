@@ -13,7 +13,7 @@ namespace GameEngine.Commands
 
             if (!gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
             {
-                // TODO: why can't we get the player char?? weird error
+                return;
             }
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
             if (otherCharactersInLoc.Count == 0)
