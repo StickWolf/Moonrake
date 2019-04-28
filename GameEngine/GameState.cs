@@ -18,6 +18,10 @@ namespace GameEngine
         [JsonProperty]
         public string PlayerName { get; set; }
 
+        // Characters[{CharacterTrackingName}] = {Character}
+        [JsonProperty]
+        private Dictionary<string, Character> Characters { get; set; } = new Dictionary<string, Character>();
+
         // CharacterItems[{CharacterName}][{ItemTrackingName}] = {ItemCount}
         [JsonProperty]
         private Dictionary<string, Dictionary<string, int>> CharactersItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
@@ -72,8 +76,13 @@ namespace GameEngine
             // add (or update) the gamestate that was passed in into the dictionary we now have using slotName as the key
             savedGamesDictionary[slotName] = CurrentGameState;
 
+            var serializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
+
             // serialize the dictionary to a string
-            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary);
+            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary, Formatting.Indented, serializerSettings);
 
             // save that serialized string to the game saves file
             File.WriteAllText(SaveFileName, serializedDictionary);
@@ -89,8 +98,13 @@ namespace GameEngine
                 // read the save file to a string
                 string fileContents = File.ReadAllText(SaveFileName);
 
+                var serializerSettings = new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                };
+
                 // deserialize the string into a dictionary<string, gamestate>
-                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents);
+                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents, serializerSettings);
             }
             else
             {
@@ -323,6 +337,23 @@ namespace GameEngine
             return true;
         }
 
+        public void AddCharacter(Character character)
+        {
+            // TODO: Update the code so each character instance has a unique tracking name and don't 
+            // TODO: use just .Name here, but instead .TrackingName
+            // TODO: This means there can be several "Rat" characters, but we want to keep track of
+            // TODO: each one individually.
+            Characters.Add(character.Name, character);
+        }
+
+        public Character GetCharacter(string characterTrackingName)
+        {
+            if (Characters.ContainsKey(characterTrackingName))
+            {
+                return Characters[characterTrackingName];
+            }
+            return null;
+        }
 
         public Dictionary<string, int> GetCharacterItems(string characterName)
         {
@@ -348,15 +379,15 @@ namespace GameEngine
             }
         }
 
-        public List<string> GetCharactersInAllLocations()
+        public List<Character> GetCharactersInAllLocations()
         {
             var characters = CharacterLocations
-                .Select(kvp =>  kvp.Key)
+                .Select(kvp => GetCharacter(kvp.Key))
                 .ToList();
             return characters;
         }
 
-        public List<string> GetCharactersInLocation(string locationName) // mcbtodo: rename to getnpc or recode users to except player
+        public List<string> GetCharactersInLocation(string locationName) // TODO: rename to getnpc or recode users to except player
         {
             var npcsInLocation = CharacterLocations
                 .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase))

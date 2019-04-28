@@ -35,13 +35,13 @@ namespace GameEngine.Commands
             else
             {
                 otherCharactersInLoc.Add("Cancel");
-                var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
-                if (playerToHit.Equals("Cancel"))
+                var characterToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
+                if (characterToHit.Equals("Cancel"))
                 {
                     Console.WriteLine("Stopped Attack.");
                     return;
                 }
-                defendingCharacter = gameData.GetCharacter(playerToHit);
+                defendingCharacter = GameState.CurrentGameState.GetCharacter(characterToHit);
             }
 
             defendingCharacter.Attack(playerCharacter, gameData);

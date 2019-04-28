@@ -11,7 +11,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character charPlayer);
+            var charPlayer = GameState.CurrentGameState.GetCharacter(PlayerCharacter.TrackingName);
             Console.WriteLine("Here are your stats:");
             Console.WriteLine($"You have {charPlayer.Hp}/{charPlayer.FullHp} HP");
             Console.WriteLine($"Your max attack is {charPlayer.MaxAttack}.");

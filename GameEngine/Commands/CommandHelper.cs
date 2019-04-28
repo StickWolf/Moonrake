@@ -219,7 +219,7 @@ namespace GameEngine.Commands
         {
             // Get a list of actual characters
             var availableCharacters = availableCharacterNames
-                .Select(c => gameData.GetCharacter(c))
+                .Select(c => GameState.CurrentGameState.GetCharacter(c))
                 .ToList();
 
             // Create a list of words that we will try to map characters to

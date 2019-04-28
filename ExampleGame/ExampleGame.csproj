@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Characters\Rat.cs" />
     <Compile Include="ExampleItems.cs" />
     <Compile Include="ExampleLocations.cs" />
     <Compile Include="ExampleGameSourceData.cs" />
