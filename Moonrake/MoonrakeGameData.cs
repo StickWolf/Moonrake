@@ -26,8 +26,6 @@ namespace Moonrake
                 " The Moonrake." +
                 " Hello, Welcome to Moonrake, a text adventure game.";
 
-            AddDefaultCharacterLocation(MoonRakeCharacters.Player, MoonRakeLocations.TreeHouse);
-
             AddDefaultCharacterItem(MoonRakeCharacters.Player, MoonRakeItems.Money, 35);
 
             #region TradeSets
