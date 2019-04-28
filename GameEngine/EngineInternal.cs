@@ -40,7 +40,7 @@ namespace GameEngine
                 // Get all characters in the game that are still alive
                 var allLocateableCharacters = GameState.CurrentGameState.GetCharactersInAllLocations();
                 // TODO: save character data (hp, etc) to the save file. Track characters in game state.
-                foreach (var gameCharacterName in allLocateableCharacters)
+                foreach (var gameCharacterName in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                 {
                     var gameCharacter = GameData.GetCharacter(gameCharacterName);
                     // Only characters that are alive get a turn
