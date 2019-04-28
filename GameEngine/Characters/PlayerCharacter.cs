@@ -15,25 +15,29 @@ namespace GameEngine.Characters
         {
         }
 
-        public override void Turn(EngineInternal engine)
+        internal void InternalTurn(EngineInternal engine)
         {
             string input;
             Console.Write(">");
             input = Console.ReadLine();
             Console.WriteLine();
-            var partsOfInput = new List<string>(input.Split(' '));
-            var firstWord = partsOfInput[0];
+            var extraWords = new List<string>(input.Split(' '));
+            var word = extraWords[0];
+            extraWords.RemoveAt(0);
 
-            var commandToRun = CommandHelper.GetCommand(firstWord);
-            if (commandToRun == null)
+            // Look for internal commands to run
+            if (CommandHelper.TryRunInternalCommand(word, extraWords, engine))
             {
-                Console.WriteLine($"I don't know what you mean by '{firstWord}'.");
                 return;
             }
 
-            // The command is a real command if we got this far
-            partsOfInput.RemoveAt(0);
-            commandToRun.Exceute(engine, partsOfInput);
+            // Then look for public commands to run
+            if (CommandHelper.TryRunPublicCommand(word, extraWords, engine.GameData))
+            {
+                return;
+            }
+
+            Console.WriteLine($"I don't know what you mean by '{word}'.");
         }
     }
 }

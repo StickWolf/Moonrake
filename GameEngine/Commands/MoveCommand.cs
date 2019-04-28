@@ -7,17 +7,17 @@ namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
-            var originPortalsDestinations = engine.GameData.Portals
+            var originPortalsDestinations = gameData.Portals
                 .Where(p => p.HasOriginLocation(playerLoc))
                 .Select(p => p.GetDestination(playerLoc))
                 .Where(d => d.Destination != null)
                 .Select(d =>  d.Destination)
                 .ToList();
 
-            var wordLocationMap = CommandHelper.WordsToLocations(extraWords, originPortalsDestinations.ToList(), engine);
+            var wordLocationMap = CommandHelper.WordsToLocations(extraWords, originPortalsDestinations.ToList(), gameData);
             var foundLocations = wordLocationMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -37,15 +37,14 @@ namespace GameEngine.Commands
                     Console.WriteLine("Canceled Move");
                     return;
                 }
-                location = engine.GameData.GetLocation(chosenLocationName);
+                location = gameData.GetLocation(chosenLocationName);
             }
 
             GameState.CurrentGameState.SetCharacterLocation(PlayerCharacter.TrackingName, location.Name);
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();
-            var lookCommand = CommandHelper.GetCommand("look");
-            lookCommand.Exceute(engine, new List<string>());
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), gameData);
         }
 
         public bool IsActivatedBy(string word)

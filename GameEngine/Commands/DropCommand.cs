@@ -7,7 +7,7 @@ namespace GameEngine.Commands
 {
     internal class DropCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var droppingCharacter = PlayerCharacter.TrackingName;
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter);
@@ -19,7 +19,7 @@ namespace GameEngine.Commands
             }
 
             var availableItems = characterItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && !i.Item1.IsBound && i.Item1.IsVisible) // Filter out bound and invisible items because these cannot be dropped
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -34,7 +34,7 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine what the player is trying to drop
-            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), engine);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), gameData);
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -54,7 +54,7 @@ namespace GameEngine.Commands
                     return;
                 }
 
-                item = engine.GameData.GetItem(itemToDrop);
+                item = gameData.GetItem(itemToDrop);
             }
 
             var itemAmountToDrop = characterItems[item.TrackingName];

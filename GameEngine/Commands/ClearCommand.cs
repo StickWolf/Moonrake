@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
-    internal class ClearCommand : ICommand
+    internal class ClearCommand : ICommandInternal
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {

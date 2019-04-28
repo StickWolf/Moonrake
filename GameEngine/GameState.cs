@@ -348,7 +348,15 @@ namespace GameEngine
             }
         }
 
-        public List<string> GetCharactersInLocation(string locationName)
+        public List<string> GetCharactersInAllLocations()
+        {
+            var characters = CharacterLocations
+                .Select(kvp =>  kvp.Key)
+                .ToList();
+            return characters;
+        }
+
+        public List<string> GetCharactersInLocation(string locationName) // mcbtodo: rename to getnpc or recode users to except player
         {
             var npcsInLocation = CharacterLocations
                 .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase))

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GameEngine.Commands
 {
-    internal class ExitCommand : ICommand
+    internal class ExitCommand : ICommandInternal
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
@@ -28,8 +28,7 @@ namespace GameEngine.Commands
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Save and then exit
-                    var saveCommand = CommandHelper.GetCommand("save");
-                    saveCommand.Exceute(engine, new List<string>());
+                    CommandHelper.TryRunInternalCommand("save", new List<string>(), engine);
                     engine.RunGameLoop = false;
                     engine.RunFactory = false;
                     return;

@@ -32,16 +32,35 @@ namespace GameEngine
         public void StartEngine()
         {
             // Ask the player to pick to load a saved game if there are any
-            var loadCommand = CommandHelper.GetCommand("load");
-            loadCommand.Exceute(this, new List<string>());
+            CommandHelper.TryRunInternalCommand("load", new List<string>(), this);
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
             {
-                // mcbtodo: instead loop through all characters and process their turn
-                GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
-                player.Turn(this);
+                // Get all characters in the game that are still alive
+                var allLocateableCharacters = GameState.CurrentGameState.GetCharactersInAllLocations();
+                // TODO: save character data (hp, etc) to the save file. Track characters in game state.
+                foreach (var gameCharacterName in allLocateableCharacters)
+                {
+                    var gameCharacter = GameData.GetCharacter(gameCharacterName);
+                    // Only characters that are alive get a turn
+                    if (gameCharacter.Hp <= 0) // TODO: instead of defining what "alive" or "dead" is here instead add a function in the character class to return a bool for this.
+                    {
+                        continue;
+                    }
 
+                    // If this is the player character, then call a special version of "Turn"
+                    if (gameCharacter is PlayerCharacter)
+                    {
+                        (gameCharacter as PlayerCharacter).InternalTurn(this);
+                    }
+                    else
+                    {
+                        gameCharacter.Turn(this.GameData);
+                    }
+                }
+
+                this.GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
                 if (player.Hp <= 0)
                 {
                     PlayerIsDead = true;
@@ -115,8 +134,7 @@ namespace GameEngine
             Console.WriteLine(GameData.GameIntroductionText);
             Console.WriteLine();
 
-            var lookCommand = CommandHelper.GetCommand("look");
-            lookCommand.Exceute(this, new List<string>());
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), this.GameData);
         }
     }
 }

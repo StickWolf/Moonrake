@@ -24,7 +24,7 @@ namespace GameEngine.Characters
         /// <summary>
         /// Allows the character to take their turn.
         /// </summary>
-        public virtual void Turn(EngineInternal engine)
+        public virtual void Turn(GameSourceData gameData)
         {
         }
 

@@ -7,7 +7,7 @@ namespace GameEngine.Commands
 {
     internal class InventoryCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var charaterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
             // TODO: make the player character name constant or global.
@@ -20,7 +20,7 @@ namespace GameEngine.Commands
             Console.WriteLine("You are currently holding:");
             foreach (var characterItem in charaterItems)
             {
-                if (engine.GameData.TryGetItem(characterItem.Key, out Item item))
+                if (gameData.TryGetItem(characterItem.Key, out Item item))
                 {
                     // Don't show invisible items
                     if (!item.IsVisible)
