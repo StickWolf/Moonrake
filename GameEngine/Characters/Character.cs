@@ -10,7 +10,7 @@ namespace GameEngine.Characters
     {
         public string Name { get; private set; }
 
-        public int Hp, FullHp, MaxAttack, CounterAttackChance;
+        public int Hp, FullHp, MaxAttack, CounterAttackChance, MaxHeal;
 
         private static Random rnd = new Random();
 
@@ -27,19 +27,24 @@ namespace GameEngine.Characters
         public virtual void Turn(GameSourceData gameData)
         {
         }
-
-        public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
+        public List<Character> GetCharacters(GameSourceData gameData)
         {
-            var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
             var locationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
             charactersInLocation.Add(PlayerCharacter.TrackingName);
             List<Character> characterList = new List<Character>();
-            foreach(var characterName in charactersInLocation)
+            foreach (var characterName in charactersInLocation)
             {
                 gameData.TryGetCharacter(characterName, out Character character);
                 characterList.Add(character);
             }
+            return characterList;
+        }
+        public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
+        {
+            var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
+            var locationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var charactersInLocation = GetCharacters(gameData);
             Hp = Hp - attackDamage;
             if (Hp <= 0)
             {
@@ -49,7 +54,7 @@ namespace GameEngine.Characters
                 Console.WriteLine($"{Name} is dead.");
                 return;
             }
-            if (charactersInLocation.Contains(Name))
+            if (charactersInLocation.Contains(this))
             {
                 Console.WriteLine($"{Name} has {Hp}/{FullHp} left");
             }
@@ -73,7 +78,7 @@ namespace GameEngine.Characters
                     Console.WriteLine($"{attackingCharacter.Name} is dead.");
                     return;
                 }
-                if (charactersInLocation.Contains(attackingCharacter.Name))
+                if (charactersInLocation.Contains(attackingCharacter))
                 {
                     Console.WriteLine($"{attackingCharacter.Name} has {attackingCharacter.Hp}/{attackingCharacter.FullHp} left");
                 }
@@ -86,6 +91,34 @@ namespace GameEngine.Characters
             return damage;
         }
 
-        //ZABTODO: Make a heal fuction and add a healing power method
+        public bool IsDead()
+        {
+            if(Hp <= 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void Heal(Character healingCharacter, GameSourceData gameData)
+        {
+            var healAmount = GetHealAmount(MaxHeal);
+            var charactersInLocation = GetCharacters(gameData);
+            Hp = Hp + healAmount;
+            if (charactersInLocation.Contains(this))
+            {
+                Console.WriteLine($"{Name} has been healed for {healAmount}.");
+            }
+            if(Hp > FullHp)
+            {
+                Hp = FullHp;
+            }
+        }
+
+        private int GetHealAmount(int maxHeal)
+        {
+            int heal = rnd.Next(0, maxHeal);
+            return maxHeal;
+        }
     }
 }
