@@ -7,11 +7,11 @@ namespace GameEngine.Commands
 {
     internal class AttackCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
 
-            if (!engine.GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
+            if (!gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
             {
                 // TODO: why can't we get the player char?? weird error
             }
@@ -22,7 +22,7 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc, engine);
+            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc, gameData);
             var foundCharacters = wordCharacterMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -41,10 +41,10 @@ namespace GameEngine.Commands
                     Console.WriteLine("Stopped Attack.");
                     return;
                 }
-                defendingCharacter = engine.GameData.GetCharacter(playerToHit);
+                defendingCharacter = gameData.GetCharacter(playerToHit);
             }
 
-            defendingCharacter.Attack(playerCharacter, engine.GameData);
+            defendingCharacter.Attack(playerCharacter, gameData);
         }
 
         public bool IsActivatedBy(string word)

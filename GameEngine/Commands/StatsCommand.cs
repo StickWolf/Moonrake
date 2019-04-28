@@ -9,9 +9,9 @@ namespace GameEngine.Commands
 {
     class StatsCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            engine.GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character charPlayer);
+            gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character charPlayer);
             Console.WriteLine("Here are your stats:");
             Console.WriteLine($"You have {charPlayer.Hp}/{charPlayer.FullHp} HP");
             Console.WriteLine($"Your max attack is {charPlayer.MaxAttack}.");

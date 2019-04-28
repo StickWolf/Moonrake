@@ -7,14 +7,14 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc) ?? new Dictionary<string, int>();
             var characterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName) ?? new Dictionary<string, int>();
 
             var interactableLocationItems = locationItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && i.Item1.IsInteractable && i.Item1.IsVisible) // Only choose items that are interactable and visible
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -22,7 +22,7 @@ namespace GameEngine.Commands
                                  ));
 
             var interactableCharacterItems = characterItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && i.Item1.IsInteractable && i.Item1.IsVisible) // Only choose items that are interactable and visible
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -40,7 +40,7 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine the choices if extra words are typed in
-            var wordItemMap = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), engine);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), gameData);
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -51,7 +51,7 @@ namespace GameEngine.Commands
             // If we weren't able to determine at-least the first item through extra words, then try via prompt mode
             if (item1 == null)
             {
-                if (!TryGetItemsFromPrompts(allInteractableItems, engine, out item1, out item2))
+                if (!TryGetItemsFromPrompts(allInteractableItems, gameData, out item1, out item2))
                 {
                     return;
                 }
@@ -68,7 +68,7 @@ namespace GameEngine.Commands
             }
         }
 
-        private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
+        private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, GameSourceData gameData, out Item item1, out Item item2)
         {
             allInteractableItems.Add("CancelChoice", "Cancel");
             var itemToInteractWith = Console.Choose("What do you want to use?", allInteractableItems);
@@ -78,7 +78,7 @@ namespace GameEngine.Commands
                 item1 = item2 = null;
                 return false;
             }
-            var item = engine.GameData.GetItem(itemToInteractWith);
+            var item = gameData.GetItem(itemToInteractWith);
             allInteractableItems.Remove(itemToInteractWith); // Remove the item being used
 
             while (true)
@@ -116,7 +116,7 @@ namespace GameEngine.Commands
                         return false;
                     }
                     item1 = item;
-                    item2 = engine.GameData.GetItem(secondItemToInteractWith);
+                    item2 = gameData.GetItem(secondItemToInteractWith);
                     return true;
                 }
                 else
@@ -125,7 +125,6 @@ namespace GameEngine.Commands
                 }
             }
         }
-
 
         public bool IsActivatedBy(string word)
         {

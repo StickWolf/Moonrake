@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
-    internal class LoadCommand : ICommand
+    internal class LoadCommand : ICommandInternal
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
@@ -22,7 +22,6 @@ namespace GameEngine.Commands
             else if (slotToLoad == "Cancel")
             {
                 Console.WriteLine("Canceled Load");
-
             }
             else
             {

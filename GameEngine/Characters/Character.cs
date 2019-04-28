@@ -21,6 +21,13 @@ namespace GameEngine.Characters
             FullHp = hp;
         }
 
+        /// <summary>
+        /// Allows the character to take their turn.
+        /// </summary>
+        public virtual void Turn(GameSourceData gameData)
+        {
+        }
+
         public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);

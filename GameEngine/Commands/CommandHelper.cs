@@ -7,7 +7,8 @@ namespace GameEngine.Commands
 {
     internal static class CommandHelper
     {
-        private static List<ICommand> AllCommands { get; set; }
+        private static List<ICommand> AllPublicCommands { get; set; }
+        private static List<ICommandInternal> AllInternalCommands { get; set; }
 
         /// <summary>
         /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
@@ -17,15 +18,12 @@ namespace GameEngine.Commands
 
         static CommandHelper()
         {
-            AllCommands = new List<ICommand>()
+            // Public commands do not get passed the engine internal when they are called
+            // Public commands are available to the player and npcs
+            AllPublicCommands = new List<ICommand>()
             {
                 new MoveCommand(),
-                new SaveCommand(),
-                new LoadCommand(),
-                new ExitCommand(),
-                new LetPlayerChangeTheirNameCommand(),
                 new LookCommand(),
-                new ClearCommand(),
                 new InventoryCommand(),
                 new GrabCommand(),
                 new DropCommand(),
@@ -33,12 +31,57 @@ namespace GameEngine.Commands
                 new StatsCommand(),
                 new InteractCommand()
             };
+
+            // Internal commands gain access to the EngineInternal when they are executed
+            // The intention is that internal commands are only available to the player
+            AllInternalCommands = new List<ICommandInternal>()
+            {
+                new ClearCommand(),
+                new LetPlayerChangeTheirNameCommand(),
+                new LoadCommand(),
+                new SaveCommand(),
+                new ExitCommand(),
+            };
         }
 
-        public static ICommand GetCommand(string word)
+        /// <summary>
+        /// Runs a public command
+        /// </summary>
+        /// <param name="word">The command word</param>
+        /// <param name="extraWords">Extra words to pass along to the command</param>
+        /// <param name="gameData">The game source data</param>
+        /// <returns>True if the command was found and ran, false if the command was not found</returns>
+        public static bool TryRunPublicCommand(string word, List<string> extraWords, GameSourceData gameData)
         {
-            var commandToRun = AllCommands.FirstOrDefault(c => c.IsActivatedBy(word));
-            return commandToRun;
+            var commandToRun = AllPublicCommands.FirstOrDefault(c => c.IsActivatedBy(word));
+            if (commandToRun == null)
+            {
+                return false;
+            }
+
+            // The command is a real command if we got this far
+            commandToRun.Exceute(gameData, extraWords);
+            return true;
+        }
+
+        /// <summary>
+        /// Runs a public command
+        /// </summary>
+        /// <param name="word">The command word</param>
+        /// <param name="extraWords">Extra words to pass along to the command</param>
+        /// <param name="gameData">The game source data</param>
+        /// <returns>True if the command was found and ran, false if the command was not found</returns>
+        internal static bool TryRunInternalCommand(string word, List<string> extraWords, EngineInternal engine)
+        {
+            var commandToRun = AllInternalCommands.FirstOrDefault(c => c.IsActivatedBy(word));
+            if (commandToRun == null)
+            {
+                return false;
+            }
+
+            // The command is a real command if we got this far
+            commandToRun.Exceute(engine, extraWords);
+            return true;
         }
 
         /// <summary>
@@ -48,11 +91,11 @@ namespace GameEngine.Commands
         /// <param name="availableItemNames">The names of items that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of items that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Item>> WordsToItems(List<string> words, List<string> availableItemNames, EngineInternal engine)
+        public static List<MutablePair<string, Item>> WordsToItems(List<string> words, List<string> availableItemNames, GameSourceData gameData)
         {
             // Get a list of actual items
             var availableItems = availableItemNames
-                .Select(i => engine.GameData.GetItem(i))
+                .Select(i => gameData.GetItem(i))
                 .ToList();
 
             // Create a list of words that we will try to map items to
@@ -121,11 +164,11 @@ namespace GameEngine.Commands
         /// <param name="availableLocationNames">The names of locations that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of locations that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<string> availableLocationNames, EngineInternal engine)
+        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<string> availableLocationNames, GameSourceData gameData)
         {
             // Get a list of actual locations
             var availableLocations = availableLocationNames
-                .Select(l => engine.GameData.GetLocation(l))
+                .Select(l => gameData.GetLocation(l))
                 .ToList();
 
             // Create a list of words that we will try to map locations to
@@ -172,11 +215,11 @@ namespace GameEngine.Commands
         /// <param name="availableCharacterNames">The names of character names that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of characters that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<string> availableCharacterNames, EngineInternal engine)
+        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<string> availableCharacterNames, GameSourceData gameData)
         {
             // Get a list of actual characters
             var availableCharacters = availableCharacterNames
-                .Select(c => engine.GameData.GetCharacter(c))
+                .Select(c => gameData.GetCharacter(c))
                 .ToList();
 
             // Create a list of words that we will try to map characters to
