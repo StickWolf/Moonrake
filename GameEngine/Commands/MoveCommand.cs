@@ -1,34 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using GameEngine.Characters;
+using GameEngine.Locations;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
-            var originPortalsDestinations = engine.GameData.Portals
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var originPortalsDestinations = gameData.Portals
                 .Where(p => p.HasOriginLocation(playerLoc))
                 .Select(p => p.GetDestination(playerLoc))
                 .Where(d => d.Destination != null)
                 .Select(d =>  d.Destination)
                 .ToList();
-            var placeToMove = originPortalsDestinations;
-            placeToMove.Add("Cancel");
-            var placeToMoveTo = Console.Choose("Where would you like to move to?", placeToMove);
 
-            if (placeToMoveTo.Equals("Cancel"))
+            var wordLocationMap = CommandHelper.WordsToLocations(extraWords, originPortalsDestinations.ToList(), gameData);
+            var foundLocations = wordLocationMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
+
+            Location location;
+            if (foundLocations.Count > 0)
             {
-                Console.WriteLine("Canceled Move");
-                return;
+                location = foundLocations[0];
             }
-            GameState.CurrentGameState.SetCharacterLocation("Player", placeToMoveTo);
+            else
+            {
+                originPortalsDestinations.Add("Cancel");
+                var chosenLocationName = Console.Choose("Where would you like to move to?", originPortalsDestinations);
+                if (chosenLocationName.Equals("Cancel"))
+                {
+                    Console.WriteLine("Canceled Move");
+                    return;
+                }
+                location = gameData.GetLocation(chosenLocationName);
+            }
+
+            GameState.CurrentGameState.SetCharacterLocation(PlayerCharacter.TrackingName, location.Name);
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();
-            var lookCommand = CommandHelper.GetCommand("look");
-            lookCommand.Exceute(engine, new List<string>());
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), gameData);
         }
 
         public bool IsActivatedBy(string word)

@@ -2,10 +2,10 @@
 
 namespace GameEngine.Commands
 {
-    public interface ICommand
+    internal interface ICommandInternal
     {
         bool IsActivatedBy(string word);
 
-        void Exceute(GameSourceData gameData, List<string> extraWords);
+        void Exceute(EngineInternal engine, List<string> extraWords);
     }
 }

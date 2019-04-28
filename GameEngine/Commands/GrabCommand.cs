@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,9 +7,9 @@ namespace GameEngine.Commands
 {
     internal class GrabCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var grabbingCharacter = "Player";
+            var grabbingCharacter = PlayerCharacter.TrackingName;
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter);
             var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc);
             if (locationItems == null || locationItems.Count == 0)
@@ -18,7 +19,7 @@ namespace GameEngine.Commands
             }
 
             var availableItems = locationItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && !i.Item1.IsBound && i.Item1.IsVisible) // Filter out bound and invisible items because these cannot be picked up
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -32,18 +33,30 @@ namespace GameEngine.Commands
                 return;
             }
 
-            availableItems.Add("CancelChoice", "Cancel");
-
-            var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
-
-            if(itemToPickUp == "CancelChoice")
+            // Try to auto-determine what the player is trying to grab
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), gameData);
+            var foundItems = wordItemMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
+            Item item;
+            if (foundItems.Count > 0)
             {
-                Console.WriteLine("Canceled Grab");
-                return;
+                item = foundItems[0];
             }
-            var itemAmount = locationItems[itemToPickUp];
+            else
+            {
+                availableItems.Add("CancelChoice", "Cancel");
+                var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
+                if (itemToPickUp == "CancelChoice")
+                {
+                    Console.WriteLine("Canceled Grab");
+                    return;
+                }
+                item = gameData.GetItem(itemToPickUp);
+            }
 
-            var item = engine.GameData.GetItem(itemToPickUp);
+            var itemAmount = locationItems[item.TrackingName];
             item.Grab(itemAmount, grabbingCharacter, GameState.CurrentGameState);
         }
 

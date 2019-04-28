@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,20 +7,14 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        /// <summary>
-        /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
-        /// to match them to an item name.
-        /// </summary>
-        private List<string> skipWords { get; set; } = new List<string>() { "the", "on", "with", "in" };
-
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc) ?? new Dictionary<string, int>();
-            var characterItems = GameState.CurrentGameState.GetCharacterItems("Player") ?? new Dictionary<string, int>();
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName) ?? new Dictionary<string, int>();
 
             var interactableLocationItems = locationItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && i.Item1.IsInteractable && i.Item1.IsVisible) // Only choose items that are interactable and visible
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -27,7 +22,7 @@ namespace GameEngine.Commands
                                  ));
 
             var interactableCharacterItems = characterItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && i.Item1.IsInteractable && i.Item1.IsVisible) // Only choose items that are interactable and visible
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -45,12 +40,18 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine the choices if extra words are typed in
-            TryGetItemsFromExtraWords(extraWords, allInteractableItems, engine, out Item item1, out Item item2);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), gameData);
+            var foundItems = wordItemMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
+            var item1 = foundItems.Count > 0 ? foundItems[0] : null;
+            var item2 = foundItems.Count > 1 ? foundItems[1] : null;
 
             // If we weren't able to determine at-least the first item through extra words, then try via prompt mode
             if (item1 == null)
             {
-                if (!TryGetItemsFromPrompts(allInteractableItems, engine, out item1, out item2))
+                if (!TryGetItemsFromPrompts(allInteractableItems, gameData, out item1, out item2))
                 {
                     return;
                 }
@@ -67,56 +68,7 @@ namespace GameEngine.Commands
             }
         }
 
-        private void TryGetItemsFromExtraWords(List<string> extraWords, Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
-        {
-            // Get a list of all items that can be interacted with
-            var interactableItems = allInteractableItems.Keys
-                .Select(i => engine.GameData.GetItem(i))
-                .ToList();
-
-            // Create a list of extra words that we will try to map items to
-            var extraItems = extraWords
-                .Except(skipWords)
-                .Select(w => new MutablePair<string, Item>(w.ToLower(), null))
-                .ToList();
-
-            bool itemsFound = true;
-            while (itemsFound)
-            {
-                itemsFound = false;
-                foreach (var extraItem in extraItems)
-                {
-                    // If this word is already mapped to an item them skip it.
-                    if (extraItem.Value != null)
-                    {
-                        continue;
-                    }
-
-                    // Get a set of items that match this word
-                    var wordItemMatches = interactableItems
-                        .Where(i => i.DisplayName.ToLower().Contains(extraItem.Key))
-                        .ToList();
-
-                    // If there is just one item it matches then assign that word to
-                    // that item and remove the item from the remaining choices
-                    if (wordItemMatches.Count == 1)
-                    {
-                        itemsFound = true;
-                        extraItem.Value = wordItemMatches.First();
-                        interactableItems.Remove(wordItemMatches.First());
-                    }
-                }
-            }
-
-            var foundExtraItems = extraItems
-                .Where(i => i.Value != null)
-                .ToList();
-
-            item1 = foundExtraItems.Count > 0 ? foundExtraItems[0].Value : null;
-            item2 = foundExtraItems.Count > 1 ? foundExtraItems[1].Value : null;
-        }
-
-        private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, EngineInternal engine, out Item item1, out Item item2)
+        private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, GameSourceData gameData, out Item item1, out Item item2)
         {
             allInteractableItems.Add("CancelChoice", "Cancel");
             var itemToInteractWith = Console.Choose("What do you want to use?", allInteractableItems);
@@ -126,7 +78,7 @@ namespace GameEngine.Commands
                 item1 = item2 = null;
                 return false;
             }
-            var item = engine.GameData.GetItem(itemToInteractWith);
+            var item = gameData.GetItem(itemToInteractWith);
             allInteractableItems.Remove(itemToInteractWith); // Remove the item being used
 
             while (true)
@@ -164,7 +116,7 @@ namespace GameEngine.Commands
                         return false;
                     }
                     item1 = item;
-                    item2 = engine.GameData.GetItem(secondItemToInteractWith);
+                    item2 = gameData.GetItem(secondItemToInteractWith);
                     return true;
                 }
                 else
@@ -173,7 +125,6 @@ namespace GameEngine.Commands
                 }
             }
         }
-
 
         public bool IsActivatedBy(string word)
         {

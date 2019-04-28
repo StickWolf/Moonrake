@@ -44,8 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Characters\PlayerCharacter.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DropCommand.cs" />
+    <Compile Include="Commands\ICommandInternal.cs" />
     <Compile Include="Commands\InteractCommand.cs" />
     <Compile Include="Commands\GrabCommand.cs" />
     <Compile Include="Commands\InventoryCommand.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="Locations\PortalRule.cs" />
     <Compile Include="Locations\Portal.cs" />
     <Compile Include="EngineFactory.cs" />
-    <Compile Include="Character.cs" />
+    <Compile Include="Characters\Character.cs" />
     <Compile Include="EngineInternal.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Locations\Location.cs" />
@@ -85,8 +87,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

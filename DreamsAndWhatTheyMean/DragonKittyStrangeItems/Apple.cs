@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 
         public void Interacting(GameState gameState, string otherItemTrackingName, GameSourceData gameData)
         {
-            var playersItems = GameState.CurrentGameState.GetCharacterItems("Player");
+            var playersItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
             var playersItemsNames = playersItems.Keys;
             if (playersItemsNames.Contains("Apple"))
             {
-                gameData.TryGetCharacter("Player", out Character player);
+                gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
                 if(player.Hp == player.FullHp)
                 {
                     GameEngine.Console.WriteLine("You can't eat the apple, you are at full health.");
@@ -42,7 +43,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
                     player.Hp = player.FullHp;
                 }
                 GameEngine.Console.WriteLine("You eat a apple, and you feel some of your health come back.");
-                GameState.CurrentGameState.TryAddCharacterItemCount("Player", "Apple", -1, gameData);
+                GameState.CurrentGameState.TryAddCharacterItemCount(PlayerCharacter.TrackingName, "Apple", -1, gameData);
             }
             else
             {

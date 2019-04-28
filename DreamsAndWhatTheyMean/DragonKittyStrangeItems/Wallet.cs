@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
         public override void Grab(int count, string grabbingCharacterName, GameState gameState)
         {
             GameData.TryGetCharacter(CharacterName, out Character attackingCharacter);
-            GameData.TryGetCharacter("Player", out Character playerCharacter);
+            GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter);
             if (attackingCharacter.Hp > 0)
             {
                 GameEngine.Console.WriteLine($"You have tried to steal {CharacterName}'s wallet, now you will suffer,");
@@ -41,7 +42,9 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             if (attackingCharacter.Hp <= 0)
             {
                 GameEngine.Console.WriteLine($"Since {CharacterName} is dead, you get {MoneyWalletContains} dollars!");
-                gameState.TryAddCharacterItemCount("Player", "Dollar", MoneyWalletContains, GameData);
+                gameState.TryAddCharacterItemCount(PlayerCharacter.TrackingName, "Dollar", MoneyWalletContains, GameData);
+                var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterName);
+                gameState.TryAddLocationItemCount(locationOfWallet, TrackingName, -1, GameData);
             }
         }
     }

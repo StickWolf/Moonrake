@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,32 +7,44 @@ namespace GameEngine.Commands
 {
     internal class AttackCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
+            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
 
-            if (!engine.GameData.TryGetCharacter("Player", out Character playerCharacter))
+            if (!gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter))
             {
                 // TODO: why can't we get the player char?? weird error
             }
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc);
             if (otherCharactersInLoc.Count == 0)
             {
-                Console.WriteLine("There is no charaters to attack");
+                Console.WriteLine("There are no charaters to attack here.");
                 return;
             }
-            if(otherCharactersInLoc.Count != 0)
+
+            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc, gameData);
+            var foundCharacters = wordCharacterMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
+            Character defendingCharacter;
+            if (foundCharacters.Count > 0)
+            {
+                defendingCharacter = foundCharacters[0];
+            }
+            else
             {
                 otherCharactersInLoc.Add("Cancel");
+                var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
+                if (playerToHit.Equals("Cancel"))
+                {
+                    Console.WriteLine("Stopped Attack.");
+                    return;
+                }
+                defendingCharacter = gameData.GetCharacter(playerToHit);
             }
-            var playerToHit = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
-            if (playerToHit.Equals("Cancel"))
-            {
-                Console.WriteLine("Stopped Attack.");
-                return;
-            }
-            engine.GameData.TryGetCharacter(playerToHit, out Character defendingCharacter);
-            defendingCharacter.Attack(playerCharacter, engine.GameData);
+
+            defendingCharacter.Attack(playerCharacter, gameData);
         }
 
         public bool IsActivatedBy(string word)

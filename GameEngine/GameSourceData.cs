@@ -1,4 +1,5 @@
-﻿using GameEngine.Locations;
+﻿using GameEngine.Characters;
+using GameEngine.Locations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -69,6 +70,16 @@ namespace GameEngine
             }
             location = null;
             return false;
+        }
+
+        /// <summary>
+        /// Gets the location with the specified name
+        /// </summary>
+        /// <param name="locationName">The location to get</param>
+        /// <returns>The location or null if it doesn't exist</returns>
+        public Location GetLocation(string locationName)
+        {
+            return Locations.ContainsKey(locationName) ? Locations[locationName] : null;
         }
 
         /// <summary>
@@ -197,6 +208,16 @@ namespace GameEngine
             }
             character = null;
             return false;
+        }
+
+        /// <summary>
+        /// Gets the character with the specified name
+        /// </summary>
+        /// <param name="characterName">The character to get</param>
+        /// <returns>The character or null if they don't exist</returns>
+        public Character GetCharacter(string characterName)
+        {
+            return Characters.ContainsKey(characterName) ? Characters[characterName] : null;
         }
 
         /// <summary>

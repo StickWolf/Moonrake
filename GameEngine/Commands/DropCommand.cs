@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,10 +7,11 @@ namespace GameEngine.Commands
 {
     internal class DropCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation("Player");
-            var characterItems = GameState.CurrentGameState.GetCharacterItems("Player");
+            var droppingCharacter = PlayerCharacter.TrackingName;
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter);
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter);
             if (characterItems == null || characterItems.Count == 0)
             {
                 Console.WriteLine("You have nothing to drop.");
@@ -17,7 +19,7 @@ namespace GameEngine.Commands
             }
 
             var availableItems = characterItems
-                .Select(i => new Tuple<Item, int>(engine.GameData.GetItem(i.Key), i.Value))
+                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
                 .Where(i => i.Item1 != null && !i.Item1.IsBound && i.Item1.IsVisible) // Filter out bound and invisible items because these cannot be dropped
                 .Select(i => new KeyValuePair<string, string>(
                                  i.Item1.TrackingName,
@@ -31,35 +33,57 @@ namespace GameEngine.Commands
                 return;
             }
 
-            availableItems.Add("CancelChoice", "Cancel");
-
-            var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
-            
-            if (itemToDrop == "CancelChoice")
+            // Try to auto-determine what the player is trying to drop
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList(), gameData);
+            var foundItems = wordItemMap
+                .Where(i => i.Value != null)
+                .Select(i => i.Value)
+                .ToList();
+            Item item;
+            if (foundItems.Count > 0)
             {
-                Console.WriteLine("Canceled Drop");
-                return;
+                item = foundItems[0];
+            }
+            else
+            {
+                availableItems.Add("CancelChoice", "Cancel");
+                var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
+                if (itemToDrop == "CancelChoice")
+                {
+                    Console.WriteLine("Canceled Drop");
+                    return;
+                }
+
+                item = gameData.GetItem(itemToDrop);
             }
 
-            var itemAmountToDrop = characterItems[itemToDrop];
+            var itemAmountToDrop = characterItems[item.TrackingName];
             if (itemAmountToDrop > 1)
             {
-                Console.WriteLine("How many do you want to drop?");
-                itemAmountToDrop = int.Parse(Console.ReadLine());
+                var leftWords = wordItemMap.Where(i => i.Value == null).Select(i => i.Key).ToList();
+                var wordNumberMap = CommandHelper.WordsToNumbers(leftWords);
+                var foundNumbers = wordNumberMap.Where(i => i.Value.HasValue).Select(i => i.Value.Value).ToList();
+                if (foundNumbers.Count > 0)
+                {
+                    itemAmountToDrop = foundNumbers[0];
+                }
+                else
+                {
+                    Console.WriteLine("How many do you want to drop?");
+                    itemAmountToDrop = int.Parse(Console.ReadLine());
+                }
+
                 if (itemAmountToDrop <= 0)
                 {
                     return;
                 }
-                if (itemAmountToDrop > characterItems[itemToDrop])
+                if (itemAmountToDrop > characterItems[item.TrackingName])
                 {
-                    itemAmountToDrop = characterItems[itemToDrop];
+                    itemAmountToDrop = characterItems[item.TrackingName];
                 }
             }
 
-            // Remove it from the player's inventory
-            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount("Player", itemToDrop, -itemAmountToDrop, engine.GameData);
-            // And place it on the floor
-            var addLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(playersLoc, itemToDrop, itemAmountToDrop, engine.GameData);
+            item.Drop(itemAmountToDrop, droppingCharacter, GameState.CurrentGameState);
         }
 
         public bool IsActivatedBy(string word)
