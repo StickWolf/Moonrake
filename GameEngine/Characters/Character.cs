@@ -27,8 +27,10 @@ namespace GameEngine.Characters
         public virtual void Turn(GameSourceData gameData)
         {
         }
-        public List<Character> GetCharacters(GameSourceData gameData)
+
+        private List<Character> GetCharacters(GameSourceData gameData)
         {
+            //TODO: This should be in the gameState
             var locationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(locationName);
             charactersInLocation.Add(PlayerCharacter.TrackingName);
@@ -43,7 +45,6 @@ namespace GameEngine.Characters
         public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            var locationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
             var charactersInLocation = GetCharacters(gameData);
             Hp = Hp - attackDamage;
             if (Hp <= 0)
@@ -102,16 +103,20 @@ namespace GameEngine.Characters
 
         public void Heal(Character healingCharacter, GameSourceData gameData)
         {
+            if(Hp == 0)
+            {
+                return;
+            }
             var healAmount = GetHealAmount(MaxHeal);
             var charactersInLocation = GetCharacters(gameData);
+            if ((Hp + healAmount) > FullHp)
+            {
+                healAmount = FullHp - Hp;
+            }
             Hp = Hp + healAmount;
             if (charactersInLocation.Contains(this))
             {
                 Console.WriteLine($"{Name} has been healed for {healAmount}.");
-            }
-            if(Hp > FullHp)
-            {
-                Hp = FullHp;
             }
         }
 
