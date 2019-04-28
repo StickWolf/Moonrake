@@ -9,8 +9,8 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var charaterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
-            // TODO: make the player character name constant or global.
+            var inventorySeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var charaterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
             if(charaterItems == null || !charaterItems.Any())
             {
                 Console.WriteLine("You have no items.");

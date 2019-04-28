@@ -18,8 +18,6 @@ namespace Moonrake
             MoonRakeItems = new MoonRakeItems(this);
             MoonRakeLocations = new MoonRakeLocations(this);
 
-            DefaultPlayerName = "Eric";
-
             GameIntroductionText = "Once, there were three ancient instruments:" +
                 " The Harp, Piano, and the Drum." +
                 " Inside of each instrument there was a magical gem:" +

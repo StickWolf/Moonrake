@@ -9,8 +9,8 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var grabbingCharacter = PlayerCharacter.TrackingName;
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter);
+            var grabbingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
             var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc);
             if (locationItems == null || locationItems.Count == 0)
             {
@@ -57,7 +57,7 @@ namespace GameEngine.Commands
             }
 
             var itemAmount = locationItems[item.TrackingName];
-            item.Grab(itemAmount, grabbingCharacter, GameState.CurrentGameState);
+            item.Grab(itemAmount, grabbingCharacter.TrackingId, GameState.CurrentGameState);
         }
 
         public bool IsActivatedBy(string word)

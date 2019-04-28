@@ -20,7 +20,7 @@ namespace ExampleGame.Characters
 
         public override void Turn(GameSourceData gameData)
         {
-            Console.WriteLine($"{Name} is taking their turn as a rat.");
+            //Console.WriteLine($"{Name} is taking their turn as a rat.");
         }
     }
 }

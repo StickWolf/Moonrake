@@ -23,7 +23,6 @@ namespace ExampleGame
             EgCharacters = new ExampleCharacters(this);
             Items = new ExampleItems(this);
 
-            DefaultPlayerName = "Sally";
             GameIntroductionText = "There once was an example game.";
 
             // TODO: From the cemetary theatre you'll need to set the numbers on a combination lock to 1234 through the use command.

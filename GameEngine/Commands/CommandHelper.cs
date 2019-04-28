@@ -212,16 +212,11 @@ namespace GameEngine.Commands
         /// Attempts to create a list of words into a list of characters.
         /// </summary>
         /// <param name="words">The words to convert</param>
-        /// <param name="availableCharacterNames">The names of character names that are possible</param>
+        /// <param name="availableCharacters">The names of character names that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of characters that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<string> availableCharacterNames, GameSourceData gameData)
+        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<Character> availableCharacters, GameSourceData gameData)
         {
-            // Get a list of actual characters
-            var availableCharacters = availableCharacterNames
-                .Select(c => GameState.CurrentGameState.GetCharacter(c))
-                .ToList();
-
             // Create a list of words that we will try to map characters to
             var wordCharacterMap = words
                 .Except(SkipWords)

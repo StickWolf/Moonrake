@@ -27,7 +27,7 @@ namespace DreamsAndWhatTheyMean
             PlayersLivingRoomLight = gameData.AddItem(new RoomLight("White", true, 2));
             BronzeTalisman = gameData.AddItem(new BronzeTalisman(gameData));
             Apple = gameData.AddItem(new Apple(gameData));
-            DadsWallet = gameData.AddItem(new Wallet("Dad", gameData, 10000));
+            DadsWallet = gameData.AddItem(new Wallet(gameData.DkCharacters.DadCharacter, gameData, 10000));
         }
     }
 }

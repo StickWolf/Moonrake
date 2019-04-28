@@ -9,9 +9,11 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            var interactingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
             var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc) ?? new Dictionary<string, int>();
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName) ?? new Dictionary<string, int>();
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<string, int>();
 
             var interactableLocationItems = locationItems
                 .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))

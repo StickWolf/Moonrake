@@ -1,9 +1,5 @@
-﻿using GameEngine.Characters;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
@@ -11,10 +7,10 @@ namespace GameEngine.Commands
     {
         public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
-            var charPlayer = GameState.CurrentGameState.GetCharacter(PlayerCharacter.TrackingName);
+            var statSeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             Console.WriteLine("Here are your stats:");
-            Console.WriteLine($"You have {charPlayer.Hp}/{charPlayer.FullHp} HP");
-            Console.WriteLine($"Your max attack is {charPlayer.MaxAttack}.");
+            Console.WriteLine($"You have {statSeekingCharacter.Hp}/{statSeekingCharacter.FullHp} HP");
+            Console.WriteLine($"Your max attack is {statSeekingCharacter.MaxAttack}.");
         }
 
         public bool IsActivatedBy(string word)

@@ -60,11 +60,11 @@ namespace GameEngine
         /// <param name="choices">All the available choices</param>
         /// <param name="prompt">The text to display above the choices</param>
         /// <returns>The chosen key</returns>
-        public static string Choose(string prompt, Dictionary<string, string> choices)
+        public static T Choose<T>(string prompt, Dictionary<T, string> choices)
         {
             WriteLine(prompt);
 
-            Dictionary<int, string> numberedKeys = new Dictionary<int, string>();
+            Dictionary<int, T> numberedKeys = new Dictionary<int, T>();
             int itemIndex = 1;
             foreach (var choice in choices)
             {

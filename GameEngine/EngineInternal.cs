@@ -59,8 +59,8 @@ namespace GameEngine
                     }
                 }
 
-                var player = GameState.CurrentGameState.GetCharacter(PlayerCharacter.TrackingName);
-                if (player.Hp <= 0)
+                var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+                if (playerCharacter.Hp <= 0)
                 {
                     PlayerIsDead = true;
                 }
@@ -88,9 +88,6 @@ namespace GameEngine
         public void StartNewGame()
         {
             GameState.CreateNewGameState();
-
-            // Transfer all defaults from the game data to game state
-            GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
 
             // Move all character instances into gameState
             foreach (var character in GameData.Characters.Values)
