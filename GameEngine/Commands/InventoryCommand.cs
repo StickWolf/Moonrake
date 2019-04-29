@@ -1,5 +1,4 @@
-﻿using GameEngine.Characters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace GameEngine.Commands
 {
     internal class InventoryCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
             var inventorySeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var charaterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
@@ -20,17 +19,15 @@ namespace GameEngine.Commands
             Console.WriteLine("You are currently holding:");
             foreach (var characterItem in charaterItems)
             {
-                if (gameData.TryGetItem(characterItem.Key, out Item item))
+                var item = characterItem.Key;
+                // Don't show invisible items
+                if (!item.IsVisible)
                 {
-                    // Don't show invisible items
-                    if (!item.IsVisible)
-                    {
-                        continue;
-                    }
-
-                    var description = item.GetDescription(characterItem.Value, GameState.CurrentGameState).UppercaseFirstChar();
-                    Console.WriteLine(description);
+                    continue;
                 }
+
+                var description = item.GetDescription(characterItem.Value).UppercaseFirstChar();
+                Console.WriteLine(description);
             }
         }
 

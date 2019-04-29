@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,10 @@ namespace GameEngine.Locations
     ///     A stairway - This portal always leads to the same target location
     ///     An elevator door - This portal leads to different locations depending on what floor the elevator is on.
     /// </summary>
-    public class Portal
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class Portal : TrackableInstance
     {
+        [JsonProperty]
         private List<PortalRule> Rules { get; set; }
 
         public Portal(List<PortalRule> rules)

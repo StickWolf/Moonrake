@@ -5,7 +5,7 @@
         /// <summary>
         /// This is the name of the location and must be unique within all locations.
         /// </summary>
-        public string Name { get; private set; }
+        public string LocationName { get; private set; }
 
         /// <summary>
         /// A description of what this location looks like when the user is at the location.
@@ -25,7 +25,7 @@
         /// <param name="localDescription">A description of what the location looks like when the user is in it.</param>
         public Location(string locationName, string remoteDescription, string localDescription)
         {
-            Name = locationName;
+            LocationName = locationName;
             LocalDescription = localDescription;
             RemoteDescription = remoteDescription;
         }

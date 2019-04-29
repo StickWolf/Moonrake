@@ -10,7 +10,7 @@ namespace ExampleGame
         public ExampleGameVariables GameVariables { get; private set; }
         public ExampleLocations EgLocations { get; private set; }
         public ExampleCharacters EgCharacters { get; private set; }
-        public ExampleItems Items { get; private set; }
+        public ExampleItems EgItems { get; private set; }
 
         /// <summary>
         /// Constructor that fills in the data
@@ -21,7 +21,7 @@ namespace ExampleGame
             GameVariables = new ExampleGameVariables(this);
             EgLocations = new ExampleLocations(this);
             EgCharacters = new ExampleCharacters(this);
-            Items = new ExampleItems(this);
+            EgItems = new ExampleItems(this);
 
             GameIntroductionText = "There once was an example game.";
 

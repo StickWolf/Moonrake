@@ -51,7 +51,7 @@ namespace GameEngine.Commands
         /// <param name="extraWords">Extra words to pass along to the command</param>
         /// <param name="gameData">The game source data</param>
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        public static bool TryRunPublicCommand(string word, List<string> extraWords, GameSourceData gameData)
+        public static bool TryRunPublicCommand(string word, List<string> extraWords)
         {
             var commandToRun = AllPublicCommands.FirstOrDefault(c => c.IsActivatedBy(word));
             if (commandToRun == null)
@@ -60,7 +60,7 @@ namespace GameEngine.Commands
             }
 
             // The command is a real command if we got this far
-            commandToRun.Exceute(gameData, extraWords);
+            commandToRun.Exceute(extraWords);
             return true;
         }
 
@@ -91,13 +91,8 @@ namespace GameEngine.Commands
         /// <param name="availableItemNames">The names of items that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of items that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Item>> WordsToItems(List<string> words, List<string> availableItemNames, GameSourceData gameData)
+        public static List<MutablePair<string, Item>> WordsToItems(List<string> words, List<Item> availableItems)
         {
-            // Get a list of actual items
-            var availableItems = availableItemNames
-                .Select(i => gameData.GetItem(i))
-                .ToList();
-
             // Create a list of words that we will try to map items to
             var wordItemMap = words
                 .Except(SkipWords)
@@ -164,7 +159,7 @@ namespace GameEngine.Commands
         /// <param name="availableLocationNames">The names of locations that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of locations that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<Location> availableLocations, GameSourceData gameData)
+        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<Location> availableLocations)
         {
             // Create a list of words that we will try to map locations to
             var wordLocationMap = words
@@ -186,7 +181,7 @@ namespace GameEngine.Commands
 
                     // Get a set of locations that match this word
                     var wordLocationMatches = availableLocations
-                        .Where(i => i.Name.ToLower().Contains(wlMapping.Key))
+                        .Where(i => i.LocationName.ToLower().Contains(wlMapping.Key))
                         .ToList();
 
                     // If there is just one location it matches then assign that word to
@@ -210,7 +205,7 @@ namespace GameEngine.Commands
         /// <param name="availableCharacters">The names of character names that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of characters that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<Character> availableCharacters, GameSourceData gameData)
+        public static List<MutablePair<string, Character>> WordsToCharacters(List<string> words, List<Character> availableCharacters)
         {
             // Create a list of words that we will try to map characters to
             var wordCharacterMap = words

@@ -1,12 +1,15 @@
 ﻿using GameEngine;
+using Newtonsoft.Json;
 
 namespace ExampleGame.Items
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class ColoredLightSwitch : Item
     {
+        [JsonProperty]
         private string GameVariableColor { get; set; }
 
-        public ColoredLightSwitch(string gameVariableColor) : base($"ColoredLightSwitch[{gameVariableColor}]", "Colored light switch")
+        public ColoredLightSwitch(string gameVariableColor) : base("Colored light switch")
         {
             GameVariableColor = gameVariableColor;
             IsUnique = false;
@@ -14,14 +17,14 @@ namespace ExampleGame.Items
             IsInteractable = true;
         }
 
-        public override string GetDescription(int count, GameState gameState)
+        public override string GetDescription(int count)
         {
             return $"a light switch";
         }
 
-        public override void Interact(GameState gameState, string otherItemTrackingName)
+        public override void Interact(Item otherItem)
         {
-            string lightColor = gameState.GetGameVarValue(GameVariableColor);
+            string lightColor = GameState.CurrentGameState.GetGameVarValue(GameVariableColor);
             if (lightColor == null)
             {
                 Console.WriteLine($"You flip the light switch, but nothing appears to happen.");
@@ -44,7 +47,7 @@ namespace ExampleGame.Items
                         newColor = "dark purple";
                         break;
                 }
-                gameState.SetGameVarValue(GameVariableColor, newColor);
+                GameState.CurrentGameState.SetGameVarValue(GameVariableColor, newColor);
                 Console.WriteLine($"You flip the light switch and the {lightColor} light now begins to glow {newColor}.");
             }
         }

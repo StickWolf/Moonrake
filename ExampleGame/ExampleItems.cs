@@ -6,14 +6,14 @@ namespace ExampleGame
 {
     public class ExampleItems
     {
-        public string BanquetToSecretWarpedHallKeyhole { get; private set; }
-        public string ColoredLightA { get; private set; }
-        public string ColoredLightB { get; private set; }
-        public string ColoredLightSwitchA { get; private set; }
-        public string ColoredLightSwitchB { get; private set; }
-        public string CrystalDiviner { get; private set; }
-        public string DullBronzeKey { get; private set; }
-        public string StartRoomLever { get; private set; }
+        public Guid BanquetToSecretWarpedHallKeyhole { get; private set; }
+        public Guid ColoredLightA { get; private set; }
+        public Guid ColoredLightB { get; private set; }
+        public Guid ColoredLightSwitchA { get; private set; }
+        public Guid ColoredLightSwitchB { get; private set; }
+        public Guid CrystalDiviner { get; private set; }
+        public Guid DullBronzeKey { get; private set; }
+        public Guid StartRoomLever { get; private set; }
 
         public ExampleItems(ExampleGameSourceData gameData)
         {
@@ -43,7 +43,7 @@ namespace ExampleGame
             }
 
             // Bronze key and keyhole pair
-            DullBronzeKey = gameData.AddItem(new Item("DullBronzeKey", "Dull Bronze Key") { IsUnique = true, IsInteractable = true });
+            DullBronzeKey = gameData.AddItem(new Item("Dull Bronze Key") { IsUnique = true, IsInteractable = true });
             BanquetToSecretWarpedHallKeyhole = gameData.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
             {
                 gameData.AddDefaultLocationItem(gameData.EgLocations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
@@ -53,13 +53,13 @@ namespace ExampleGame
             StartRoomLever = gameData.AddItem(
                 new Lever(gameData.GameVariables.StartRoomLever)
                 {
-                    CustomInteract = new Action<GameState, string>((gameState, fromPosition) =>
+                    CustomInteract = new Action<string>((fromPosition) =>
                     {
                         if (fromPosition.Equals("off"))
                         {
                             GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
-                            gameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.Items.DullBronzeKey, 1, gameData);
-                            gameState.SetGameVarValue(gameData.GameVariables.StartRoomLever, "on");
+                            GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
+                            GameState.CurrentGameState.SetGameVarValue(gameData.GameVariables.StartRoomLever, "on");
                         }
                         else
                         {

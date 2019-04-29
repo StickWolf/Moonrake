@@ -26,7 +26,7 @@ namespace GameEngine.Characters
             }
 
             // Then look for public commands to run
-            if (CommandHelper.TryRunPublicCommand(word, extraWords, engine.GameData))
+            if (CommandHelper.TryRunPublicCommand(word, extraWords))
             {
                 return;
             }

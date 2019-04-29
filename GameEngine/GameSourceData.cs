@@ -13,27 +13,40 @@ namespace GameEngine
 
         public string GameEndingText { get; protected set; }
 
-        public Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
+        private Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
+        public Dictionary<Guid, Character> TODO_Delete_And_Use_GameState_Instead_Characters { get { return Characters; } }
 
-        public Dictionary<Guid, Location> Locations { get; set; } = new Dictionary<Guid, Location>();
+        private Dictionary<Guid, Location> Locations { get; set; } = new Dictionary<Guid, Location>();
+        public Dictionary<Guid, Location> TODO_Delete_And_Use_GameState_Instead_Locations { get { return Locations; } }
 
-        public List<Portal> Portals { get; private set; } = new List<Portal>();
+        private Dictionary<Guid, Portal> Portals { get; set; } = new Dictionary<Guid, Portal>();
+        public Dictionary<Guid, Portal> TODO_Delete_And_Use_GameState_Instead_Portals { get { return Portals; } }
 
-        public Dictionary<string, string> DefaultGameVars { get; private set; } = new Dictionary<string, string>();
+        private Dictionary<Guid, TradeSet> TradeSets { get; set; } = new Dictionary<Guid, TradeSet>();
+        public Dictionary<Guid, TradeSet> TODO_Delete_And_Use_GameState_Instead_TradeSets { get { return TradeSets; } }
 
-        private Dictionary<string, Item> Items { get; set; } = new Dictionary<string, Item>();
+        private Dictionary<Guid, TradePost> TradePosts { get; set; } = new Dictionary<Guid, TradePost>();
+        public Dictionary<Guid, TradePost> TODO_Delete_And_Use_GameState_Instead_TradePosts { get { return TradePosts; } }
 
-        public Dictionary<Guid, Dictionary<string, int>> DefaultCharacterItems = new Dictionary<Guid, Dictionary<string, int>>();
+        private Dictionary<Guid, Guid> DefaultTradePostLocations { get; set; } = new Dictionary<Guid, Guid>();
+        public Dictionary<Guid, Guid> TODO_Delete_And_Use_GameState_Instead_DefaultTradePostLocations { get { return DefaultTradePostLocations; } }
 
-        public Dictionary<Guid, Dictionary<string, int>> DefaultLocationItems { get; set; } = new Dictionary<Guid, Dictionary<string, int>>();
+        private Dictionary<Guid, Guid> DefaultCharacterLocations { get; set; } = new Dictionary<Guid, Guid>();
+        public Dictionary<Guid, Guid> TODO_Delete_And_Use_GameState_Instead_DefaultCharacterLocations { get { return DefaultCharacterLocations; } }
 
-        private Dictionary<string, TradeSet> TradeSets { get; set; } = new Dictionary<string, TradeSet>();
+        private Dictionary<string, string> DefaultGameVars { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> TODO_Delete_And_Use_GameState_Instead_DefaultGameVars { get { return DefaultGameVars; } }
 
-        private Dictionary<string, TradePost> TradePosts { get; set; } = new Dictionary<string, TradePost>();
+        private Dictionary<Guid, Item> Items { get; set; } = new Dictionary<Guid, Item>();
+        public Dictionary<Guid, Item> TODO_Delete_And_Use_GameState_Instead_Items { get { return Items; } }
 
-        public Dictionary<string, Guid> DefaultTradePostLocations { get; private set; } = new Dictionary<string, Guid>();
+        private Dictionary<Guid, Dictionary<Guid, int>> DefaultCharacterItems { get; set; } = new Dictionary<Guid, Dictionary<Guid, int>>();
+        public Dictionary<Guid, Dictionary<Guid, int>> TODO_Delete_And_Use_GameState_Instead_DefaultCharacterItems { get { return DefaultCharacterItems; } }
 
-        public Dictionary<Guid, Guid> DefaultCharacterLocations { get; set; } = new Dictionary<Guid, Guid>();
+        private Dictionary<Guid, Dictionary<Guid, int>> DefaultLocationItems { get; set; } = new Dictionary<Guid, Dictionary<Guid, int>>();
+        public Dictionary<Guid, Dictionary<Guid, int>> TODO_Delete_And_Use_GameState_Instead_DefaultLocationItems { get { return DefaultLocationItems; } }
+
+
 
         public Guid AddLocation(Location location)
         {
@@ -41,9 +54,11 @@ namespace GameEngine
             return location.TrackingId;
         }
 
-        public void AddPortal(params PortalRule[] destinationRules)
+        public Guid AddPortal(params PortalRule[] destinationRules)
         {
-            Portals.Add(new Portal(destinationRules.ToList()));
+            var portal = new Portal(destinationRules.ToList());
+            Portals[portal.TrackingId] = portal;
+            return portal.TrackingId;
         }
 
         public string AddDefaultGameVar(string gameVarName, string gameVarValue)
@@ -53,49 +68,31 @@ namespace GameEngine
             DefaultGameVars[gameVarName] = gameVarValue;
             return gameVarName;
         }
-        
-        public string AddItem(Item item)
-        {
-            Debug.Assert(!Items.ContainsKey(item.TrackingName), $"An item with the same tracking name '{item.TrackingName}' is being added twice to the game data. Check the code to make sure this doesn't happen.");
 
-            Items[item.TrackingName] = item;
-            return item.TrackingName;
+        public Guid AddItem(Item item)
+        {
+            Items[item.TrackingId] = item;
+            return item.TrackingId;
         }
 
-        public bool TryGetItem(string itemTrackingName, out Item item)
-        {
-            if (Items.ContainsKey(itemTrackingName))
-            {
-                item = Items[itemTrackingName];
-                return true;
-            }
-            item = null;
-            return false;
-        }
-
-        public Item GetItem(string itemTrackingName)
-        {
-            return Items.ContainsKey(itemTrackingName) ? Items[itemTrackingName] : null;
-        }
-
-        public void AddDefaultCharacterItem(Guid characterTrackingId, string itemTrackingName, int itemCount)
+        public void AddDefaultCharacterItem(Guid characterTrackingId, Guid itemTrackingId, int itemCount)
         {
             if (!DefaultCharacterItems.ContainsKey(characterTrackingId))
             {
-                DefaultCharacterItems[characterTrackingId] = new Dictionary<string, int>();
+                DefaultCharacterItems[characterTrackingId] = new Dictionary<Guid, int>();
             }
-            DefaultCharacterItems[characterTrackingId][itemTrackingName] = itemCount;
+            DefaultCharacterItems[characterTrackingId][itemTrackingId] = itemCount;
         }
 
-        public void AddDefaultLocationItem(Guid locationTrackingId, string itemTrackingName, int itemCount)
+        public void AddDefaultLocationItem(Guid locationTrackingId, Guid itemTrackingId, int itemCount)
         {
             if (!DefaultLocationItems.ContainsKey(locationTrackingId))
             {
-                DefaultLocationItems[locationTrackingId] = new Dictionary<string, int>();
+                DefaultLocationItems[locationTrackingId] = new Dictionary<Guid, int>();
             }
 
-            Debug.Assert(!DefaultLocationItems[locationTrackingId].ContainsKey(itemTrackingName), $"Default location item '{itemTrackingName}' for location '{locationTrackingId}' has already been set. Check the code and make sure this item is only set 1 time for this location.");
-            DefaultLocationItems[locationTrackingId][itemTrackingName] = itemCount;
+            Debug.Assert(!DefaultLocationItems[locationTrackingId].ContainsKey(itemTrackingId), $"Default location item '{itemTrackingId}' for location '{locationTrackingId}' has already been set. Check the code and make sure this item is only set 1 time for this location.");
+            DefaultLocationItems[locationTrackingId][itemTrackingId] = itemCount;
         }
 
         public Guid AddCharacter(Character character, Guid locationTrackingId)
@@ -105,44 +102,19 @@ namespace GameEngine
             return character.TrackingId;
         }
 
-        public string AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)
+        public Guid AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)
         {
-            Debug.Assert(!TradeSets.ContainsKey(tradesetName), $"A tradeset with the name '{tradesetName}' has already been added. Check the code to make sure it only gets added 1 time.");
-
             var tradeSet = new TradeSet(tradesetName, itemRecipes);
-            TradeSets[tradeSet.Name] = tradeSet;
-            return tradeSet.Name;
+            TradeSets[tradeSet.TrackingId] = tradeSet;
+            return tradeSet.TrackingId;
         }
 
-        public bool TryGetTradeSet(string tradeSetName, out TradeSet tradeSet)
+        public Guid AddTradePost(Guid locationTrackingId, string tradePostName, params Guid[] tradeSetTrackingIds)
         {
-            if (TradeSets.ContainsKey(tradeSetName))
-            {
-                tradeSet = TradeSets[tradeSetName];
-                return true;
-            }
-            tradeSet = null;
-            return false;
-        }
-
-        public string AddTradePost(string tradePostName, params string[] tradeSetNames)
-        {
-            Debug.Assert(!TradePosts.ContainsKey(tradePostName), $"A tradepost with the name '{tradePostName}' has already been added. Check the code to make sure it only gets added 1 time.");
-
-            var tradePost = new TradePost(tradePostName, tradeSetNames);
-            TradePosts[tradePost.Name] = tradePost;
-            return tradePost.Name;
-        }
-
-        public bool TryGetTradePost(string tradePostName, out TradePost tradePost)
-        {
-            if (TradeSets.ContainsKey(tradePostName))
-            {
-                tradePost = TradePosts[tradePostName];
-                return true;
-            }
-            tradePost = null;
-            return false;
+            var tradePost = new TradePost(tradePostName, tradeSetTrackingIds);
+            TradePosts[tradePost.TrackingId] = tradePost;
+            DefaultTradePostLocations[tradePost.TrackingId] = locationTrackingId;
+            return tradePost.TrackingId;
         }
     }
 }
