@@ -34,10 +34,8 @@ namespace GameEngine.Commands
             }
             else
             {
-                var cancelLocation = new Location("Cancel", "Cancel", "Cancel"); // TODO: fix this weirdness
-                validLocations[cancelLocation] = "Cancel";
-                location = Console.Choose("Where would you like to move to?", validLocations);
-                if (location == cancelLocation)
+                location = Console.Choose("Where would you like to move to?", validLocations, includeCancel: true);
+                if (location == null)
                 {
                     Console.WriteLine("Canceled Move");
                     return;

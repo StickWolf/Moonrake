@@ -46,9 +46,8 @@ namespace GameEngine.Commands
             }
             else
             {
-                availableItems.Add("CancelChoice", "Cancel");
-                var itemToDrop = Console.Choose("What do you want to drop?", availableItems);
-                if (itemToDrop == "CancelChoice")
+                var itemToDrop = Console.Choose("What do you want to drop?", availableItems, includeCancel: true);
+                if (itemToDrop == null)
                 {
                     Console.WriteLine("Canceled Drop");
                     return;
