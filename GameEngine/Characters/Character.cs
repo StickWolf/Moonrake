@@ -29,7 +29,7 @@ namespace GameEngine.Characters
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
-            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: true);
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: true);
             Hp = Hp - attackDamage;
             if (Hp <= 0)
             {
@@ -94,7 +94,7 @@ namespace GameEngine.Characters
             var healAmount = GetHealAmount(MaxHeal);
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
-            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: true);
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: true);
             if ((Hp + healAmount) > FullHp)
             {
                 healAmount = FullHp - Hp;

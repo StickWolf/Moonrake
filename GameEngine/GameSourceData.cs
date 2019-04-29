@@ -15,7 +15,7 @@ namespace GameEngine
 
         public Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
 
-        private Dictionary<string, Location> Locations { get; set; } = new Dictionary<string, Location>();
+        public Dictionary<Guid, Location> Locations { get; set; } = new Dictionary<Guid, Location>();
 
         public List<Portal> Portals { get; private set; } = new List<Portal>();
 
@@ -25,38 +25,20 @@ namespace GameEngine
 
         public Dictionary<Guid, Dictionary<string, int>> DefaultCharacterItems = new Dictionary<Guid, Dictionary<string, int>>();
 
-        public Dictionary<string, Dictionary<string, int>> DefaultLocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+        public Dictionary<Guid, Dictionary<string, int>> DefaultLocationItems { get; set; } = new Dictionary<Guid, Dictionary<string, int>>();
 
         private Dictionary<string, TradeSet> TradeSets { get; set; } = new Dictionary<string, TradeSet>();
 
         private Dictionary<string, TradePost> TradePosts { get; set; } = new Dictionary<string, TradePost>();
 
-        public Dictionary<string, string> DefaultTradePostLocations { get; private set; } = new Dictionary<string, string>();
+        public Dictionary<string, Guid> DefaultTradePostLocations { get; private set; } = new Dictionary<string, Guid>();
 
-        public Dictionary<Guid, string> DefaultCharacterLocations { get; set; } = new Dictionary<Guid, string>();
+        public Dictionary<Guid, Guid> DefaultCharacterLocations { get; set; } = new Dictionary<Guid, Guid>();
 
-        public string AddLocation(Location location)
+        public Guid AddLocation(Location location)
         {
-            Debug.Assert(!Locations.ContainsKey(location.Name), $"A location with the same name '{location.Name}' is being added twice to the game data. Check the code to make sure this doesn't happen.");
-
-            Locations[location.Name] = location;
-            return location.Name;
-        }
-
-        public bool TryGetLocation(string locationName, out Location location)
-        {
-            if (Locations.ContainsKey(locationName))
-            {
-                location = Locations[locationName];
-                return true;
-            }
-            location = null;
-            return false;
-        }
-
-        public Location GetLocation(string locationName)
-        {
-            return Locations.ContainsKey(locationName) ? Locations[locationName] : null;
+            Locations[location.TrackingId] = location;
+            return location.TrackingId;
         }
 
         public void AddPortal(params PortalRule[] destinationRules)
@@ -105,21 +87,21 @@ namespace GameEngine
             DefaultCharacterItems[characterTrackingId][itemTrackingName] = itemCount;
         }
 
-        public void AddDefaultLocationItem(string locationName, string itemTrackingName, int itemCount)
+        public void AddDefaultLocationItem(Guid locationTrackingId, string itemTrackingName, int itemCount)
         {
-            if (!DefaultLocationItems.ContainsKey(locationName))
+            if (!DefaultLocationItems.ContainsKey(locationTrackingId))
             {
-                DefaultLocationItems[locationName] = new Dictionary<string, int>();
+                DefaultLocationItems[locationTrackingId] = new Dictionary<string, int>();
             }
 
-            Debug.Assert(!DefaultLocationItems[locationName].ContainsKey(itemTrackingName), $"Default location item '{itemTrackingName}' for location '{locationName}' has already been set. Check the code and make sure this item is only set 1 time for this location.");
-            DefaultLocationItems[locationName][itemTrackingName] = itemCount;
+            Debug.Assert(!DefaultLocationItems[locationTrackingId].ContainsKey(itemTrackingName), $"Default location item '{itemTrackingName}' for location '{locationTrackingId}' has already been set. Check the code and make sure this item is only set 1 time for this location.");
+            DefaultLocationItems[locationTrackingId][itemTrackingName] = itemCount;
         }
 
-        public Guid AddCharacter(Character character, string locationName)
+        public Guid AddCharacter(Character character, Guid locationTrackingId)
         {
             Characters[character.TrackingId] = character;
-            DefaultCharacterLocations[character.TrackingId] = locationName;
+            DefaultCharacterLocations[character.TrackingId] = locationTrackingId;
             return character.TrackingId;
         }
 

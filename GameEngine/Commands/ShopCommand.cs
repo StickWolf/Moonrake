@@ -16,11 +16,10 @@ namespace GameEngine.Commands
 
             //  1. Determine the player's current location from the game state
             var shoppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var shoppingLocationName = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
-            gameData.TryGetLocation(shoppingLocationName, out Location shoppersLocation);
+            var shoppersLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
             
             //  2. Look in the game data for any tradeposts that are currently at this location
-            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingLocationName);
+            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppersLocation.TrackingId);
             
             //  3. If there are no tradeposts here then mention that and return.
             if (allTradePostsInPlayersLocation.Count == 0)

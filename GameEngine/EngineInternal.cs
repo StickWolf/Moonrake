@@ -89,11 +89,16 @@ namespace GameEngine
         {
             GameState.CreateNewGameState();
 
+            foreach (var location in GameData.Locations)
+            {
+                GameState.CurrentGameState.AddLocation(location.Value);
+            }
+
             // Move all character instances into gameState
             foreach (var character in GameData.Characters.Values)
             {
-                string characterLocationName = GameData.DefaultCharacterLocations[character.TrackingId];
-                GameState.CurrentGameState.AddCharacter(character, characterLocationName);
+                var locationTrackingId = GameData.DefaultCharacterLocations[character.TrackingId];
+                GameState.CurrentGameState.AddCharacter(character, locationTrackingId);
             }
 
             // Add game vars that represent the inital game state

@@ -8,7 +8,7 @@ namespace ExampleGame
     public class ExampleGameSourceData : GameSourceData
     {
         public ExampleGameVariables GameVariables { get; private set; }
-        public ExampleLocations Locations { get; private set; }
+        public ExampleLocations EgLocations { get; private set; }
         public ExampleCharacters EgCharacters { get; private set; }
         public ExampleItems Items { get; private set; }
 
@@ -19,7 +19,7 @@ namespace ExampleGame
         {
             // Note that the properties should be defined in this order due to how they reference each other
             GameVariables = new ExampleGameVariables(this);
-            Locations = new ExampleLocations(this);
+            EgLocations = new ExampleLocations(this);
             EgCharacters = new ExampleCharacters(this);
             Items = new ExampleItems(this);
 

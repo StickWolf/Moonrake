@@ -5,14 +5,14 @@ namespace DreamsAndWhatTheyMean
     class TheTaleOfTheDragonKittySourceData : GameSourceData
     {
         public DragonKittyCharacters DkCharacters { get; private set; }
-        public DragonKittyLocations Locations { get; private set; }
+        public DragonKittyLocations DkLocations { get; private set; }
         public DragonKittyGameVarables GameVarables { get; private set; }
         public DragonKittyItems Items { get; private set; }
 
         public TheTaleOfTheDragonKittySourceData()
         {
             DkCharacters = new DragonKittyCharacters(this);
-            Locations = new DragonKittyLocations(this);
+            DkLocations = new DragonKittyLocations(this);
             GameVarables = new DragonKittyGameVarables(this);
             Items = new DragonKittyItems(this);
 
@@ -29,17 +29,17 @@ namespace DreamsAndWhatTheyMean
             #endregion
 
             #region Room Items
-            AddDefaultLocationItem(Locations.PlayersRoom, Items.Money, 30);
-            AddDefaultLocationItem(Locations.PlayersRoom, Items.Paper, 21);
-            AddDefaultLocationItem(Locations.PlayersBackyard, Items.BronzeChunk, 9);
-            AddDefaultLocationItem(Locations.PlayersBackyard, Items.Money, 2);
-            AddDefaultLocationItem(Locations.BlackSmithShop, Items.BronzeBar, 1);
-            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlasticChunk, 23);
-            AddDefaultLocationItem(Locations.PlayersRoom, Items.PlayersRoomLight, 1);
-            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.PlayersLivingRoomLight, 1);
-            AddDefaultLocationItem(Locations.ESStreet, Items.BronzeTalisman, 1);
-            AddDefaultLocationItem(Locations.PlayersLivingRoom, Items.Apple, 10);
-            AddDefaultLocationItem(Locations.PlayersBackyard, Items.DadsWallet, 1);
+            AddDefaultLocationItem(DkLocations.PlayersRoom, Items.Money, 30);
+            AddDefaultLocationItem(DkLocations.PlayersRoom, Items.Paper, 21);
+            AddDefaultLocationItem(DkLocations.PlayersBackyard, Items.BronzeChunk, 9);
+            AddDefaultLocationItem(DkLocations.PlayersBackyard, Items.Money, 2);
+            AddDefaultLocationItem(DkLocations.BlackSmithShop, Items.BronzeBar, 1);
+            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, Items.PlasticChunk, 23);
+            AddDefaultLocationItem(DkLocations.PlayersRoom, Items.PlayersRoomLight, 1);
+            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, Items.PlayersLivingRoomLight, 1);
+            AddDefaultLocationItem(DkLocations.ESStreet, Items.BronzeTalisman, 1);
+            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, Items.Apple, 10);
+            AddDefaultLocationItem(DkLocations.PlayersBackyard, Items.DadsWallet, 1);
             #endregion
 
             #region Trade-Sets
@@ -53,7 +53,7 @@ namespace DreamsAndWhatTheyMean
             #region Trade-Posts
             var tpBlackSmith = AddTradePost("The Black-Smith",
                 tsBlackSmith);
-            DefaultTradePostLocations[tpBlackSmith] = Locations.BlackSmithShop; 
+            DefaultTradePostLocations[tpBlackSmith] = DkLocations.BlackSmithShop; 
             #endregion
         }
     }
