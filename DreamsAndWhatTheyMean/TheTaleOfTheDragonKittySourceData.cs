@@ -7,14 +7,14 @@ namespace DreamsAndWhatTheyMean
         public DragonKittyCharacters DkCharacters { get; private set; }
         public DragonKittyLocations DkLocations { get; private set; }
         public DragonKittyGameVarables GameVarables { get; private set; }
-        public DragonKittyItems Items { get; private set; }
+        public DragonKittyItems DkItems { get; private set; }
 
         public TheTaleOfTheDragonKittySourceData()
         {
             DkCharacters = new DragonKittyCharacters(this);
             DkLocations = new DragonKittyLocations(this);
             GameVarables = new DragonKittyGameVarables(this);
-            Items = new DragonKittyItems(this);
+            DkItems = new DragonKittyItems(this);
 
             GameIntroductionText = "Once, there was a group of kids." +
                 " These kids played around every day, they even had a youtube channel that they shared." +
@@ -25,35 +25,34 @@ namespace DreamsAndWhatTheyMean
             GameEndingText = "You have saved the last of the dragonkittys and you have won the game.";
 
             #region Starter Items
-            AddDefaultCharacterItem(DkCharacters.Player, Items.Money, 200);
+            AddDefaultCharacterItem(DkCharacters.Player, DkItems.Money, 200);
             #endregion
 
             #region Room Items
-            AddDefaultLocationItem(DkLocations.PlayersRoom, Items.Money, 30);
-            AddDefaultLocationItem(DkLocations.PlayersRoom, Items.Paper, 21);
-            AddDefaultLocationItem(DkLocations.PlayersBackyard, Items.BronzeChunk, 9);
-            AddDefaultLocationItem(DkLocations.PlayersBackyard, Items.Money, 2);
-            AddDefaultLocationItem(DkLocations.BlackSmithShop, Items.BronzeBar, 1);
-            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, Items.PlasticChunk, 23);
-            AddDefaultLocationItem(DkLocations.PlayersRoom, Items.PlayersRoomLight, 1);
-            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, Items.PlayersLivingRoomLight, 1);
-            AddDefaultLocationItem(DkLocations.ESStreet, Items.BronzeTalisman, 1);
-            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, Items.Apple, 10);
-            AddDefaultLocationItem(DkLocations.PlayersBackyard, Items.DadsWallet, 1);
+            AddDefaultLocationItem(DkLocations.PlayersRoom, DkItems.Money, 30);
+            AddDefaultLocationItem(DkLocations.PlayersRoom, DkItems.Paper, 21);
+            AddDefaultLocationItem(DkLocations.PlayersBackyard, DkItems.BronzeChunk, 9);
+            AddDefaultLocationItem(DkLocations.PlayersBackyard, DkItems.Money, 2);
+            AddDefaultLocationItem(DkLocations.BlackSmithShop, DkItems.BronzeBar, 1);
+            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, DkItems.PlasticChunk, 23);
+            AddDefaultLocationItem(DkLocations.PlayersRoom, DkItems.PlayersRoomLight, 1);
+            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, DkItems.PlayersLivingRoomLight, 1);
+            AddDefaultLocationItem(DkLocations.ESStreet, DkItems.BronzeTalisman, 1);
+            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, DkItems.Apple, 10);
+            AddDefaultLocationItem(DkLocations.PlayersBackyard, DkItems.DadsWallet, 1);
             #endregion
 
             #region Trade-Sets
             var tsBlackSmith = AddTradeSet("Metal",
-                new ItemRecipe(Items.BronzeBar,
-                    new ItemRecipeIngredient(Items.BronzeChunk, 3),
-                    new ItemRecipeIngredient(Items.Money, 50)
+                new ItemRecipe(DkItems.BronzeBar,
+                    new ItemRecipeIngredient(DkItems.BronzeChunk, 3),
+                    new ItemRecipeIngredient(DkItems.Money, 50)
                     ));
             #endregion
 
             #region Trade-Posts
-            var tpBlackSmith = AddTradePost("The Black-Smith",
+            var tpBlackSmith = AddTradePost(DkLocations.BlackSmithShop, "The Black-Smith",
                 tsBlackSmith);
-            DefaultTradePostLocations[tpBlackSmith] = DkLocations.BlackSmithShop; 
             #endregion
         }
     }

@@ -7,7 +7,7 @@ namespace GameEngine.Commands
 {
     internal class AttackCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
             var playerLoc = GameState.CurrentGameState.GetPlayerCharacterLocation();
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
@@ -22,7 +22,7 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList(), gameData);
+            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList());
             var foundCharacters = wordCharacterMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -42,7 +42,7 @@ namespace GameEngine.Commands
                 }
             }
 
-            defendingCharacter.Attack(playerCharacter, gameData);
+            defendingCharacter.Attack(playerCharacter);
         }
 
         public bool IsActivatedBy(string word)

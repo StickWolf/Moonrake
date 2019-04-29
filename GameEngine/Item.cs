@@ -2,13 +2,8 @@
 
 namespace GameEngine
 {
-    public class Item
+    public class Item : TrackableInstance
     {
-        /// <summary>
-        /// Name used to track the item in gamestate, this value is not displayed
-        /// </summary>
-        public string TrackingName { get; private set; }
-
         /// <summary>
         /// Name that is displayed in the game
         /// </summary>
@@ -36,9 +31,8 @@ namespace GameEngine
         /// </summary>
         public bool IsVisible { get; set; } = true;
 
-        public Item(string trackingName, string displayName)
+        public Item(string displayName)
         {
-            TrackingName = trackingName;
             DisplayName = displayName;
         }
 
@@ -49,7 +43,7 @@ namespace GameEngine
         /// <param name="gameData">The gamedata for the game</param>
         /// <param name="currentGameState">The current game state</param>
         /// <returns>A description</returns>
-        public virtual string GetDescription(int count, GameState gameState)
+        public virtual string GetDescription(int count)
         {
             if (count == 1)
             {
@@ -63,10 +57,10 @@ namespace GameEngine
         /// Interacts with an item
         /// </summary>
         /// <param name="gameState">The current game state</param>
-        /// <param name="otherItemTrackingName">
-        /// If another item is being used on this item, this is the tracking name of the other item
+        /// <param name="otherItem">
+        /// If another item is being used on this item, this is that other item
         /// </param>
-        public virtual void Interact(GameState gameState, string otherItemTrackingName)
+        public virtual void Interact(Item otherItem)
         {
             Console.WriteLine("You find nothing special.");
         }
@@ -78,16 +72,16 @@ namespace GameEngine
         /// <param name="grabbingCharacterTrackingId">The name of the character who is grabbing</param>
         /// <param name="gameState">The current game state</param>
         /// <param name="gameData">The current game data</param>
-        public virtual void Grab(int count, Guid grabbingCharacterTrackingId, GameState gameState)
+        public virtual void Grab(int count, Guid grabbingCharacterTrackingId)
         {
-            var description = GetDescription(count, gameState);
+            var description = GetDescription(count);
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacterTrackingId);
             // Remove it from the floor
-            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, TrackingName, -count, this);
+            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, -count);
             // And place it in the player's inventory, but only if it was removed from the floor successfully
             if (removeLocationResult)
             {
-                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacterTrackingId, TrackingName, count, this);
+                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacterTrackingId, this.TrackingId, count);
                 Console.WriteLine($"You grabbed {description}.");
             }
             else
@@ -103,18 +97,18 @@ namespace GameEngine
         /// <param name="droppingCharacterTrackingId">The name of the character who is dropping</param>
         /// <param name="gameState">The current game state</param>
         /// <param name="gameData">The current game data</param>
-        public virtual void Drop(int count, Guid droppingCharacterTrackingId, GameState gameState)
+        public virtual void Drop(int count, Guid droppingCharacterTrackingId)
         {
-            var description = GetDescription(count, gameState);
+            var description = GetDescription(count);
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacterTrackingId);
 
             // Remove it from the character's inventory
-            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacterTrackingId, TrackingName, -count, this);
+            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacterTrackingId, this.TrackingId, -count);
 
             // And place it on the floor, but only if it was removed from the inventory successfully
             if (removeCharResult)
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, TrackingName, count, this);
+                GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, count);
                 Console.WriteLine($"You dropped {description}.");
             }
             else

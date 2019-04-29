@@ -1,13 +1,15 @@
-﻿namespace GameEngine
+﻿using System;
+
+namespace GameEngine
 {
     public class ItemRecipeIngredient
     {
-        public string IngredientName { get; private set; }
+        public Guid ItemIngredientTrackingId { get; private set; }
         public int Amount { get; private set; }
 
-        public ItemRecipeIngredient(string ingredientName, int amount)
+        public ItemRecipeIngredient(Guid itemIngredientTrackingId, int amount)
         {
-            IngredientName = ingredientName;
+            ItemIngredientTrackingId = itemIngredientTrackingId;
             Amount = amount;
         }
     }

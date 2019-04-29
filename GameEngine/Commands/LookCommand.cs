@@ -1,5 +1,4 @@
-﻿using GameEngine.Characters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace GameEngine.Commands
 {
     internal class LookCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
             // Figure out the location name of where the player is at
             var lookingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
@@ -17,7 +16,7 @@ namespace GameEngine.Commands
             Console.WriteLine(characterLocation?.LocalDescription);
 
             // Get all portals that have a rule that originates from the current location
-            var originPortals = gameData.Portals.Where(p => p.HasOriginLocation(characterLocation.TrackingId));
+            var originPortals = GameState.CurrentGameState.GetPortalsInLocation(characterLocation.TrackingId);
 
             var portalDesinations = originPortals
                 .Select(p => p.GetDestination(characterLocation.TrackingId));
@@ -41,7 +40,7 @@ namespace GameEngine.Commands
                 {
                     // If we got here, the description AND the destination exist.
                     var remoteLocation = GameState.CurrentGameState.GetLocation(portalDest.DestinationTrackingId);
-                    Console.WriteLine($"[{remoteLocation.Name}] {portalDest.Description} {remoteLocation.RemoteDescription}");
+                    Console.WriteLine($"[{remoteLocation.LocationName}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
             }
 
@@ -53,7 +52,8 @@ namespace GameEngine.Commands
                 foreach (var locationItem in locationItems)
                 {
                     currentItemIndex++;
-                    if (gameData.TryGetItem(locationItem.Key, out Item item))
+                    var item = locationItem.Key;
+                    if (item != null)
                     {
                         // Skip items that are not visible
                         if (!item.IsVisible)
@@ -65,7 +65,7 @@ namespace GameEngine.Commands
                         {
                             itemDescriptions += (currentItemIndex == locationItems.Count) ? " and " : ", ";
                         }
-                        itemDescriptions += item.GetDescription(locationItem.Value, GameState.CurrentGameState);
+                        itemDescriptions += item.GetDescription(locationItem.Value);
                     }
                 }
 

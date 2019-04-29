@@ -20,11 +20,11 @@ namespace GameEngine.Characters
         /// <summary>
         /// Allows the character to take their turn.
         /// </summary>
-        public virtual void Turn(GameSourceData gameData)
+        public virtual void Turn()
         {
         }
 
-        public virtual void Attack(Character attackingCharacter, GameSourceData gameData)
+        public virtual void Attack(Character attackingCharacter)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
@@ -85,7 +85,7 @@ namespace GameEngine.Characters
             return false;
         }
 
-        public void Heal(Character healingCharacter, GameSourceData gameData)
+        public void Heal(Character healingCharacter)
         {
             if(IsDead())
             {

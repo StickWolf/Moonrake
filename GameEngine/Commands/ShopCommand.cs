@@ -10,7 +10,7 @@ namespace GameEngine.Commands
 {
     internal class ShopCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
             // TODO: The shopping command lets you go shopping!
 
@@ -29,7 +29,7 @@ namespace GameEngine.Commands
             }
 
             //  4. If there is just 1 tradepost then automatically choose that one
-            string chosenTradePost;
+            TradePost chosenTradePost;
             if (allTradePostsInPlayersLocation.Count == 1)
             {
                 chosenTradePost = allTradePostsInPlayersLocation[0];
@@ -37,9 +37,11 @@ namespace GameEngine.Commands
             else
             {
                 // if there are multiple then give the user a choice on which one they want to shop at.
-                chosenTradePost = Console.Choose("Where would you like to shop?", allTradePostsInPlayersLocation, includeCancel: false);
+                var choices = allTradePostsInPlayersLocation
+                    .ToDictionary(t => t, t => t.Name);
+                chosenTradePost = Console.Choose("Where would you like to shop?", choices, includeCancel: false);
             }
-            Console.WriteLine($"Welcome, you will be shopping at {chosenTradePost}");
+            Console.WriteLine($"Welcome, you will be shopping at {chosenTradePost.Name}");
 
             //  5. One they have chosen a tradepost, look through each tradeset the tradepost offers
             //     and list out each item and the cost of each item in a menu that the user can choose

@@ -45,8 +45,7 @@ namespace Moonrake
                     new ItemRecipeIngredient(MoonRakeItems.Money, 15)
                 )
             );
-            var IceCreamShop = AddTradePost("Ice Cream Shop", IceCream);
-            DefaultTradePostLocations[IceCreamShop] = MoonRakeLocations.IceCreamShop;
+            var IceCreamShop = AddTradePost(MoonRakeLocations.IceCreamShop, "Ice Cream Shop", IceCream);
 
             #endregion
         }
