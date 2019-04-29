@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
-    public class TradePost
+    public class TradePost : TrackableInstance
     {
         /// <summary>
         /// The name of the trade post.
@@ -12,11 +13,12 @@ namespace GameEngine
         /// <summary>
         /// All the trade sets that are available at this trade post
         /// </summary>
-        public List<string> TradeSets = new List<string>();
+        public List<Guid> TradeSetTrackingIds = new List<Guid>();
 
-        public TradePost(string tradePostName, params string[] tradeSets)
+        public TradePost(string tradePostName, params Guid[] tradeSetTrackingIds)
         {
             Name = tradePostName;
+            TradeSetTrackingIds.AddRange(tradeSetTrackingIds);
         }
     }
 }

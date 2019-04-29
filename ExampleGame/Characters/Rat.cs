@@ -12,13 +12,13 @@ namespace ExampleGame.Characters
             WhiskerCount = whiskerCount;
         }
 
-        public override void Attack(Character attackingCharacter, GameSourceData gameData)
+        public override void Attack(Character attackingCharacter)
         {
             WhiskerCount--;
             Console.WriteLine($"My whisker count is: {WhiskerCount}");
         }
 
-        public override void Turn(GameSourceData gameData)
+        public override void Turn()
         {
             //Console.WriteLine($"{Name} is taking their turn as a rat.");
         }

@@ -5,7 +5,7 @@ namespace GameEngine.Commands
 {
     class StatsCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
             var statSeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             Console.WriteLine("Here are your stats:");

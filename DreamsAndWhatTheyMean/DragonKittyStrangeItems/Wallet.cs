@@ -1,5 +1,6 @@
 ﻿using GameEngine;
 using GameEngine.Characters;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,22 @@ using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     class Wallet : Item
     {
-        public Guid CharacterTrackingId { get; set; }
-        public GameSourceData GameData { get; set; }
-        public int MoneyWalletContains { get; set; }
-        public Wallet(Guid characterTrackingId, GameSourceData gameData, int moneyInWallet) : base($"{characterTrackingId}sWallet", $"{characterTrackingId}'s wallet")
+        [JsonProperty]
+        private Guid CharacterTrackingId { get; set; }
+
+        [JsonProperty]
+        private Guid DollarItemTrackingId { get; set; }
+
+        [JsonProperty]
+        private int MoneyWalletContains { get; set; }
+
+        public Wallet(Guid characterTrackingId, Guid dollarItemTrackingId, int moneyInWallet) : base($"{characterTrackingId}'s wallet")
         {
-            GameData = gameData;
             CharacterTrackingId = characterTrackingId;
+            DollarItemTrackingId = dollarItemTrackingId;
             MoneyWalletContains = moneyInWallet;
             IsBound = false;
             IsInteractable = false;
@@ -24,28 +32,28 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsVisible = true;
         }
 
-        public override string GetDescription(int count, GameState gameState)
+        public override string GetDescription(int count)
         {
-            var character = gameState.GetCharacter(CharacterTrackingId);
+            var character = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
             return $"{character.Name}'s wallet";
         }
 
-        public override void Grab(int count, Guid grabbingCharacterTrackingId, GameState gameState)
+        public override void Grab(int count, Guid grabbingCharacterTrackingId)
         {
-            var playerCharacter = gameState.GetPlayerCharacter();
-            var attackingCharacter = gameState.GetCharacter(CharacterTrackingId);
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
             if (attackingCharacter.Hp > 0)
             {
                 GameEngine.Console.WriteLine($"You have tried to steal {CharacterTrackingId}'s wallet, now you will suffer,");
-                playerCharacter.Attack(attackingCharacter, GameData);
+                playerCharacter.Attack(attackingCharacter);
                 GameEngine.Console.WriteLine($"{CharacterTrackingId} has hit you.");
             }
             if (attackingCharacter.Hp <= 0)
             {
                 GameEngine.Console.WriteLine($"Since {CharacterTrackingId} is dead, you get {MoneyWalletContains} dollars!");
-                gameState.TryAddCharacterItemCount(playerCharacter.TrackingId, "Dollar", MoneyWalletContains, GameData);
+                GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, DollarItemTrackingId, MoneyWalletContains);
                 var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterTrackingId);
-                gameState.TryAddLocationItemCount(locationOfWallet.TrackingId, TrackingName, -1, GameData);
+                GameState.CurrentGameState.TryAddLocationItemCount(locationOfWallet.TrackingId, this.TrackingId, -1);
             }
         }
     }

@@ -1,25 +1,30 @@
 ﻿using GameEngine;
+using Newtonsoft.Json;
 using System;
 
 namespace ExampleGame.Items
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Keyhole : Item
     {
+        [JsonProperty]
         private string GameVarDoorIsOpen { get; set; }
-        private string RequiredKeyItemName { get; set; }
 
-        public Keyhole(string gameVarDoorIsOpen, string requiredKeyItemName) : base($"Keyhole[{gameVarDoorIsOpen}]", "Keyhole")
+        [JsonProperty]
+        private Guid RequiredKeyItemTrackingId { get; set; }
+
+        public Keyhole(string gameVarDoorIsOpen, Guid requiredKeyItemTrackingId) : base("Keyhole")
         {
-            RequiredKeyItemName = requiredKeyItemName;
+            RequiredKeyItemTrackingId = requiredKeyItemTrackingId;
             GameVarDoorIsOpen = gameVarDoorIsOpen;
             IsUnique = true;
             IsBound = true;
             IsInteractable = true;
         }
 
-        public override string GetDescription(int count, GameState gameState)
+        public override string GetDescription(int count)
         {
-            var doorIsOpen = gameState.GetGameVarValue(GameVarDoorIsOpen);
+            var doorIsOpen = GameState.CurrentGameState.GetGameVarValue(GameVarDoorIsOpen);
             if (!doorIsOpen.Equals("true", StringComparison.OrdinalIgnoreCase))
             {
                 return "a keyhole in the locked door";
@@ -28,18 +33,18 @@ namespace ExampleGame.Items
             return null;
         }
 
-        public override void Interact(GameState gameState, string otherItemTrackingName)
+        public override void Interact(Item otherItem)
         {
-            if (otherItemTrackingName == null)
+            if (otherItem == null)
             {
                 GameEngine.Console.WriteLine("The keyhole looks like it needs a key.");
                 return;
             }
 
-            if (otherItemTrackingName.Equals(RequiredKeyItemName))
+            if (otherItem.TrackingId == RequiredKeyItemTrackingId)
             {
                 GameEngine.Console.WriteLine("The door unlocks and swings open!");
-                gameState.SetGameVarValue(GameVarDoorIsOpen, "true");
+                GameState.CurrentGameState.SetGameVarValue(GameVarDoorIsOpen, "true");
                 IsVisible = false;
                 return;
             }

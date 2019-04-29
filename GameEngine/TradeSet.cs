@@ -2,7 +2,7 @@
 
 namespace GameEngine
 {
-    public class TradeSet
+    public class TradeSet : TrackableInstance
     {
         public List<ItemRecipe> Recipes { get; private set; } = new List<ItemRecipe>();
         public string Name { get; private set; }

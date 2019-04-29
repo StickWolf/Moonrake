@@ -8,20 +8,16 @@ namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
             var movingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var movingCharacterLoc = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
 
             // Get a list of locations that can be moved to from here.
-            var validLocations = gameData.Portals
-                .Where(p => p.HasOriginLocation(movingCharacterLoc.TrackingId)) // Portals in this location
-                .Select(p => p.GetDestination(movingCharacterLoc.TrackingId)) // Get destination info for each of the portals
-                .Where(d => d.DestinationTrackingId != Guid.Empty) // Exclude destinations that lead nowhere (locked doors, etc)
-                .Select(d => GameState.CurrentGameState.GetLocation(d.DestinationTrackingId)) // Get the actual destination location
-                .ToDictionary(kvp => kvp, kvp => kvp.Name); // convert to Dictionary[{location}] = {locationName}
+            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLoc.TrackingId)
+                .ToDictionary(kvp => kvp, kvp => kvp.LocationName); // convert to Dictionary[{location}] = {locationName}
 
-            var wordLocationMap = CommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList(), gameData);
+            var wordLocationMap = CommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList());
             var foundLocations = wordLocationMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -46,7 +42,7 @@ namespace GameEngine.Commands
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), gameData);
+            CommandHelper.TryRunPublicCommand("look", new List<string>());
         }
 
         public bool IsActivatedBy(string word)
