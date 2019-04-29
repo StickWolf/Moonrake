@@ -9,19 +9,21 @@ namespace GameEngine.Commands
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("Start a new game");
+
+            bool includeCancel = false;
             if (GameState.CurrentGameState != null)
             {
-                validSlotNames.Add("Cancel");
+                includeCancel = true;
             }
 
-            var slotToLoad = Console.Choose("Load or start new game?", validSlotNames);
-            if (slotToLoad.Equals("Start a new game"))
-            {
-                engine.StartNewGame();
-            }
-            else if (slotToLoad == "Cancel")
+            var slotToLoad = Console.Choose("Load or start new game?", validSlotNames, includeCancel: includeCancel);
+            if (slotToLoad == null)
             {
                 Console.WriteLine("Canceled Load");
+            }
+            else if (slotToLoad.Equals("Start a new game"))
+            {
+                engine.StartNewGame();
             }
             else
             {

@@ -46,9 +46,8 @@ namespace GameEngine.Commands
             }
             else
             {
-                availableItems.Add("CancelChoice", "Cancel");
-                var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems);
-                if (itemToPickUp == "CancelChoice")
+                var itemToPickUp = Console.Choose("What do you want to pick up?", availableItems, includeCancel: true);
+                if (itemToPickUp == null)
                 {
                     Console.WriteLine("Canceled Grab");
                     return;

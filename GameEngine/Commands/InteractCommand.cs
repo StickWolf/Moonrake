@@ -72,9 +72,8 @@ namespace GameEngine.Commands
 
         private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, GameSourceData gameData, out Item item1, out Item item2)
         {
-            allInteractableItems.Add("CancelChoice", "Cancel");
-            var itemToInteractWith = Console.Choose("What do you want to use?", allInteractableItems);
-            if (itemToInteractWith == "CancelChoice")
+            var itemToInteractWith = Console.Choose("What do you want to use?", allInteractableItems, includeCancel: true);
+            if (itemToInteractWith == null)
             {
                 Console.WriteLine("Canceled interaction");
                 item1 = item2 = null;
@@ -110,8 +109,8 @@ namespace GameEngine.Commands
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Prompt for other item to interact with
-                    var secondItemToInteractWith = Console.Choose($"What do you want to use the {item.DisplayName} on?", allInteractableItems);
-                    if (secondItemToInteractWith == "CancelChoice")
+                    var secondItemToInteractWith = Console.Choose($"What do you want to use the {item.DisplayName} on?", allInteractableItems, includeCancel: true);
+                    if (secondItemToInteractWith == null)
                     {
                         Console.WriteLine("Canceled interaction");
                         item1 = item2 = null;
