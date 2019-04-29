@@ -19,34 +19,34 @@ namespace ExampleGame
         {
             CrystalDiviner = gameData.AddItem(new CrystalDiviner());
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, CrystalDiviner, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.Start, CrystalDiviner, 1);
             }
 
             // Light and light switch A in Start
             ColoredLightA = gameData.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightAColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, ColoredLightA, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.Start, ColoredLightA, 1);
             }
             ColoredLightSwitchA = gameData.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightAColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, ColoredLightSwitchA, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.Start, ColoredLightSwitchA, 1);
             }
 
             // Light and light switch B in the Banquet Elevator
             ColoredLightB = gameData.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightBColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.BanquetElevator, ColoredLightB, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.BanquetElevator, ColoredLightB, 1);
             }
             ColoredLightSwitchB = gameData.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightBColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.BanquetElevator, ColoredLightSwitchB, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.BanquetElevator, ColoredLightSwitchB, 1);
             }
 
             // Bronze key and keyhole pair
             DullBronzeKey = gameData.AddItem(new Item("DullBronzeKey", "Dull Bronze Key") { IsUnique = true, IsInteractable = true });
             BanquetToSecretWarpedHallKeyhole = gameData.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
             }
 
             // Start room lever
@@ -58,7 +58,7 @@ namespace ExampleGame
                         if (fromPosition.Equals("off"))
                         {
                             GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
-                            gameState.TryAddLocationItemCount(gameData.Locations.Start, gameData.Items.DullBronzeKey, 1, gameData);
+                            gameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.Items.DullBronzeKey, 1, gameData);
                             gameState.SetGameVarValue(gameData.GameVariables.StartRoomLever, "on");
                         }
                         else
@@ -68,7 +68,7 @@ namespace ExampleGame
                     })
                 });
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, StartRoomLever, 1);
+                gameData.AddDefaultLocationItem(gameData.EgLocations.Start, StartRoomLever, 1);
             }
         }
     }

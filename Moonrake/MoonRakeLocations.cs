@@ -1,14 +1,15 @@
 ﻿using GameEngine.Locations;
+using System;
 
 namespace Moonrake
 {
     public class MoonRakeLocations
     {
-        public string TreeHouse { get; private set; }
+        public Guid TreeHouse { get; private set; }
 
-        public string Field { get; private set; }
+        public Guid Field { get; private set; }
 
-        public string IceCreamShop { get; private set; }
+        public Guid IceCreamShop { get; private set; }
 
         public MoonRakeLocations(MoonrakeGameData gameData)
         {
@@ -41,12 +42,12 @@ namespace Moonrake
             gameData.AddPortal(
                 new PortalOpenGameVarRule(Field, IceCreamShop,
                 "Through the Ice Cream Shop's medium wooden door you see", gameData.MoonRakeGameVariables.IceCreamShopDoor, "open"),
-                new PortalAlwaysClosedRule(Field, null,
+                new PortalAlwaysClosedRule(Field, Guid.Empty,
                 "You see a closed medium sized wooden door under the big sign on the Ice Cream Shop."),
 
                 new PortalOpenGameVarRule(IceCreamShop, Field,
                 "Through the medium wooden door you see", gameData.MoonRakeGameVariables.IceCreamShopDoor, "open"),
-                new PortalAlwaysClosedRule(IceCreamShop, null,
+                new PortalAlwaysClosedRule(IceCreamShop, Guid.Empty,
                 "You see a closed medium sized wooden door inside the Ice Cream Shop.")
                 );
         }

@@ -1,4 +1,5 @@
 ﻿using GameEngine.Characters;
+using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,25 +24,29 @@ namespace GameEngine
         [JsonProperty]
         private Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
 
+        // Locations[{LocationTrackingId}] = {Location}
+        [JsonProperty]
+        private Dictionary<Guid, Location> Locations { get; set; } = new Dictionary<Guid, Location>();
+
         // CharacterItems[{CharacterTrackingId}][{ItemTrackingName}] = {ItemCount}
         [JsonProperty]
         private Dictionary<Guid, Dictionary<string, int>> CharactersItems { get; set; } = new Dictionary<Guid, Dictionary<string, int>>();
 
-        // LocationItems[{LocationName}][{ItemTrackingName}] = {ItemCount}
+        // LocationItems[{LocationTrackingId}][{ItemTrackingName}] = {ItemCount}
         [JsonProperty]
-        private Dictionary<string, Dictionary<string, int>> LocationItems { get; set; } = new Dictionary<string, Dictionary<string, int>>();
+        private Dictionary<Guid, Dictionary<string, int>> LocationItems { get; set; } = new Dictionary<Guid, Dictionary<string, int>>();
 
-        // CharacterLocations[{CharacterTrackingId}] = {LocationName}
+        // CharacterLocations[{CharacterTrackingId}] = {LocationTrackingId}
         [JsonProperty]
-        private Dictionary<Guid, string> CharacterLocations { get; set; } = new Dictionary<Guid, string>();
+        private Dictionary<Guid, Guid> CharacterLocations { get; set; } = new Dictionary<Guid, Guid>();
 
         // GameVars[{GameVarName}] = {GameVarValue}
         [JsonProperty]
         private Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
 
-        // CurrentTradePostLocations[{TradePostName}] = {LocationName}
+        // CurrentTradePostLocations[{TradePostName}] = {LocationTrackingId}
         [JsonProperty]
-        private Dictionary<string, string> CurrentTradePostLocations { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, Guid> CurrentTradePostLocations { get; set; } = new Dictionary<string, Guid>();
 
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
@@ -92,12 +97,13 @@ namespace GameEngine
         private static Dictionary<string, GameState> GetGameStates()
         {
             Dictionary<string, GameState> savedGamesDictionary;
+            var saveFile = new FileInfo(SaveFileName);
 
             // If there is an existing saves file
-            if (File.Exists(SaveFileName))
+            if (saveFile.Exists)
             {
                 // read the save file to a string
-                string fileContents = File.ReadAllText(SaveFileName);
+                string fileContents = File.ReadAllText(saveFile.FullName);
 
                 var serializerSettings = new JsonSerializerSettings()
                 {
@@ -245,50 +251,50 @@ namespace GameEngine
             return true;
         }
 
-        public bool TryAddLocationItemCount(string locationName, string itemTrackingName, int count, GameSourceData gameData)
+        public bool TryAddLocationItemCount(Guid locationTrackingId, string itemTrackingName, int count, GameSourceData gameData)
         {
             if (gameData.TryGetItem(itemTrackingName, out Item item) == false)
             {
                 return false;
             }
-            return TryAddLocationItemCount(locationName, itemTrackingName, count, item);
+            return TryAddLocationItemCount(locationTrackingId, itemTrackingName, count, item);
         }
 
-        public bool TryAddLocationItemCount(string locationName, string itemTrackingName, int count, Item item)
+        public bool TryAddLocationItemCount(Guid locationTrackingId, string itemTrackingName, int count, Item item)
         {
             if (count == 0)
             {
                 return true;
             }
 
-            void setLocationItemCount(string sLocationName, string sItemTrackingName, int sCount)
+            void setLocationItemCount(Guid sLocationTrackingId, string sItemTrackingName, int sCount)
             {
-                if (!LocationItems.ContainsKey(sLocationName))
+                if (!LocationItems.ContainsKey(sLocationTrackingId))
                 {
-                    LocationItems.Add(sLocationName, new Dictionary<string, int>());
+                    LocationItems.Add(sLocationTrackingId, new Dictionary<string, int>());
                 }
-                if (!LocationItems[sLocationName].ContainsKey(sItemTrackingName))
+                if (!LocationItems[sLocationTrackingId].ContainsKey(sItemTrackingName))
                 {
-                    LocationItems[sLocationName].Add(sItemTrackingName, sCount);
+                    LocationItems[sLocationTrackingId].Add(sItemTrackingName, sCount);
                 }
                 else
                 {
-                    LocationItems[sLocationName][sItemTrackingName] = sCount;
+                    LocationItems[sLocationTrackingId][sItemTrackingName] = sCount;
                 }
             }
 
-            void removeLocationItem(string sLocationName, string sItemTrackingName)
+            void removeLocationItem(Guid sLocationTrackingId, string sItemTrackingName)
             {
-                if (!LocationItems.ContainsKey(sLocationName))
+                if (!LocationItems.ContainsKey(sLocationTrackingId))
                 {
                     return;
                 }
-                if (LocationItems[sLocationName].ContainsKey(sItemTrackingName))
+                if (LocationItems[sLocationTrackingId].ContainsKey(sItemTrackingName))
                 {
-                    LocationItems[sLocationName].Remove(sItemTrackingName);
-                    if (!LocationItems[sLocationName].Any())
+                    LocationItems[sLocationTrackingId].Remove(sItemTrackingName);
+                    if (!LocationItems[sLocationTrackingId].Any())
                     {
-                        LocationItems.Remove(sLocationName);
+                        LocationItems.Remove(sLocationTrackingId);
                     }
                 }
             }
@@ -296,9 +302,9 @@ namespace GameEngine
             // The goal is to only keep records in the dictionary for counts greater than 0
             // Even if we do temporarily add keys here, they should be cleaned up before returning if needed
             var locationItemCount = 0;
-            if (LocationItems.ContainsKey(locationName) && LocationItems[locationName].ContainsKey(itemTrackingName))
+            if (LocationItems.ContainsKey(locationTrackingId) && LocationItems[locationTrackingId].ContainsKey(itemTrackingName))
             {
-                locationItemCount = LocationItems[locationName][itemTrackingName];
+                locationItemCount = LocationItems[locationTrackingId][itemTrackingName];
             }
 
             // Non-unique items can be added and removed from locations without worrying about the count
@@ -307,12 +313,12 @@ namespace GameEngine
                 locationItemCount += count;
                 if (locationItemCount > 0)
                 {
-                    setLocationItemCount(locationName, itemTrackingName, locationItemCount);
+                    setLocationItemCount(locationTrackingId, itemTrackingName, locationItemCount);
                     return true;
                 }
                 else if (locationItemCount == 0)
                 {
-                    removeLocationItem(locationName, itemTrackingName);
+                    removeLocationItem(locationTrackingId, itemTrackingName);
                     return true;
                 }
                 return false;
@@ -325,7 +331,7 @@ namespace GameEngine
                 // Double check to make sure there really is an item here
                 if (locationItemCount > 0)
                 {
-                    removeLocationItem(locationName, itemTrackingName);
+                    removeLocationItem(locationTrackingId, itemTrackingName);
                     return true;
                 }
                 return false;
@@ -334,11 +340,23 @@ namespace GameEngine
             // The only other option is that this is a unique item being added to a location
             // First remove it from everywhere else, then add it here.
             RemoveItemEveryWhere(itemTrackingName);
-            setLocationItemCount(locationName, itemTrackingName, 1);
+            setLocationItemCount(locationTrackingId, itemTrackingName, 1);
             return true;
         }
 
-        public void AddCharacter(Character character, string locationName) // TODO: instead use location tracking id
+        public Guid AddLocation(Location location)
+        {
+            Debug.Assert(!Locations.ContainsKey(location.TrackingId), $"A location with the same tracking id '{location.TrackingId}' has already been added.");
+            Locations.Add(location.TrackingId, location);
+            return location.TrackingId;
+        }
+
+        public Location GetLocation(Guid locationTrackingId)
+        {
+            return Locations.ContainsKey(locationTrackingId) ? Locations[locationTrackingId] : null;
+        }
+
+        public Guid AddCharacter(Character character, Guid locationTrackingId)
         {
             Debug.Assert(!Characters.ContainsKey(character.TrackingId), $"A character with the same tracking id '{character.TrackingId}' has already been added.");
 
@@ -349,7 +367,8 @@ namespace GameEngine
                 PlayerTrackingId = character.TrackingId;
             }
             Characters.Add(character.TrackingId, character);
-            CharacterLocations[character.TrackingId] = locationName;
+            CharacterLocations[character.TrackingId] = locationTrackingId;
+            return character.TrackingId;
         }
 
         public Character GetPlayerCharacter()
@@ -384,11 +403,11 @@ namespace GameEngine
             }
         }
 
-        public Dictionary<string, int> GetLocationItems(string locationName)
+        public Dictionary<string, int> GetLocationItems(Guid locationTrackingId)
         {
-            if (LocationItems.ContainsKey(locationName))
+            if (LocationItems.ContainsKey(locationTrackingId))
             {
-                return LocationItems[locationName];
+                return LocationItems[locationTrackingId];
             }
             else
             {
@@ -402,10 +421,10 @@ namespace GameEngine
             return characters;
         }
 
-        public List<Character> GetCharactersInLocation(string locationName, bool includePlayer) // TODO: update to instead accept a location tracking guid
+        public List<Character> GetCharactersInLocation(Guid locationTrackingId, bool includePlayer)
         {
             var characters = CharacterLocations
-                .Where(kvp => kvp.Value.Equals(locationName, StringComparison.OrdinalIgnoreCase)) // Where location is the one passed in
+                .Where(kvp => kvp.Value == locationTrackingId) // Where location is the one passed in
                 .Select(kvp => GetCharacter(kvp.Key));
 
             // remove player if needed.
@@ -418,7 +437,7 @@ namespace GameEngine
             return characters.ToList();
         }
 
-        public string GetPlayerCharacterLocation() // TODO: update to instead return an actual Location
+        public Location GetPlayerCharacterLocation()
         {
             return GetCharacterLocation(PlayerTrackingId);
         }
@@ -428,11 +447,12 @@ namespace GameEngine
         /// </summary>
         /// <param name="characterTrackingId">The character name</param>
         /// <returns>Character location or null</returns>
-        public string GetCharacterLocation(Guid characterTrackingId) // TODO: update to instead return an actual Location
+        public Location GetCharacterLocation(Guid characterTrackingId) 
         {
             if (CharacterLocations.ContainsKey(characterTrackingId))
             {
-                return CharacterLocations[characterTrackingId];
+                var locationTrackingId = CharacterLocations[characterTrackingId];
+                return Locations[locationTrackingId];
             }
             return null;
         }
@@ -441,10 +461,10 @@ namespace GameEngine
         /// Sets the location of the specified character
         /// </summary>
         /// <param name="characterTrackingId">The Name of the character</param>
-        /// <param name="locationName">The location to place the character at</param>
-        public void SetCharacterLocation(Guid characterTrackingId, string locationName) // TODO: update to accept a location tracking guid instead
+        /// <param name="locationTrackingId">The location to place the character at</param>
+        public void SetCharacterLocation(Guid characterTrackingId, Guid locationTrackingId)
         {
-            CharacterLocations[characterTrackingId] = locationName;
+            CharacterLocations[characterTrackingId] = locationTrackingId;
         }
 
         /// <summary>
@@ -475,21 +495,21 @@ namespace GameEngine
         /// Adds/sets a tradepost to be at the specified location
         /// </summary>
         /// <param name="tradePostName">The name of the trade post</param>
-        /// <param name="locationName">The location the trade post is at</param>
-        public void SetTradePostLocation(string tradePostName, string locationName)
+        /// <param name="locationTrackingId">The location the trade post is at</param>
+        public void SetTradePostLocation(string tradePostName, Guid locationTrackingId)
         {
-            CurrentTradePostLocations[tradePostName] = locationName;
+            CurrentTradePostLocations[tradePostName] = locationTrackingId;
         }
 
         /// <summary>
         /// Gets all the trade posts at the given location
         /// </summary>
-        /// <param name="locationName">The location to look at</param>
+        /// <param name="locationTrackingId">The location to look at</param>
         /// <returns>All the trade posts at the given location</returns>
-        public List<string> GetTradePostsAtLocation(string locationName)
+        public List<string> GetTradePostsAtLocation(Guid locationTrackingId)
         {
             var tradePostNames = CurrentTradePostLocations
-                .Where(kvp => kvp.Value.Equals(locationName))
+                .Where(kvp => kvp.Value.Equals(locationTrackingId))
                 .Select(kvp => kvp.Key)
                 .ToList();
             return tradePostNames;

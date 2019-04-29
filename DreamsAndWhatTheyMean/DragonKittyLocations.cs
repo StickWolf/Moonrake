@@ -9,17 +9,17 @@ namespace DreamsAndWhatTheyMean
 {
     class DragonKittyLocations
     {
-        public string PlayersRoom { get; private set; }
+        public Guid PlayersRoom { get; private set; }
 
-        public string PlayersLivingRoom { get; private set; }
+        public Guid PlayersLivingRoom { get; private set; }
 
-        public string PlayersBackyard { get; private set; }
+        public Guid PlayersBackyard { get; private set; }
 
-        public string BRStreet { get; private set; }
+        public Guid BRStreet { get; private set; }
 
-        public string ESStreet { get; private set; }
+        public Guid ESStreet { get; private set; }
 
-        public string BlackSmithShop { get; private set; }
+        public Guid BlackSmithShop { get; private set; }
 
         public DragonKittyLocations(TheTaleOfTheDragonKittySourceData gameData)
         {

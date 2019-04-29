@@ -1,18 +1,19 @@
 ﻿using GameEngine.Locations;
+using System;
 
 namespace ExampleGame
 {
     public class ExampleLocations
     {
-        public string Start { get; private set; }
+        public Guid Start { get; private set; }
 
-        public string BanquetHall { get; private set; }
+        public Guid BanquetHall { get; private set; }
 
-        public string CemetaryTheatre { get; private set; }
+        public Guid CemetaryTheatre { get; private set; }
 
-        public string BanquetElevator { get; private set; }
+        public Guid BanquetElevator { get; private set; }
 
-        public string SecretWarpedHall { get; private set; }
+        public Guid SecretWarpedHall { get; private set; }
 
         public ExampleLocations(ExampleGameSourceData gameData)
         {
@@ -61,19 +62,19 @@ namespace ExampleGame
                 // These 2 rules will only be considered if the player is in the banquet hall.
                 // If the game variable "BanquestElevatorFloor" is set to 1 then the first rule will match, otherwise it'll match the 2nd
                 new PortalOpenGameVarRule(BanquetHall, BanquetElevator, "Through an open elevator door you see", gameData.GameVariables.BanquetElevatorFloor, "1"),
-                new PortalAlwaysClosedRule(BanquetHall, null, "You see a closed elevator door"),
+                new PortalAlwaysClosedRule(BanquetHall, Guid.Empty, "You see a closed elevator door"),
 
                 new PortalOpenGameVarRule(BanquetElevator, BanquetHall, "From within the elevator you peer through the door to see", gameData.GameVariables.BanquetElevatorFloor, "1"),
-                new PortalAlwaysClosedRule(BanquetElevator, null, "The elevator door is closed")
+                new PortalAlwaysClosedRule(BanquetElevator, Guid.Empty, "The elevator door is closed")
                 );
 
             // Banquet Hall <--> Warped Hall
             gameData.AddPortal(
                 new PortalOpenGameVarRule(BanquetHall, SecretWarpedHall, "Through the now open passageway you see", gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, "true"),
-                new PortalAlwaysClosedRule(BanquetHall, null, "You see a large closed stone door with a keyhole. The door is locked."),
+                new PortalAlwaysClosedRule(BanquetHall, Guid.Empty, "You see a large closed stone door with a keyhole. The door is locked."),
 
                 new PortalOpenGameVarRule(SecretWarpedHall, BanquetHall, "Through the now open passageway you see", gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, "true"),
-                new PortalAlwaysClosedRule(SecretWarpedHall, null, "You see the end of the hallway. There is currently no way through in this direction.")
+                new PortalAlwaysClosedRule(SecretWarpedHall, Guid.Empty, "You see the end of the hallway. There is currently no way through in this direction.")
                 );
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Locations
+﻿using System;
+
+namespace GameEngine.Locations
 {
     /// <summary>
     /// This portal rule is used if the specified game variable equals the expected value
@@ -9,8 +11,8 @@
 
         public string ExpectedValue { get; private set; }
 
-        public PortalOpenGameVarRule(string origin, string destination, string description, string gameVarName, string expectedValue)
-            : base(origin, destination, description)
+        public PortalOpenGameVarRule(Guid originTrackingId, Guid destinationTrackingId, string description, string gameVarName, string expectedValue)
+            : base(originTrackingId, destinationTrackingId, description)
         {
             GameVarName = gameVarName;
             ExpectedValue = expectedValue;

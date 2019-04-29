@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Locations
+﻿using System;
+
+namespace GameEngine.Locations
 {
     /// <summary>
     /// This portal rule will always be used if encountered.
@@ -7,8 +9,8 @@
     /// </summary>
     public class PortalAlwaysOpenRule : PortalRule
     {
-        public PortalAlwaysOpenRule(string origin, string destination, string description)
-            : base(origin, destination, description)
+        public PortalAlwaysOpenRule(Guid originTrackingId, Guid destinationTrackingId, string description)
+            : base(originTrackingId, destinationTrackingId, description)
         {
         }
     }

@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace GameEngine.Locations
+﻿namespace GameEngine.Locations
 {
-    public class Location
+    public class Location : TrackableInstance
     {
         /// <summary>
         /// This is the name of the location and must be unique within all locations.

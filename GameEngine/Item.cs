@@ -83,7 +83,7 @@ namespace GameEngine
             var description = GetDescription(count, gameState);
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacterTrackingId);
             // Remove it from the floor
-            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc, TrackingName, -count, this);
+            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, TrackingName, -count, this);
             // And place it in the player's inventory, but only if it was removed from the floor successfully
             if (removeLocationResult)
             {
@@ -114,7 +114,7 @@ namespace GameEngine
             // And place it on the floor, but only if it was removed from the inventory successfully
             if (removeCharResult)
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(characterLoc, TrackingName, count, this);
+                GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, TrackingName, count, this);
                 Console.WriteLine($"You dropped {description}.");
             }
             else
