@@ -34,10 +34,8 @@ namespace GameEngine.Commands
             }
             else
             {
-                var cancelChar = new Character("Cancel", 0); // TODO: instead of this hacky adding-ness, instead update the choose method to support a cancel option natively
-                otherCharactersInLoc[cancelChar] = "Cancel";
-                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc);
-                if (defendingCharacter == cancelChar)
+                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true);
+                if (defendingCharacter == null)
                 {
                     Console.WriteLine("Stopped Attack.");
                     return;

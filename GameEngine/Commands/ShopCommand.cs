@@ -37,7 +37,7 @@ namespace GameEngine.Commands
             else
             {
                 // if there are multiple then give the user a choice on which one they want to shop at.
-                chosenTradePost = Console.Choose("Where would you like to shop?", allTradePostsInPlayersLocation);
+                chosenTradePost = Console.Choose("Where would you like to shop?", allTradePostsInPlayersLocation, includeCancel: false);
             }
             Console.WriteLine($"Welcome, you will be shopping at {chosenTradePost}");
 
