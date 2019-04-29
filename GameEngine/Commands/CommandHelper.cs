@@ -164,13 +164,8 @@ namespace GameEngine.Commands
         /// <param name="availableLocationNames">The names of locations that are possible</param>
         /// <param name="engine">Game engine</param>
         /// <returns>A list of locations that were matched in the order they were found</returns>
-        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<string> availableLocationNames, GameSourceData gameData)
+        public static List<MutablePair<string, Location>> WordsToLocations(List<string> words, List<Location> availableLocations, GameSourceData gameData)
         {
-            // Get a list of actual locations
-            var availableLocations = availableLocationNames
-                .Select(l => gameData.GetLocation(l))
-                .ToList();
-
             // Create a list of words that we will try to map locations to
             var wordLocationMap = words
                 .Except(SkipWords)

@@ -11,7 +11,7 @@ namespace GameEngine.Commands
         {
             var grabbingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc.TrackingId);
             if (locationItems == null || locationItems.Count == 0)
             {
                 Console.WriteLine("There is nothing to grab.");

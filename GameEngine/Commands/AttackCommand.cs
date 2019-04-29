@@ -12,7 +12,7 @@ namespace GameEngine.Commands
             var playerLoc = GameState.CurrentGameState.GetPlayerCharacterLocation();
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
 
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc, includePlayer: false)
+            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: false)
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 

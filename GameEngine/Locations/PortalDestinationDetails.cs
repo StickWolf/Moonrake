@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Locations
+﻿using System;
+
+namespace GameEngine.Locations
 {
     public class PortalDestinationDetails
     {
@@ -6,7 +8,7 @@
         /// The destination of where the portal leads to.
         /// Null if the portal is closed.
         /// </summary>
-        public string Destination { get; set; }
+        public Guid DestinationTrackingId { get; set; }
 
         /// <summary>
         /// A description of what the portal looks like.

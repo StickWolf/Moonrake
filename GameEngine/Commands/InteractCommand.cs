@@ -12,7 +12,7 @@ namespace GameEngine.Commands
             var interactingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
 
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc) ?? new Dictionary<string, int>();
+            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc.TrackingId) ?? new Dictionary<string, int>();
             var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<string, int>();
 
             var interactableLocationItems = locationItems

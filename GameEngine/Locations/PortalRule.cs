@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Locations
+﻿using System;
+
+namespace GameEngine.Locations
 {
     /// <summary>
     /// A portal rule is tested to see if a portal links to the specified destination.
@@ -9,13 +11,13 @@
         /// <summary>
         /// The location where the portal starts at
         /// </summary>
-        public string Origin { get; private set; }
+        public Guid OriginTrackingId { get; private set; }
 
         /// <summary>
         /// The destination of where the portal leads to if the rule matches.
         /// This may be null if the portal is closed.
         /// </summary>
-        public string Destination { get; private set; }
+        public Guid DestinationTrackingId { get; private set; }
 
         /// <summary>
         /// A description of what the portal looks like when the rule matches.
@@ -26,10 +28,10 @@
         /// </summary>
         public string Description { get; private set; }
 
-        public PortalRule(string origin, string destination, string description)
+        public PortalRule(Guid originTrackingId, Guid destinationTrackingId, string description)
         {
-            Origin = origin;
-            Destination = destination;
+            OriginTrackingId = originTrackingId;
+            DestinationTrackingId = destinationTrackingId;
             Description = description;
         }
     }

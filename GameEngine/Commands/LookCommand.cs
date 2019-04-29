@@ -11,20 +11,17 @@ namespace GameEngine.Commands
         {
             // Figure out the location name of where the player is at
             var lookingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLocationName = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
-
-            // Get a referience to that location from the GameData
-            gameData.TryGetLocation(playerLocationName, out var location);
+            var characterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
 
             // Display the local description of the location
-            Console.WriteLine(location?.LocalDescription);
+            Console.WriteLine(characterLocation?.LocalDescription);
 
             // Get all portals that have a rule that originates from the current location
-            var originPortals = gameData.Portals.Where(p => p.HasOriginLocation(playerLocationName));
+            var originPortals = gameData.Portals.Where(p => p.HasOriginLocation(characterLocation.TrackingId));
 
             var portalDesinations = originPortals
-                .Select(p => p.GetDestination(location.Name))
-                .OrderBy(d => d.Destination);
+                .Select(p => p.GetDestination(characterLocation.TrackingId));
+                //.OrderBy(d => d.Destination); // TODO: Bring sorting back
 
             Console.WriteLine();
             // Loop through all destinations in that location 
@@ -35,7 +32,7 @@ namespace GameEngine.Commands
                 {
                     // The player sees nothing
                 } 
-                else if(portalDest.Destination == null)
+                else if(portalDest.DestinationTrackingId == Guid.Empty)
                 {
                     // If we get here, the description exists, but the destination does not
                     Console.WriteLine(portalDest.Description);
@@ -43,12 +40,12 @@ namespace GameEngine.Commands
                 else
                 {
                     // If we got here, the description AND the destination exist.
-                    gameData.TryGetLocation(portalDest.Destination, out var remoteLocation);
-                    Console.WriteLine($"[{portalDest.Destination}] {portalDest.Description} {remoteLocation.RemoteDescription}");
+                    var remoteLocation = GameState.CurrentGameState.GetLocation(portalDest.DestinationTrackingId);
+                    Console.WriteLine($"[{remoteLocation.Name}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
             }
 
-            var locationItems = GameState.CurrentGameState.GetLocationItems(playerLocationName);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(characterLocation.TrackingId);
             if (locationItems != null)
             {
                 string itemDescriptions = string.Empty;
@@ -79,7 +76,7 @@ namespace GameEngine.Commands
                 }
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLocationName, includePlayer: false);
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(characterLocation.TrackingId, includePlayer: false);
             if(otherCharactersInLocation.Count != 0)
             {
                 Console.WriteLine();
