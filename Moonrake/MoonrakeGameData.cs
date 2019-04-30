@@ -3,9 +3,8 @@ using GameEngine.Locations;
 
 namespace Moonrake
 {
-    public class MoonrakeGameData : GameSourceData
+    public class MoonrakeGameData
     {
-
         public MoonRakeCharacters MoonRakeCharacters { get; private set; }
         public MoonRakeGameVariables MoonRakeGameVariables { get; private set; }
         public MoonRakeItems MoonRakeItems { get; private set; }
@@ -18,7 +17,7 @@ namespace Moonrake
             MoonRakeItems = new MoonRakeItems(this);
             MoonRakeLocations = new MoonRakeLocations(this);
 
-            GameIntroductionText = "Once, there were three ancient instruments:" +
+            GameState.CurrentGameState.GameIntroductionText = "Once, there were three ancient instruments:" +
                 " The Harp, Piano, and the Drum." +
                 " Inside of each instrument there was a magical gem:" +
                 " A ruby, sapphire, and a diamond." +
@@ -26,7 +25,7 @@ namespace Moonrake
                 " The Moonrake." +
                 " Hello, Welcome to Moonrake, a text adventure game.";
 
-            AddDefaultCharacterItem(MoonRakeCharacters.Player, MoonRakeItems.Money, 35);
+            GameState.CurrentGameState.TryAddCharacterItemCount(MoonRakeCharacters.Player, MoonRakeItems.Money, 35);
 
             #region TradeSets
 
@@ -34,7 +33,7 @@ namespace Moonrake
 
             #region TradePosts
 
-            var IceCream = AddTradeSet("Ice Cream",
+            var IceCream = GameState.CurrentGameState.AddTradeSet("Ice Cream",
                 new ItemRecipe(MoonRakeItems.ChocolateIceCream,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 10)
                 ),
@@ -45,7 +44,7 @@ namespace Moonrake
                     new ItemRecipeIngredient(MoonRakeItems.Money, 15)
                 )
             );
-            var IceCreamShop = AddTradePost(MoonRakeLocations.IceCreamShop, "Ice Cream Shop", IceCream);
+            var IceCreamShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.IceCreamShop, "Ice Cream Shop", IceCream);
 
             #endregion
         }

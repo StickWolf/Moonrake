@@ -17,11 +17,11 @@ namespace Moonrake
 
         public MoonRakeItems(MoonrakeGameData gameData)
         {
-            WaterEye = gameData.AddItem(new Item("Water Eye") { IsUnique = true });
-            Money = gameData.AddItem(new Item("Money"));
-            ChocolateIceCream = gameData.AddItem(new Item("Chocolate Ice Cream"));
-            StrawberryIceCream = gameData.AddItem(new Item("Strawberry Ice Cream"));
-            VanillaIceCream = gameData.AddItem(new Item("Vanilla Ice Cream"));
+            WaterEye = GameState.CurrentGameState.AddItem(new Item("Water Eye") { IsUnique = true });
+            Money = GameState.CurrentGameState.AddItem(new Item("Money"));
+            ChocolateIceCream = GameState.CurrentGameState.AddItem(new Item("Chocolate Ice Cream"));
+            StrawberryIceCream = GameState.CurrentGameState.AddItem(new Item("Strawberry Ice Cream"));
+            VanillaIceCream = GameState.CurrentGameState.AddItem(new Item("Vanilla Ice Cream"));
         }
     }
 }

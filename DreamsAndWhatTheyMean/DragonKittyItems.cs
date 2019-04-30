@@ -19,16 +19,16 @@ namespace DreamsAndWhatTheyMean
 
         public DragonKittyItems(TheTaleOfTheDragonKittySourceData gameData)
         {
-            Money = gameData.AddItem(new Item("dollar"));
-            Paper = gameData.AddItem(new Item("paper piece"));
-            BronzeChunk = gameData.AddItem(new Item("bronze chunk"));
-            BronzeBar = gameData.AddItem(new Item("bronze bar"));
-            PlasticChunk = gameData.AddItem(new Item("leftover plastic part"));
-            PlayersRoomLight = gameData.AddItem(new RoomLight("White", true, 1));
-            PlayersLivingRoomLight = gameData.AddItem(new RoomLight("White", true, 2));
-            BronzeTalisman = gameData.AddItem(new BronzeTalisman());
-            Apple = gameData.AddItem(new Apple());
-            DadsWallet = gameData.AddItem(new Wallet(gameData.DkCharacters.DadCharacter, gameData.DkItems.Money, 10000));
+            Money = GameState.CurrentGameState.AddItem(new Item("dollar"));
+            Paper = GameState.CurrentGameState.AddItem(new Item("paper piece"));
+            BronzeChunk = GameState.CurrentGameState.AddItem(new Item("bronze chunk"));
+            BronzeBar = GameState.CurrentGameState.AddItem(new Item("bronze bar"));
+            PlasticChunk = GameState.CurrentGameState.AddItem(new Item("leftover plastic part"));
+            PlayersRoomLight = GameState.CurrentGameState.AddItem(new RoomLight("White", true, 1));
+            PlayersLivingRoomLight = GameState.CurrentGameState.AddItem(new RoomLight("White", true, 2));
+            BronzeTalisman = GameState.CurrentGameState.AddItem(new BronzeTalisman());
+            Apple = GameState.CurrentGameState.AddItem(new Apple());
+            DadsWallet = GameState.CurrentGameState.AddItem(new Wallet(gameData.DkCharacters.DadCharacter, gameData.DkItems.Money, 10000));
         }
     }
 }
