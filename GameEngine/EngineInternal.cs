@@ -1,5 +1,6 @@
 ﻿using GameEngine.Characters;
 using GameEngine.Commands;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine
@@ -19,11 +20,11 @@ namespace GameEngine
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
-        private GameSourceData GameData { get; set; }
+        public Action NewGameFiller { get; private set; }
 
-        public EngineInternal(GameSourceData gameData)
+        public EngineInternal(Action newGameFiller)
         {
-            GameData = gameData;
+            NewGameFiller = newGameFiller;
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace GameEngine
                 // TODO: Find a way to figure out when the player has won.
                 else if (PlayerHasWon)
                 {
-                    Console.WriteLine(GameData.GameEndingText);
+                    Console.WriteLine(GameState.CurrentGameState.GameEndingText);
                     Console.WriteLine("             |--The End--|             ");
                     Console.ReadLine();
                     RunGameLoop = false;
@@ -87,71 +88,11 @@ namespace GameEngine
         public void StartNewGame()
         {
             GameState.CreateNewGameState();
-
-            // Move locations over
-            foreach (var location in GameData.TODO_Delete_And_Use_GameState_Instead_Locations)
-            {
-                GameState.CurrentGameState.AddLocation(location.Value);
-            }
-
-            // Move Items over
-            foreach (var item in GameData.TODO_Delete_And_Use_GameState_Instead_Items.Values)
-            {
-                GameState.CurrentGameState.AddItem(item);
-            }
-
-            // Move portals over
-            foreach (var portal in GameData.TODO_Delete_And_Use_GameState_Instead_Portals.Values)
-            {
-                GameState.CurrentGameState.AddPortal(portal);
-            }
-
-            // Move all character instances into gameState
-            foreach (var character in GameData.TODO_Delete_And_Use_GameState_Instead_Characters.Values)
-            {
-                var locationTrackingId = GameData.TODO_Delete_And_Use_GameState_Instead_DefaultCharacterLocations[character.TrackingId];
-                GameState.CurrentGameState.AddCharacter(character, locationTrackingId);
-            }
-
-            // Port tradesets over
-            foreach (var tradeSet in GameData.TODO_Delete_And_Use_GameState_Instead_TradeSets.Values)
-            {
-                GameState.CurrentGameState.AddTradeSet(tradeSet);
-            }
-
-            // Port tradePosts over
-            foreach (var tradePost in GameData.TODO_Delete_And_Use_GameState_Instead_TradePosts.Values)
-            {
-                var locationTrackingId = GameData.TODO_Delete_And_Use_GameState_Instead_DefaultTradePostLocations[tradePost.TrackingId];
-                GameState.CurrentGameState.AddTradePost(tradePost, locationTrackingId);
-            }
-
-            // Add game vars that represent the inital game state
-            foreach (var gv in GameData.TODO_Delete_And_Use_GameState_Instead_DefaultGameVars)
-            {
-                GameState.CurrentGameState.SetGameVarValue(gv.Key, gv.Value);
-            }
-
-            // Set the default items that all characters have
-            foreach (var characterTrackingId in GameData.TODO_Delete_And_Use_GameState_Instead_DefaultCharacterItems.Keys)
-            {
-                foreach (var itemTrackingId in GameData.TODO_Delete_And_Use_GameState_Instead_DefaultCharacterItems[characterTrackingId].Keys)
-                {
-                    GameState.CurrentGameState.TryAddCharacterItemCount(characterTrackingId, itemTrackingId, GameData.TODO_Delete_And_Use_GameState_Instead_DefaultCharacterItems[characterTrackingId][itemTrackingId]);
-                }
-            }
-
-            foreach (var locationTrackingId in GameData.TODO_Delete_And_Use_GameState_Instead_DefaultLocationItems.Keys)
-            {
-                foreach (var itemTrackingId in GameData.TODO_Delete_And_Use_GameState_Instead_DefaultLocationItems[locationTrackingId].Keys)
-                {
-                    GameState.CurrentGameState.TryAddLocationItemCount(locationTrackingId, itemTrackingId, GameData.TODO_Delete_And_Use_GameState_Instead_DefaultLocationItems[locationTrackingId][itemTrackingId]);
-                }
-            }
+            NewGameFiller();
 
             // Show the intro
             Console.Clear();
-            Console.WriteLine(GameData.GameIntroductionText);
+            Console.WriteLine(GameState.CurrentGameState.GameIntroductionText);
             Console.WriteLine();
 
             CommandHelper.TryRunPublicCommand("look", new List<string>());

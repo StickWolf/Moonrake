@@ -2,7 +2,7 @@
 
 namespace DreamsAndWhatTheyMean
 {
-    class TheTaleOfTheDragonKittySourceData : GameSourceData
+    class TheTaleOfTheDragonKittySourceData
     {
         public DragonKittyCharacters DkCharacters { get; private set; }
         public DragonKittyLocations DkLocations { get; private set; }
@@ -16,34 +16,34 @@ namespace DreamsAndWhatTheyMean
             GameVarables = new DragonKittyGameVarables(this);
             DkItems = new DragonKittyItems(this);
 
-            GameIntroductionText = "Once, there was a group of kids." +
+            GameState.CurrentGameState.GameIntroductionText = "Once, there was a group of kids." +
                 " These kids played around every day, they even had a youtube channel that they shared." +
                 " Now, in this story, you will join these kids and go on a journey with them." +
                 " Their names are: Zach, and Amaya." +
                 " Welcome to The Tale of The DragonKitty.";
 
-            GameEndingText = "You have saved the last of the dragonkittys and you have won the game.";
+            GameState.CurrentGameState.GameEndingText = "You have saved the last of the dragonkittys and you have won the game.";
 
             #region Starter Items
-            AddDefaultCharacterItem(DkCharacters.Player, DkItems.Money, 200);
+            GameState.CurrentGameState.TryAddCharacterItemCount(DkCharacters.Player, DkItems.Money, 200);
             #endregion
 
             #region Room Items
-            AddDefaultLocationItem(DkLocations.PlayersRoom, DkItems.Money, 30);
-            AddDefaultLocationItem(DkLocations.PlayersRoom, DkItems.Paper, 21);
-            AddDefaultLocationItem(DkLocations.PlayersBackyard, DkItems.BronzeChunk, 9);
-            AddDefaultLocationItem(DkLocations.PlayersBackyard, DkItems.Money, 2);
-            AddDefaultLocationItem(DkLocations.BlackSmithShop, DkItems.BronzeBar, 1);
-            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, DkItems.PlasticChunk, 23);
-            AddDefaultLocationItem(DkLocations.PlayersRoom, DkItems.PlayersRoomLight, 1);
-            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, DkItems.PlayersLivingRoomLight, 1);
-            AddDefaultLocationItem(DkLocations.ESStreet, DkItems.BronzeTalisman, 1);
-            AddDefaultLocationItem(DkLocations.PlayersLivingRoom, DkItems.Apple, 10);
-            AddDefaultLocationItem(DkLocations.PlayersBackyard, DkItems.DadsWallet, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Money, 30);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Paper, 21);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.BronzeChunk, 9);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.Money, 2);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.BlackSmithShop, DkItems.BronzeBar, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlasticChunk, 23);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.PlayersRoomLight, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlayersLivingRoomLight, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.ESStreet, DkItems.BronzeTalisman, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.Apple, 10);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.DadsWallet, 1);
             #endregion
 
             #region Trade-Sets
-            var tsBlackSmith = AddTradeSet("Metal",
+            var tsBlackSmith = GameState.CurrentGameState.AddTradeSet("Metal",
                 new ItemRecipe(DkItems.BronzeBar,
                     new ItemRecipeIngredient(DkItems.BronzeChunk, 3),
                     new ItemRecipeIngredient(DkItems.Money, 50)
@@ -51,7 +51,7 @@ namespace DreamsAndWhatTheyMean
             #endregion
 
             #region Trade-Posts
-            var tpBlackSmith = AddTradePost(DkLocations.BlackSmithShop, "The Black-Smith",
+            var tpBlackSmith = GameState.CurrentGameState.AddTradePost(DkLocations.BlackSmithShop, "The Black-Smith",
                 tsBlackSmith);
             #endregion
         }
