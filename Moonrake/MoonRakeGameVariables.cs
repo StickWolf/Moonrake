@@ -1,4 +1,6 @@
-﻿namespace Moonrake
+﻿using GameEngine;
+
+namespace Moonrake
 {
     public class MoonRakeGameVariables
     {
@@ -6,7 +8,7 @@
 
         public MoonRakeGameVariables(MoonrakeGameData gameData)
         {
-            IceCreamShopDoor = gameData.AddDefaultGameVar("IceCreamShopDoor", "closed");
+            IceCreamShopDoor = GameState.CurrentGameState.SetGameVarValue("IceCreamShopDoor", "closed");
         }
     }
 }

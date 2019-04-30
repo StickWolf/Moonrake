@@ -20,6 +20,12 @@ namespace GameEngine
         [JsonProperty]
         private Guid PlayerTrackingId { get; set; }
 
+        [JsonProperty]
+        public string GameIntroductionText { get; set; }
+
+        [JsonProperty]
+        public string GameEndingText { get; set; }
+
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
         private Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
@@ -551,9 +557,10 @@ namespace GameEngine
         /// </summary>
         /// <param name="gameVariableName">The game variable to set</param>
         /// <param name="value">The value to set the game variable to</param>
-        public void SetGameVarValue(string gameVariableName, string value)
+        public string SetGameVarValue(string gameVariableName, string value)
         {
             GameVars[gameVariableName] = value;
+            return gameVariableName;
         }
 
         public Guid AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)

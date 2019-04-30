@@ -6,12 +6,7 @@ namespace ExampleGame
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(CreateExampleGameData);
-        }
-
-        static GameSourceData CreateExampleGameData()
-        {
-            return new ExampleGameSourceData();
+            EngineFactory.Start(() => new ExampleGameSourceData());
         }
     }
 }

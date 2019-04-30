@@ -8,21 +8,14 @@ namespace GameEngine
         /// Starts the factory.
         /// The factory will create games and start them over and over until stopped.
         /// </summary>
-        /// <param name="gameDataFactory">A method that returns a GameData</param>
-        public static void Start(Func<GameSourceData> gameDataFactory)
+        /// <param name="newGameFiller">A method that fills out GameState for a new game</param>
+        public static void Start(Action newGameFiller)
         {
-            EngineInternal engine;
+            EngineInternal engine = new EngineInternal(newGameFiller);
             do
             {
-                // Create a new game data instance
-                var gameData = gameDataFactory();
-
-                // Create a new engine 
-                engine = new EngineInternal(gameData);
-
                 // Start the game
                 engine.StartEngine();
-
             } while (engine.RunFactory);
         }
     }
