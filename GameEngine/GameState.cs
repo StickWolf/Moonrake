@@ -26,6 +26,12 @@ namespace GameEngine
         [JsonProperty]
         public string GameEndingText { get; set; }
 
+        // TODO: provide a Custom object here that is serialized that the game can save stuff in
+        // TODO: then separate out the game data classes with the Guids apart from the newgame constructor code
+        // TODO: and store the gamedata class here as Custom.
+        // TODO: After that, item interact code may then do:
+        // TODO: (GameState.CurrentGameState.Custom as ExampleGameData).EgItems.DullBronzeKey -- and have it refer to the correct Guid and work with serialization
+
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
         private Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
