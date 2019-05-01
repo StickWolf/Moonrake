@@ -9,7 +9,7 @@ namespace GameEngine.Commands
         {
             var statSeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             Console.WriteLine("Here are your stats:");
-            Console.WriteLine($"You have {statSeekingCharacter.Hp}/{statSeekingCharacter.FullHp} HP");
+            Console.WriteLine($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
             Console.WriteLine($"Your max attack is {statSeekingCharacter.MaxAttack}.");
         }
 

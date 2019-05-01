@@ -1,8 +1,10 @@
 ﻿using GameEngine.Commands;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace GameEngine.Characters
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class PlayerCharacter : Character
     {
         public PlayerCharacter(string name, int hp) : base(name, hp)

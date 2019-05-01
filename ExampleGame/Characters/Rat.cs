@@ -1,11 +1,14 @@
 ﻿using GameEngine;
 using GameEngine.Characters;
+using Newtonsoft.Json;
 
 namespace ExampleGame.Characters
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Rat : Character
     {
-        public int WhiskerCount { get; set; }
+        [JsonProperty]
+        private int WhiskerCount { get; set; }
 
         public Rat(string name, int hp, int whiskerCount) : base(name, hp)
         {
