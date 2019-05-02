@@ -46,7 +46,7 @@ namespace Moonrake
             );
             var IceCreamShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.IceCreamShop, "Ice Cream Shop", IceCream);
 
-            var BigPepper = AddTradeSet("Big Pepper",
+            var BigPepper = GameState.CurrentGameState.AddTradeSet("Big Pepper",
                 new ItemRecipe(MoonRakeItems.Burrito,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 20)
                 ),
@@ -57,10 +57,9 @@ namespace Moonrake
                     new ItemRecipeIngredient(MoonRakeItems.Money, 5)
                 )
             );
-            var BigPepperShop = AddTradePost("Big Pepper Shop", BigPepper);
-            DefaultTradePostLocations[BigPepperShop] = MoonRakeLocations.BigPepperShop;
+            var BigPepperShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.BigPepperShop, "Big Pepper Shop", BigPepper);
 
-            var TheBurgerDimplomat = AddTradeSet("The Burger Dimplomat",
+            var TheBurgerDimplomat = GameState.CurrentGameState.AddTradeSet("The Burger Dimplomat",
                 new ItemRecipe(MoonRakeItems.Burger,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 15)
                 ),
@@ -74,8 +73,7 @@ namespace Moonrake
                     new ItemRecipeIngredient(MoonRakeItems.Money, 5)
                 )
             );
-            var TheBurgerDimplomatShop = AddTradePost("The Burger Dimplomat Shop", BigPepper);
-            DefaultTradePostLocations[TheBurgerDimplomatShop] = MoonRakeLocations.TheBurgerDimplomatShop;
+            var TheBurgerDimplomatShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.TheBurgerDimplomatShop, "The Burger Dimplomat Shop", BigPepper);
 
             #endregion
         }

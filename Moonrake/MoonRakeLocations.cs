@@ -12,11 +12,9 @@ namespace Moonrake
 
         public Guid IceCreamShop { get; private set; }
 
-        public string TheBurgerDimplomatShop { get; private set; }
+        public Guid TheBurgerDimplomatShop { get; private set; }
 
-        public string BigPepperShop { get; private set; }
-
-
+        public Guid BigPepperShop { get; private set; }
 
         public MoonRakeLocations(MoonrakeGameData gameData)
         {
@@ -38,11 +36,11 @@ namespace Moonrake
                 "The store has checkered walls and a floor decorated with many pantings of candies."
                 ));
 
-            TheBurgerDimplomatShop = gameData.AddLocation(new Location("The Burger Dimplomat Shop",
+            TheBurgerDimplomatShop = GameState.CurrentGameState.AddLocation(new Location("The Burger Dimplomat Shop",
                 "a large grey building with a red and white checker pattern line at the bottom.", 
                 "black-colored tables that are evenly spaced out. In one corner, there is a soda vending machine."));
 
-            BigPepperShop = gameData.AddLocation(new Location("Big Pepper", 
+            BigPepperShop = GameState.CurrentGameState.AddLocation(new Location("Big Pepper", 
                 "a small, tan-colored restuarant with rainbow-colored lighted letters that read out Big Pepper",
                 "Brown colored tables are arranged in lines 2 by 7. you see a big menu with delicious sounding mexican foods"));
 
