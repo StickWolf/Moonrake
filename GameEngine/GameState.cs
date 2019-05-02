@@ -409,34 +409,74 @@ namespace GameEngine
                             continue;
                         }
 
-                        // If the items are not the same type then there is
-                        // no change to stack them, ignore this comparison.
-                        if (itemA.GetType() != itemB.GetType())
+                        if (EqualChecker.AreEqual(itemA, itemB))
                         {
-                            continue;
-                        }
-
-                        if (CompareJsonProperties(itemA, itemB))
-                        {
-                            // TODO: this still needs to be implemented to make deduping work
                             dupeFound = true;
 
-                            // TODO: do the work to remove itemB, transfer all counts of itemB to instead be linked to itemA
-
+                            // TODO: Not sure how we would update refs to itemB that are found in other object properties
+                            // TODO: Maybe we can raise an event here that can be subscribed to
                             Items.Remove(itemB.TrackingId);
+                            StackItems(itemB.TrackingId, itemA.TrackingId);
+                            break;
                         }
+                    }
+                    if (dupeFound)
+                    {
+                        break;
                     }
                 }
             }
         }
 
-        private bool CompareJsonProperties(object obj1, object obj2)
+        private void StackItems(Guid removeItemTrackingId, Guid receiveItemTrackingId)
         {
-            return false;
+            foreach (var characterTrackingId in CharactersItems.Keys)
+            {
+                if (CharactersItems[characterTrackingId] == null)
+                {
+                    continue;
+                }
 
-            // TODO: Get all properties via reflection
-            // TODO: compare the values of properties that have the JsonProperty on them
-            // TODO: if they are all equal, return true.
+                if (!CharactersItems[characterTrackingId].ContainsKey(removeItemTrackingId))
+                {
+                    continue;
+                }
+
+                var removedCount = CharactersItems[characterTrackingId][removeItemTrackingId];
+                CharactersItems[characterTrackingId].Remove(removeItemTrackingId);
+                if (CharactersItems[characterTrackingId].ContainsKey(receiveItemTrackingId))
+                {
+                    CharactersItems[characterTrackingId][receiveItemTrackingId] += removedCount;
+                }
+                else
+                {
+                    CharactersItems[characterTrackingId][receiveItemTrackingId] = removedCount;
+                }
+            }
+
+            foreach (var locationTrackingId in LocationItems.Keys)
+            {
+                if (LocationItems[locationTrackingId] == null)
+                {
+                    continue;
+                }
+
+                if (!LocationItems[locationTrackingId].ContainsKey(removeItemTrackingId))
+                {
+                    continue;
+                }
+
+                var removedCount = LocationItems[locationTrackingId][removeItemTrackingId];
+                LocationItems[locationTrackingId].Remove(removeItemTrackingId);
+                if (LocationItems[locationTrackingId].ContainsKey(receiveItemTrackingId))
+                {
+                    LocationItems[locationTrackingId][receiveItemTrackingId] += removedCount;
+                }
+                else
+                {
+                    LocationItems[locationTrackingId][receiveItemTrackingId] = removedCount;
+                }
+            }
         }
 
         public Guid AddLocation(Location location)
