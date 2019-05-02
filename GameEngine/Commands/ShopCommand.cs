@@ -1,4 +1,5 @@
-﻿using GameEngine.Locations;
+﻿using GameEngine.Characters;
+using GameEngine.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,15 @@ namespace GameEngine.Commands
 {
     internal class ShopCommand : ICommand
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Exceute(GameSourceData gameData, List<string> extraWords)
         {
             // TODO: The shopping command lets you go shopping!
             //
             // TODO: Here is the pseudo code.
 
             //  1. Determine the player's current location from the game state
-            var playersLocationName = GameState.CurrentGameState.GetCharacterLocation("Player");
-            engine.GameData.TryGetLocation(playersLocationName, out Location playersLocation);
+            var playersLocationName = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
+            gameData.TryGetLocation(playersLocationName, out Location playersLocation);
             
             //  2. Look in the game data for any tradeposts that are currently at this location
             var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(playersLocationName);

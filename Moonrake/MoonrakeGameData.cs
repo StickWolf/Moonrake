@@ -52,6 +52,37 @@ namespace Moonrake
             var IceCreamShop = AddTradePost("Ice Cream Shop", IceCream);
             DefaultTradePostLocations[IceCreamShop] = MoonRakeLocations.IceCreamShop;
 
+            var BigPepper = AddTradeSet("Big Pepper",
+                new ItemRecipe(MoonRakeItems.Burrito,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 20)
+                ),
+                new ItemRecipe(MoonRakeItems.Taco,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 15)
+                ),
+                new ItemRecipe(MoonRakeItems.Rice,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 5)
+                )
+            );
+            var BigPepperShop = AddTradePost("Big Pepper Shop", BigPepper);
+            DefaultTradePostLocations[BigPepperShop] = MoonRakeLocations.BigPepperShop;
+
+            var TheBurgerDimplomat = AddTradeSet("The Burger Dimplomat",
+                new ItemRecipe(MoonRakeItems.Burger,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 15)
+                ),
+                new ItemRecipe(MoonRakeItems.CheeseBurger,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 25)
+                ),
+                new ItemRecipe(MoonRakeItems.Soda,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 5)
+                ),
+                new ItemRecipe(MoonRakeItems.Fries,
+                    new ItemRecipeIngredient(MoonRakeItems.Money, 5)
+                )
+            );
+            var TheBurgerDimplomatShop = AddTradePost("The Burger Dimplomat Shop", BigPepper);
+            DefaultTradePostLocations[TheBurgerDimplomatShop] = MoonRakeLocations.TheBurgerDimplomatShop;
+
             #endregion
         }
     }
