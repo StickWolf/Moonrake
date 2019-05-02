@@ -1,20 +1,36 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GameEngine.Characters
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Character : TrackableInstance
     {
+        [JsonProperty]
         public string Name { get; set; }
 
-        public int Hp, FullHp, MaxAttack, CounterAttackChance, MaxHeal;
+        [JsonProperty]
+        public int HitPoints { get; set; }
+
+        [JsonProperty]
+        public int MaxHitPoints { get; set; }
+
+        [JsonProperty]
+        public int MaxAttack { get; set; }
+
+        [JsonProperty]
+        public int CounterAttackChance { get; set; }
+
+        [JsonProperty]
+        public int MaxHeal { get; set; }
 
         private static Random rnd = new Random();
 
         public Character(string name, int hp)
         {
             Name = name;
-            Hp = hp;
-            FullHp = hp;
+            HitPoints = hp;
+            MaxHitPoints = hp;
         }
 
         /// <summary>
@@ -30,18 +46,18 @@ namespace GameEngine.Characters
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: true);
-            Hp = Hp - attackDamage;
-            if (Hp <= 0)
+            HitPoints = HitPoints - attackDamage;
+            if (HitPoints <= 0)
             {
                 // Makes sure that the player has 0 hp, so when a heal
                 // comes in, it isn't like -100 to -50.
-                Hp = 0;
+                HitPoints = 0;
                 Console.WriteLine($"{Name} is dead.");
                 return;
             }
             if (charactersInLocation.Contains(this))
             {
-                Console.WriteLine($"{Name} has {Hp}/{FullHp} left");
+                Console.WriteLine($"{Name} has {HitPoints}/{MaxHitPoints} left");
             }
 
             var counterAttackPosiblity = rnd.Next(CounterAttackChance, 100);
@@ -54,18 +70,18 @@ namespace GameEngine.Characters
                 Console.WriteLine($"{Name} countered!");
                 var maxAttackDamage = MaxAttack / 2;
                 var counterAttackDamage = GetAttackDamage(maxAttackDamage);
-                attackingCharacter.Hp = attackingCharacter.Hp - counterAttackDamage;
-                if (attackingCharacter.Hp <= 0)
+                attackingCharacter.HitPoints = attackingCharacter.HitPoints - counterAttackDamage;
+                if (attackingCharacter.HitPoints <= 0)
                 {
                     // Makes sure that the player has 0 hp, so when a heal
                     // comes in, it isn't like -100 to -50.
-                    attackingCharacter.Hp = 0;
+                    attackingCharacter.HitPoints = 0;
                     Console.WriteLine($"{attackingCharacter.Name} is dead.");
                     return;
                 }
                 if (charactersInLocation.Contains(attackingCharacter))
                 {
-                    Console.WriteLine($"{attackingCharacter.Name} has {attackingCharacter.Hp}/{attackingCharacter.FullHp} left");
+                    Console.WriteLine($"{attackingCharacter.Name} has {attackingCharacter.HitPoints}/{attackingCharacter.MaxHitPoints} left");
                 }
             }
         }
@@ -78,11 +94,25 @@ namespace GameEngine.Characters
 
         public bool IsDead()
         {
-            if(Hp <= 0)
+            if(HitPoints <= 0)
             {
                 return true;
             }
             return false;
+        }
+
+        public void Heal(int healAmount)
+        {
+            if (IsDead())
+            {
+                return;
+            }
+
+            if ((HitPoints + healAmount) > MaxHitPoints)
+            {
+                healAmount = MaxHitPoints - HitPoints;
+            }
+            HitPoints = HitPoints + healAmount;
         }
 
         public void Heal(Character healingCharacter)
@@ -95,11 +125,7 @@ namespace GameEngine.Characters
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: true);
-            if ((Hp + healAmount) > FullHp)
-            {
-                healAmount = FullHp - Hp;
-            }
-            Hp = Hp + healAmount;
+            Heal(healAmount);
             if (charactersInLocation.Contains(this))
             {
                 Console.WriteLine($"{Name} has been healed for {healAmount}.");

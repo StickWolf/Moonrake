@@ -60,7 +60,7 @@ namespace GameEngine
                 }
 
                 var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-                if (playerCharacter.Hp <= 0)
+                if (playerCharacter.HitPoints <= 0)
                 {
                     PlayerIsDead = true;
                 }

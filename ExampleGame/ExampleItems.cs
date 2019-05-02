@@ -14,6 +14,7 @@ namespace ExampleGame
         public Guid CrystalDiviner { get; private set; }
         public Guid DullBronzeKey { get; private set; }
         public Guid StartRoomLever { get; private set; }
+        public Guid HealingPotion { get; private set; }
 
         public ExampleItems(ExampleGameSourceData gameData)
         {
@@ -50,25 +51,15 @@ namespace ExampleGame
             }
 
             // Start room lever
-            StartRoomLever = GameState.CurrentGameState.AddItem(
-                new Lever(gameData.GameVariables.StartRoomLever)
-                {
-                    CustomInteract = new Action<string>((fromPosition) =>
-                    {
-                        if (fromPosition.Equals("off"))
-                        {
-                            GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
-                            GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
-                            GameState.CurrentGameState.SetGameVarValue(gameData.GameVariables.StartRoomLever, "on");
-                        }
-                        else
-                        {
-                            GameEngine.Console.WriteLine($"The lever is jammed and won't budge.");
-                        }
-                    })
-                });
+            StartRoomLever = GameState.CurrentGameState.AddItem(new Lever(gameData.GameVariables.StartRoomLever, gameData.EgLocations.Start, DullBronzeKey));
             {
                 GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, StartRoomLever, 1);
+            }
+
+            // Healing potion
+            HealingPotion = GameState.CurrentGameState.AddItem(new HealingPotion(5));
+            {
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, HealingPotion, 25);
             }
         }
     }
