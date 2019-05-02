@@ -1,21 +1,27 @@
-﻿namespace GameEngine.Locations
+﻿using Newtonsoft.Json;
+
+namespace GameEngine.Locations
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Location : TrackableInstance
     {
         /// <summary>
         /// This is the name of the location and must be unique within all locations.
         /// </summary>
+        [JsonProperty]
         public string LocationName { get; private set; }
 
         /// <summary>
         /// A description of what this location looks like when the user is at the location.
         /// </summary>
+        [JsonProperty]
         public string LocalDescription { get; private set; }
 
         /// <summary>
         /// A description off what this location looks like when the user is
         /// looking ant the location from a remote location.
         /// </summary>
+        [JsonProperty]
         public string RemoteDescription { get; private set; }
 
         /// <summary>

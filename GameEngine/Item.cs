@@ -1,34 +1,42 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GameEngine
 {
+    // TODO: explicityly attribute all properties of all base classes like this, Item, Location, Character etc.. Otherwise overridden classes that use opt in will only get the top level attributes.
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Item : TrackableInstance
     {
         /// <summary>
         /// Name that is displayed in the game
         /// </summary>
+        [JsonProperty]
         public string DisplayName { get; private set; }
 
         /// <summary>
         /// Tells if the item is unique (there can be only 1), or not, in which case there could be many.
         /// The game will take care of assuring that only 1 is held by any character at a time.
         /// </summary>
+        [JsonProperty]
         public bool IsUnique { get; set;}
 
         /// <summary>
         /// Indicates if an item can be picked up, moved locations and dropped or if it is stuck to where it is.
         /// </summary>
+        [JsonProperty]
         public bool IsBound { get; set; }
 
         /// <summary>
         /// Indicates if an item can be interacted with.
         /// </summary>
-        public bool IsInteractable { get; set; }
+        [JsonProperty]
+        public bool IsInteractable { get; set; } // TODO: split this into 2 properties, IsInteractableFromFloor and IsInteractableFromInventory and rewrite the code to check these things before calling interact
 
         /// <summary>
         /// Indicates if the item is visible or not.
         /// Only visible items can be picked up or seen.
         /// </summary>
+        [JsonProperty]
         public bool IsVisible { get; set; } = true;
 
         public Item(string displayName)

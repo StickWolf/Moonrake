@@ -1,8 +1,10 @@
 ﻿using System;
 using GameEngine;
+using Newtonsoft.Json;
 
 namespace ExampleGame.Items
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class CrystalDiviner : Item
     {
         public CrystalDiviner() : base("Crystal Device")

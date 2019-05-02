@@ -42,13 +42,13 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
         {
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
-            if (attackingCharacter.Hp > 0)
+            if (attackingCharacter.HitPoints > 0)
             {
                 GameEngine.Console.WriteLine($"You have tried to steal {CharacterTrackingId}'s wallet, now you will suffer,");
                 playerCharacter.Attack(attackingCharacter);
                 GameEngine.Console.WriteLine($"{CharacterTrackingId} has hit you.");
             }
-            if (attackingCharacter.Hp <= 0)
+            if (attackingCharacter.HitPoints <= 0)
             {
                 GameEngine.Console.WriteLine($"Since {CharacterTrackingId} is dead, you get {MoneyWalletContains} dollars!");
                 GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, DollarItemTrackingId, MoneyWalletContains);
