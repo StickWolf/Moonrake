@@ -1,6 +1,7 @@
 ﻿using GameEngine;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace ExampleGame.Items
 {
@@ -10,11 +11,17 @@ namespace ExampleGame.Items
         [JsonProperty]
         private string GameVariableToggle { get; set; }
 
-        public Action<string> CustomInteract { get; set; }
+        [JsonProperty]
+        private Guid StartLocation { get; set; } // TODO: I don't want to pass startlocation and the key explicitly, but it needs to be something that survives serialization
 
-        public Lever(string gameVariableToggle) : base("Lever")
+        [JsonProperty]
+        private Guid DullBronzeKey { get; set; }
+
+        public Lever(string gameVariableToggle, Guid startLocation, Guid dullBronzeKey) : base("Lever")
         {
             GameVariableToggle = gameVariableToggle;
+            StartLocation = startLocation;
+            DullBronzeKey = dullBronzeKey;
             IsUnique = false;
             IsBound = true;
             IsInteractable = true;
@@ -34,16 +41,26 @@ namespace ExampleGame.Items
             }
             else
             {
-                if (CustomInteract != null)
-                {
-                    CustomInteract(leverPosition);
-                }
-                else
-                {
-                    GameEngine.Console.WriteLine($"You move the lever.");
-                    GameState.CurrentGameState.SetGameVarValue(GameVariableToggle, leverPosition.Equals("on") ? "off" : "on");
-                }
+                StartRoomInteract(leverPosition);
             }
         }
+
+        private void StartRoomInteract(string fromPosition)
+        {
+            if (fromPosition.Equals("off"))
+            {
+                GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
+                GameState.CurrentGameState.TryAddLocationItemCount(StartLocation, DullBronzeKey, 1);
+
+                // TODO: try to move away from game variables and just use properties of items/locations/etc directly
+                GameState.CurrentGameState.SetGameVarValue(GameVariableToggle, "on");
+            }
+            else
+            {
+                GameEngine.Console.WriteLine($"The lever is jammed and won't budge.");
+            }
+        }
+
+
     }
 }

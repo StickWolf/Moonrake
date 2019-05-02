@@ -27,7 +27,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             if (playersItemsNames.Contains("BronzeTalisman"))
             {
                 player.MaxAttack = player.MaxAttack + 20;
-                player.FullHp = player.FullHp + 30;
+                player.MaxHitPoints = player.MaxHitPoints + 30;
                 GameEngine.Console.WriteLine("You put the talisman on, it vanishes and you feel stronger.");
                 GameState.CurrentGameState.TryAddCharacterItemCount(player.TrackingId, this.TrackingId, -1);
             }

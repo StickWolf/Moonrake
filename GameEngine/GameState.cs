@@ -26,6 +26,12 @@ namespace GameEngine
         [JsonProperty]
         public string GameEndingText { get; set; }
 
+        // TODO: provide a Custom object here that is serialized that the game can save stuff in
+        // TODO: then separate out the game data classes with the Guids apart from the newgame constructor code
+        // TODO: and store the gamedata class here as Custom.
+        // TODO: After that, item interact code may then do:
+        // TODO: (GameState.CurrentGameState.Custom as ExampleGameData).EgItems.DullBronzeKey -- and have it refer to the correct Guid and work with serialization
+
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
         private Dictionary<Guid, Character> Characters { get; set; } = new Dictionary<Guid, Character>();
@@ -357,6 +363,80 @@ namespace GameEngine
             RemoveItemEveryWhere(itemTrackingId);
             setLocationItemCount(locationTrackingId, itemTrackingId, 1);
             return true;
+        }
+
+        /// <summary>
+        /// Clones the specified item so that there are 2 instances of it in the Items.
+        /// The clone won't have any references to it and is free to mutate directly after cloning.
+        /// The clone will have a new tracking Id assigned.
+        /// </summary>
+        /// <param name="sourceItemTrackingId">The source item tracking id to clone</param>
+        /// <returns>The cloned item</returns>
+        public void ConvertItemToClone(Guid sourceItemTrackingId)
+        {
+            var sourceItem = GetItem(sourceItemTrackingId);
+            Items.Remove(sourceItem.TrackingId);
+
+            // Cloning just means serializing and deserializing to a new instance
+            var serializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
+            string serializedItem = JsonConvert.SerializeObject(sourceItem, Formatting.Indented, serializerSettings);
+            var clonedItem = JsonConvert.DeserializeObject<Item>(serializedItem, serializerSettings);
+
+            // The source gets the new id and becomes unlinked (not refrenced by location or character item counts)
+            // This allows the source item to call this method, then to safely mutate itself.
+            sourceItem.TrackingId = Guid.NewGuid();
+
+            AddItem(sourceItem);
+            AddItem(clonedItem);
+        }
+
+        public void DedupeItems()
+        {
+            bool dupeFound = true;
+            while (dupeFound)
+            {
+                dupeFound = false;
+                foreach (var itemA in Items.Values)
+                {
+                    foreach (var itemB in Items.Values)
+                    {
+                        // If these are actually the same item instance then ignore
+                        if (itemA.TrackingId == itemB.TrackingId)
+                        {
+                            continue;
+                        }
+
+                        // If the items are not the same type then there is
+                        // no change to stack them, ignore this comparison.
+                        if (itemA.GetType() != itemB.GetType())
+                        {
+                            continue;
+                        }
+
+                        if (CompareJsonProperties(itemA, itemB))
+                        {
+                            // TODO: this still needs to be implemented to make deduping work
+                            dupeFound = true;
+
+                            // TODO: do the work to remove itemB, transfer all counts of itemB to instead be linked to itemA
+
+                            Items.Remove(itemB.TrackingId);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool CompareJsonProperties(object obj1, object obj2)
+        {
+            return false;
+
+            // TODO: Get all properties via reflection
+            // TODO: compare the values of properties that have the JsonProperty on them
+            // TODO: if they are all equal, return true.
         }
 
         public Guid AddLocation(Location location)

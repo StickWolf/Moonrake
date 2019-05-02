@@ -26,15 +26,15 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             var playersItemsNames = playersItems.Keys.Select(i => i.DisplayName);
             if (playersItemsNames.Contains("Apple"))
             {
-                if (player.Hp == player.FullHp)
+                if (player.HitPoints == player.MaxHitPoints)
                 {
                     GameEngine.Console.WriteLine("You can't eat the apple, you are at full health.");
                     return;
                 }
-                player.Hp = player.Hp + 20;
-                if (player.Hp > player.FullHp)
+                player.HitPoints = player.HitPoints + 20;
+                if (player.HitPoints > player.MaxHitPoints)
                 {
-                    player.Hp = player.FullHp;
+                    player.HitPoints = player.MaxHitPoints;
                 }
                 GameEngine.Console.WriteLine("You eat a apple, and you feel some of your health come back.");
                 GameState.CurrentGameState.TryAddCharacterItemCount(player.TrackingId, this.TrackingId, -1);

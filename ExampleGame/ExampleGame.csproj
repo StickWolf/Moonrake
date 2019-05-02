@@ -52,6 +52,7 @@
     <Compile Include="ExampleGameSourceData.cs" />
     <Compile Include="ExampleCharacters.cs" />
     <Compile Include="ExampleGameVariables.cs" />
+    <Compile Include="Items\HealingPotion.cs" />
     <Compile Include="Items\Lever.cs" />
     <Compile Include="Items\Keyhole.cs" />
     <Compile Include="Items\ColoredLightSwitch.cs" />
