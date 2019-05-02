@@ -1,5 +1,6 @@
 ﻿using GameEngine.Characters;
 using GameEngine.Commands;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine
@@ -19,11 +20,11 @@ namespace GameEngine
         public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
-        public GameSourceData GameData { get; set; }
+        public Action NewGameFiller { get; private set; }
 
-        public EngineInternal(GameSourceData gameData)
+        public EngineInternal(Action newGameFiller)
         {
-            GameData = gameData;
+            NewGameFiller = newGameFiller;
         }
 
         /// <summary>
@@ -38,13 +39,11 @@ namespace GameEngine
             while (RunGameLoop)
             {
                 // Get all characters in the game that are still alive
-                var allLocateableCharacters = GameState.CurrentGameState.GetCharactersInAllLocations();
-                // TODO: save character data (hp, etc) to the save file. Track characters in game state.
-                foreach (var gameCharacterName in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
+                var allLocateableCharacters = GameState.CurrentGameState.GetAllCharacters();
+                foreach (var gameCharacter in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                 {
-                    var gameCharacter = GameData.GetCharacter(gameCharacterName);
                     // Only characters that are alive get a turn
-                    if (gameCharacter.Hp <= 0) // TODO: instead of defining what "alive" or "dead" is here instead add a function in the character class to return a bool for this.
+                    if (gameCharacter.IsDead())
                     {
                         continue;
                     }
@@ -56,12 +55,12 @@ namespace GameEngine
                     }
                     else
                     {
-                        gameCharacter.Turn(this.GameData);
+                        gameCharacter.Turn();
                     }
                 }
 
-                this.GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
-                if (player.Hp <= 0)
+                var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+                if (playerCharacter.HitPoints <= 0)
                 {
                     PlayerIsDead = true;
                 }
@@ -75,7 +74,7 @@ namespace GameEngine
                 // TODO: Find a way to figure out when the player has won.
                 else if (PlayerHasWon)
                 {
-                    Console.WriteLine(GameData.GameEndingText);
+                    Console.WriteLine(GameState.CurrentGameState.GameEndingText);
                     Console.WriteLine("             |--The End--|             ");
                     Console.ReadLine();
                     RunGameLoop = false;
@@ -89,52 +88,14 @@ namespace GameEngine
         public void StartNewGame()
         {
             GameState.CreateNewGameState();
-
-            // Transfer all defaults from the game data to game state
-            GameState.CurrentGameState.PlayerName = GameData.DefaultPlayerName;
-
-            // Set the default locations for each character
-            foreach (var characterName in GameData.DefaultCharacterLocations.Keys)
-            {
-                string locationName = GameData.DefaultCharacterLocations[characterName];
-                GameState.CurrentGameState.SetCharacterLocation(characterName, locationName);
-            }
-
-            // Add game vars that represent the inital game state
-            foreach (var gv in GameData.DefaultGameVars)
-            {
-                GameState.CurrentGameState.SetGameVarValue(gv.Key, gv.Value);
-            }
-
-            // Set the default locations of where trade posts exist at
-            foreach (var tp in GameData.DefaultTradePostLocations)
-            {
-                GameState.CurrentGameState.SetTradePostLocation(tp.Key, tp.Value);
-            }
-
-            // Set the default items that all characters have
-            foreach (var characterName in GameData.DefaultCharacterItems.Keys)
-            {
-                foreach (var itemTrackingName in GameData.DefaultCharacterItems[characterName].Keys)
-                {
-                    GameState.CurrentGameState.TryAddCharacterItemCount(characterName, itemTrackingName, GameData.DefaultCharacterItems[characterName][itemTrackingName], GameData);
-                }
-            }
-
-            foreach (var locationName in GameData.DefaultLocationItems.Keys)
-            {
-                foreach (var itemTrackingName in GameData.DefaultLocationItems[locationName].Keys)
-                {
-                    GameState.CurrentGameState.TryAddLocationItemCount(locationName, itemTrackingName, GameData.DefaultLocationItems[locationName][itemTrackingName], GameData);
-                }
-            }
+            NewGameFiller();
 
             // Show the intro
             Console.Clear();
-            Console.WriteLine(GameData.GameIntroductionText);
+            Console.WriteLine(GameState.CurrentGameState.GameIntroductionText);
             Console.WriteLine();
 
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), this.GameData);
+            CommandHelper.TryRunPublicCommand("look", new List<string>());
         }
     }
 }

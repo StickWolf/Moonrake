@@ -6,12 +6,7 @@ namespace DreamsAndWhatTheyMean
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(CreateDragonKittyGameData);
-        }
-
-        static GameSourceData CreateDragonKittyGameData()
-        {
-            return new TheTaleOfTheDragonKittySourceData();
+            EngineFactory.Start(() => new TheTaleOfTheDragonKittySourceData());
         }
     }
 }

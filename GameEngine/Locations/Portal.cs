@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,10 @@ namespace GameEngine.Locations
     ///     A stairway - This portal always leads to the same target location
     ///     An elevator door - This portal leads to different locations depending on what floor the elevator is on.
     /// </summary>
-    public class Portal
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class Portal : TrackableInstance
     {
+        [JsonProperty]
         private List<PortalRule> Rules { get; set; }
 
         public Portal(List<PortalRule> rules)
@@ -24,32 +27,32 @@ namespace GameEngine.Locations
         /// <summary>
         /// Indicates if the portal has any rules that originate from the specified location
         /// </summary>
-        /// <param name="locationName">The location to check for</param>
+        /// <param name="locationTrackingId">The location to check for</param>
         /// <returns>True / False</returns>
-        public bool HasOriginLocation(string locationName)
+        public bool HasOriginLocation(Guid locationTrackingId)
         {
-            return Rules.Any(r => r.Origin.Equals(locationName));
+            return Rules.Any(r => r.OriginTrackingId == locationTrackingId);
         }
 
         /// <summary>
         /// Looks at all the rules that originate from the specified location and returns the first
         /// one that matches as a PortalDestinationDetails
         /// </summary>
-        /// <param name="origin">The source location name</param>
+        /// <param name="originTrackingId">The source location tracking id</param>
         /// <returns>The first rule that matches</returns>
-        public PortalDestinationDetails GetDestination(string origin)
+        public PortalDestinationDetails GetDestination(Guid originTrackingId)
         {
             var destDetails = new PortalDestinationDetails();
 
             // Filter the list of rules down to just those that start from the specified origin
-            var originRules = Rules.Where(r => r.Origin.Equals(origin));
+            var originRules = Rules.Where(r => r.OriginTrackingId.Equals(originTrackingId));
 
             foreach (var destRule in originRules)
             {
                 if (destRule is PortalAlwaysClosedRule || destRule is PortalAlwaysOpenRule)
                 {
                     destDetails.Description = destRule.Description;
-                    destDetails.Destination = destRule.Destination;
+                    destDetails.DestinationTrackingId = destRule.DestinationTrackingId;
                     return destDetails;
                 }
                 else if (destRule is PortalOpenGameVarRule)
@@ -60,7 +63,7 @@ namespace GameEngine.Locations
                         gameVarRuleValue.Equals(gameVarRule.ExpectedValue, StringComparison.OrdinalIgnoreCase))
                     {
                         destDetails.Description = destRule.Description;
-                        destDetails.Destination = destRule.Destination;
+                        destDetails.DestinationTrackingId = destRule.DestinationTrackingId;
                         return destDetails;
                     }
                 }

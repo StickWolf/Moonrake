@@ -10,32 +10,26 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
     class BronzeTalisman : Item
     {
-        public GameSourceData GameData { get; set; }
-        public BronzeTalisman(GameSourceData gameData) : base("BronzeTalisman", "bronze talisman")
+        public BronzeTalisman() : base("bronze talisman")
         {
-            GameData = gameData;
             IsUnique = false;
             IsVisible = true;
             IsInteractable = true;
             IsBound = false;
         }
 
-        public override void Interact(GameState gameState, string otherItemTrackingName)
+        public override void Interact(Item otherItem)
         {
-            Interacting(gameState, otherItemTrackingName, GameData);
-        }
+            var player = GameState.CurrentGameState.GetPlayerCharacter();
+            var playersItems = GameState.CurrentGameState.GetCharacterItems(player.TrackingId);
 
-        public void Interacting(GameState gameState, string otherItemTrackingName, GameSourceData gameData)
-        {
-            var playersItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
-            var playersItemsNames = playersItems.Keys;
+            var playersItemsNames = playersItems.Keys.Select(i => i.DisplayName);
             if (playersItemsNames.Contains("BronzeTalisman"))
             {
-                gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
                 player.MaxAttack = player.MaxAttack + 20;
-                player.FullHp = player.FullHp + 30;
+                player.MaxHitPoints = player.MaxHitPoints + 30;
                 GameEngine.Console.WriteLine("You put the talisman on, it vanishes and you feel stronger.");
-                GameState.CurrentGameState.TryAddCharacterItemCount(PlayerCharacter.TrackingName, "BronzeTalisman", -1, gameData);
+                GameState.CurrentGameState.TryAddCharacterItemCount(player.TrackingId, this.TrackingId, -1);
             }
             else
             {

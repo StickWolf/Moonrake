@@ -1,4 +1,6 @@
-﻿namespace ExampleGame
+﻿using GameEngine;
+
+namespace ExampleGame
 {
     public class ExampleGameVariables
     {
@@ -12,13 +14,13 @@
 
         public ExampleGameVariables(ExampleGameSourceData gameData)
         {
-            BanquetElevatorFloor = gameData.AddDefaultGameVar("BanquetElevatorFloor", "1");
-            BanquetToSecretWarpedHallDoorOpen = gameData.AddDefaultGameVar("BanquetToSecretWarpedHallDoorOpen", "false");
+            BanquetElevatorFloor = GameState.CurrentGameState.SetGameVarValue("BanquetElevatorFloor", "1");
+            BanquetToSecretWarpedHallDoorOpen = GameState.CurrentGameState.SetGameVarValue("BanquetToSecretWarpedHallDoorOpen", "false");
 
-            ColoredLightAColor = gameData.AddDefaultGameVar("ColoredLightA.Color", "red");
-            ColoredLightBColor = gameData.AddDefaultGameVar("ColoredLightB.Color", "teal");
+            ColoredLightAColor = GameState.CurrentGameState.SetGameVarValue("ColoredLightA.Color", "red");
+            ColoredLightBColor = GameState.CurrentGameState.SetGameVarValue("ColoredLightB.Color", "teal");
 
-            StartRoomLever = gameData.AddDefaultGameVar("StartRoomLever", "off");
+            StartRoomLever = GameState.CurrentGameState.SetGameVarValue("StartRoomLever", "off");
         }
     }
 }

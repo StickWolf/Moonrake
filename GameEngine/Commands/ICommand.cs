@@ -6,6 +6,6 @@ namespace GameEngine.Commands
     {
         bool IsActivatedBy(string word);
 
-        void Exceute(GameSourceData gameData, List<string> extraWords);
+        void Exceute(List<string> extraWords);
     }
 }

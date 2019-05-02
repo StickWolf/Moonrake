@@ -1,20 +1,16 @@
-﻿using GameEngine.Characters;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
     class StatsCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
-            gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character charPlayer);
+            var statSeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             Console.WriteLine("Here are your stats:");
-            Console.WriteLine($"You have {charPlayer.Hp}/{charPlayer.FullHp} HP");
-            Console.WriteLine($"Your max attack is {charPlayer.MaxAttack}.");
+            Console.WriteLine($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
+            Console.WriteLine($"Your max attack is {statSeekingCharacter.MaxAttack}.");
         }
 
         public bool IsActivatedBy(string word)

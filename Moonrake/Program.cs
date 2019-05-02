@@ -6,12 +6,7 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(CreateMoonrakeGameData);
-        }
-
-        static GameSourceData CreateMoonrakeGameData()
-        {
-            return new MoonrakeGameData();
+            EngineFactory.Start(() => new MoonrakeGameData());
         }
     }
 }

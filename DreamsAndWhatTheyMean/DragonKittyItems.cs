@@ -1,33 +1,34 @@
 ﻿using DreamsAndWhatTheyMean.DragonKittyStrangeItems;
 using GameEngine;
+using System;
 
 namespace DreamsAndWhatTheyMean
 {
     class DragonKittyItems
     {
-        public string Money { get; private set; }
-        public string Paper { get; private set; }
-        public string BronzeChunk { get; private set; }
-        public string BronzeBar { get; private set; }
-        public string PlasticChunk { get; private set; }
-        public string PlayersRoomLight { get; private set; }
-        public string PlayersLivingRoomLight { get; private set; }
-        public string BronzeTalisman { get; private set; }
-        public string Apple { get; private set; }
-        public string DadsWallet { get; private set; }
+        public Guid Money { get; private set; }
+        public Guid Paper { get; private set; }
+        public Guid BronzeChunk { get; private set; }
+        public Guid BronzeBar { get; private set; }
+        public Guid PlasticChunk { get; private set; }
+        public Guid PlayersRoomLight { get; private set; }
+        public Guid PlayersLivingRoomLight { get; private set; }
+        public Guid BronzeTalisman { get; private set; }
+        public Guid Apple { get; private set; }
+        public Guid DadsWallet { get; private set; }
 
         public DragonKittyItems(TheTaleOfTheDragonKittySourceData gameData)
         {
-            Money = gameData.AddItem(new Item("Dollar", "dollar"));
-            Paper = gameData.AddItem(new Item("PaperPiece", "paper piece"));
-            BronzeChunk = gameData.AddItem(new Item("BronzeChunk", "bronze chunk"));
-            BronzeBar = gameData.AddItem(new Item("BronzeBar", "bronze bar"));
-            PlasticChunk = gameData.AddItem(new Item("LeftoverPlasticPart", "leftover plastic part"));
-            PlayersRoomLight = gameData.AddItem(new RoomLight("White", true, 1));
-            PlayersLivingRoomLight = gameData.AddItem(new RoomLight("White", true, 2));
-            BronzeTalisman = gameData.AddItem(new BronzeTalisman(gameData));
-            Apple = gameData.AddItem(new Apple(gameData));
-            DadsWallet = gameData.AddItem(new Wallet("Dad", gameData, 10000));
+            Money = GameState.CurrentGameState.AddItem(new Item("dollar"));
+            Paper = GameState.CurrentGameState.AddItem(new Item("paper piece"));
+            BronzeChunk = GameState.CurrentGameState.AddItem(new Item("bronze chunk"));
+            BronzeBar = GameState.CurrentGameState.AddItem(new Item("bronze bar"));
+            PlasticChunk = GameState.CurrentGameState.AddItem(new Item("leftover plastic part"));
+            PlayersRoomLight = GameState.CurrentGameState.AddItem(new RoomLight("White", true, 1));
+            PlayersLivingRoomLight = GameState.CurrentGameState.AddItem(new RoomLight("White", true, 2));
+            BronzeTalisman = GameState.CurrentGameState.AddItem(new BronzeTalisman());
+            Apple = GameState.CurrentGameState.AddItem(new Apple());
+            DadsWallet = GameState.CurrentGameState.AddItem(new Wallet(gameData.DkCharacters.DadCharacter, gameData.DkItems.Money, 10000));
         }
     }
 }

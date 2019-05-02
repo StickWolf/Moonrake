@@ -1,22 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
-    public class TradePost
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class TradePost : TrackableInstance
     {
         /// <summary>
         /// The name of the trade post.
         /// </summary>
+        [JsonProperty]
         public string Name { get; private set; }
 
         /// <summary>
         /// All the trade sets that are available at this trade post
         /// </summary>
-        public List<string> TradeSets = new List<string>();
+        [JsonProperty]
+        public List<Guid> TradeSetTrackingIds = new List<Guid>();
 
-        public TradePost(string tradePostName, params string[] tradeSets)
+        public TradePost(string tradePostName, params Guid[] tradeSetTrackingIds)
         {
             Name = tradePostName;
+            TradeSetTrackingIds.AddRange(tradeSetTrackingIds);
         }
     }
 }

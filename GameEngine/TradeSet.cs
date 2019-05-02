@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
-    public class TradeSet
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class TradeSet : TrackableInstance
     {
+        [JsonProperty]
         public List<ItemRecipe> Recipes { get; private set; } = new List<ItemRecipe>();
+
+        [JsonProperty]
         public string Name { get; private set; }
 
         public TradeSet(string name, params ItemRecipe[] recipes)

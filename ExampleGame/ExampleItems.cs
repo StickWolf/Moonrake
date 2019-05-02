@@ -6,69 +6,60 @@ namespace ExampleGame
 {
     public class ExampleItems
     {
-        public string BanquetToSecretWarpedHallKeyhole { get; private set; }
-        public string ColoredLightA { get; private set; }
-        public string ColoredLightB { get; private set; }
-        public string ColoredLightSwitchA { get; private set; }
-        public string ColoredLightSwitchB { get; private set; }
-        public string CrystalDiviner { get; private set; }
-        public string DullBronzeKey { get; private set; }
-        public string StartRoomLever { get; private set; }
+        public Guid BanquetToSecretWarpedHallKeyhole { get; private set; }
+        public Guid ColoredLightA { get; private set; }
+        public Guid ColoredLightB { get; private set; }
+        public Guid ColoredLightSwitchA { get; private set; }
+        public Guid ColoredLightSwitchB { get; private set; }
+        public Guid CrystalDiviner { get; private set; }
+        public Guid DullBronzeKey { get; private set; }
+        public Guid StartRoomLever { get; private set; }
+        public Guid HealingPotion { get; private set; }
 
         public ExampleItems(ExampleGameSourceData gameData)
         {
-            CrystalDiviner = gameData.AddItem(new CrystalDiviner());
+            CrystalDiviner = GameState.CurrentGameState.AddItem(new CrystalDiviner());
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, CrystalDiviner, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, CrystalDiviner, 1);
             }
 
             // Light and light switch A in Start
-            ColoredLightA = gameData.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightAColor));
+            ColoredLightA = GameState.CurrentGameState.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightAColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, ColoredLightA, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, ColoredLightA, 1);
             }
-            ColoredLightSwitchA = gameData.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightAColor));
+            ColoredLightSwitchA = GameState.CurrentGameState.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightAColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, ColoredLightSwitchA, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, ColoredLightSwitchA, 1);
             }
 
             // Light and light switch B in the Banquet Elevator
-            ColoredLightB = gameData.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightBColor));
+            ColoredLightB = GameState.CurrentGameState.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightBColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.BanquetElevator, ColoredLightB, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetElevator, ColoredLightB, 1);
             }
-            ColoredLightSwitchB = gameData.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightBColor));
+            ColoredLightSwitchB = GameState.CurrentGameState.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightBColor));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.BanquetElevator, ColoredLightSwitchB, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetElevator, ColoredLightSwitchB, 1);
             }
 
             // Bronze key and keyhole pair
-            DullBronzeKey = gameData.AddItem(new Item("DullBronzeKey", "Dull Bronze Key") { IsUnique = true, IsInteractable = true });
-            BanquetToSecretWarpedHallKeyhole = gameData.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
+            DullBronzeKey = GameState.CurrentGameState.AddItem(new Item("Dull Bronze Key") { IsUnique = true, IsInteractable = true });
+            BanquetToSecretWarpedHallKeyhole = GameState.CurrentGameState.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
             }
 
             // Start room lever
-            StartRoomLever = gameData.AddItem(
-                new Lever(gameData.GameVariables.StartRoomLever)
-                {
-                    CustomInteract = new Action<GameState, string>((gameState, fromPosition) =>
-                    {
-                        if (fromPosition.Equals("off"))
-                        {
-                            GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
-                            gameState.TryAddLocationItemCount(gameData.Locations.Start, gameData.Items.DullBronzeKey, 1, gameData);
-                            gameState.SetGameVarValue(gameData.GameVariables.StartRoomLever, "on");
-                        }
-                        else
-                        {
-                            GameEngine.Console.WriteLine($"The lever is jammed and won't budge.");
-                        }
-                    })
-                });
+            StartRoomLever = GameState.CurrentGameState.AddItem(new Lever(gameData.GameVariables.StartRoomLever, gameData.EgLocations.Start, DullBronzeKey));
             {
-                gameData.AddDefaultLocationItem(gameData.Locations.Start, StartRoomLever, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, StartRoomLever, 1);
+            }
+
+            // Healing potion
+            HealingPotion = GameState.CurrentGameState.AddItem(new HealingPotion(5));
+            {
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, HealingPotion, 25);
             }
         }
     }

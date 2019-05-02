@@ -1,19 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class ItemRecipe
     {
-        public string ItemResult { get; private set; }
-        public Dictionary<string, int> Ingredients { get; private set; } = new Dictionary<string, int>();
+        [JsonProperty]
+        public Guid ItemResultTrackingId { get; private set; }
 
-        public ItemRecipe(string itemResult, params ItemRecipeIngredient[] ingredients)
+        [JsonProperty]
+        public Dictionary<Guid, int> Ingredients { get; private set; } = new Dictionary<Guid, int>();
+
+        public ItemRecipe(Guid itemResultTrackingId, params ItemRecipeIngredient[] ingredients)
         {
-            ItemResult = itemResult;
+            ItemResultTrackingId = itemResultTrackingId;
             
             foreach (var ingredient in ingredients)
             {
-                Ingredients[ingredient.IngredientName] = ingredient.Amount;
+                Ingredients[ingredient.ItemIngredientTrackingId] = ingredient.Amount;
             }
         }
     }

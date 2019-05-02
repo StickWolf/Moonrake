@@ -1,4 +1,6 @@
-﻿namespace Moonrake
+﻿using GameEngine;
+
+namespace Moonrake
 {
     public class MoonRakeGameVariables
     {

@@ -10,40 +10,34 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
     class Apple : Item
     {
-        public GameSourceData GameData { get; set; }
-        public Apple(GameSourceData gameData) : base("Apple", "apple")
+        public Apple() : base("apple")
         {
-            GameData = gameData;
             IsBound = false;
             IsInteractable = true;
             IsUnique = false;
             IsVisible = true;
         }
 
-        public override void Interact(GameState gameState, string otherItemTrackingName)
+        public override void Interact(Item otherItem)
         {
-            Interacting(gameState, otherItemTrackingName, GameData);
-        }
+            var player = GameState.CurrentGameState.GetPlayerCharacter();
+            var playersItems = GameState.CurrentGameState.GetCharacterItems(player.TrackingId);
 
-        public void Interacting(GameState gameState, string otherItemTrackingName, GameSourceData gameData)
-        {
-            var playersItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName);
-            var playersItemsNames = playersItems.Keys;
+            var playersItemsNames = playersItems.Keys.Select(i => i.DisplayName);
             if (playersItemsNames.Contains("Apple"))
             {
-                gameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character player);
-                if(player.Hp == player.FullHp)
+                if (player.HitPoints == player.MaxHitPoints)
                 {
                     GameEngine.Console.WriteLine("You can't eat the apple, you are at full health.");
                     return;
                 }
-                player.Hp = player.Hp + 20;
-                if(player.Hp > player.FullHp)
+                player.HitPoints = player.HitPoints + 20;
+                if (player.HitPoints > player.MaxHitPoints)
                 {
-                    player.Hp = player.FullHp;
+                    player.HitPoints = player.MaxHitPoints;
                 }
                 GameEngine.Console.WriteLine("You eat a apple, and you feel some of your health come back.");
-                GameState.CurrentGameState.TryAddCharacterItemCount(PlayerCharacter.TrackingName, "Apple", -1, gameData);
+                GameState.CurrentGameState.TryAddCharacterItemCount(player.TrackingId, this.TrackingId, -1);
             }
             else
             {

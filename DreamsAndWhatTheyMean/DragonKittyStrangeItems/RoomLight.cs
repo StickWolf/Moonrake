@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,16 @@ using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class RoomLight : Item
     {
+        [JsonProperty]
         private string LightColor { get; set; }
+
+        [JsonProperty]
         private bool IsOn { get; set; }
 
-        public RoomLight(string lightColor, bool isOn, int roomLightNumber) : base($"RoomLight[{roomLightNumber}]", "room light")
+        public RoomLight(string lightColor, bool isOn, int roomLightNumber) : base("room light")
         {
             LightColor = lightColor;
             IsOn = isOn;
@@ -21,7 +26,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsInteractable = true;
         }
 
-        public string GetDescription(int count, GameSourceData gameData, GameState gameState)
+        public override string GetDescription(int count)
         {
             if(IsOn)
             {
@@ -34,7 +39,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             return "strange, flashing light";
         }
 
-        public void Interact(GameSourceData gameData, GameState gameState)
+        public override void Interact(Item otherItem)
         {
             if(IsOn)
             {

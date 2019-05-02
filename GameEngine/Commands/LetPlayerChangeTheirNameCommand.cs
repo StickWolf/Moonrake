@@ -7,9 +7,10 @@ namespace GameEngine.Commands
     {
         public void Exceute(EngineInternal engine, List<string> extraWords)
         {
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             Console.Write($"What would you like your name to be?: ");
-            GameState.CurrentGameState.PlayerName = Console.ReadLine();
-            Console.WriteLine($"Your new name is {GameState.CurrentGameState.PlayerName}.");
+            playerCharacter.Name = Console.ReadLine();
+            Console.WriteLine($"Your new name is {playerCharacter.Name}.");
         }
 
         public bool IsActivatedBy(string word)

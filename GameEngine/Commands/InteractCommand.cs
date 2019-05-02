@@ -1,5 +1,4 @@
-﻿using GameEngine.Characters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,26 +6,26 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        public void Exceute(GameSourceData gameData, List<string> extraWords)
+        public void Exceute(List<string> extraWords)
         {
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(PlayerCharacter.TrackingName);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc) ?? new Dictionary<string, int>();
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(PlayerCharacter.TrackingName) ?? new Dictionary<string, int>();
+            var interactingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+
+            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc.TrackingId) ?? new Dictionary<Item, int>();
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<Item, int>();
 
             var interactableLocationItems = locationItems
-                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
-                .Where(i => i.Item1 != null && i.Item1.IsInteractable && i.Item1.IsVisible) // Only choose items that are interactable and visible
-                .Select(i => new KeyValuePair<string, string>(
-                                 i.Item1.TrackingName,
-                                 i.Item1.GetDescription(i.Item2, GameState.CurrentGameState).UppercaseFirstChar()
+                .Where(i => i.Key.IsInteractable && i.Key.IsVisible) // Only choose items that are interactable and visible
+                .Select(i => new KeyValuePair<Item, string>(
+                                 i.Key,
+                                 i.Key.GetDescription(i.Value).UppercaseFirstChar()
                                  ));
 
             var interactableCharacterItems = characterItems
-                .Select(i => new Tuple<Item, int>(gameData.GetItem(i.Key), i.Value))
-                .Where(i => i.Item1 != null && i.Item1.IsInteractable && i.Item1.IsVisible) // Only choose items that are interactable and visible
-                .Select(i => new KeyValuePair<string, string>(
-                                 i.Item1.TrackingName,
-                                 i.Item1.GetDescription(i.Item2, GameState.CurrentGameState).UppercaseFirstChar()
+                .Where(i => i.Key.IsInteractable && i.Key.IsVisible) // Only choose items that are interactable and visible
+                .Select(i => new KeyValuePair<Item, string>(
+                                 i.Key,
+                                 i.Key.GetDescription(i.Value).UppercaseFirstChar()
                                  ));
 
             var allInteractableItems = interactableLocationItems
@@ -40,7 +39,7 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine the choices if extra words are typed in
-            var wordItemMap = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList(), gameData);
+            var wordItemMap = CommandHelper.WordsToItems(extraWords, allInteractableItems.Keys.ToList());
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -51,7 +50,7 @@ namespace GameEngine.Commands
             // If we weren't able to determine at-least the first item through extra words, then try via prompt mode
             if (item1 == null)
             {
-                if (!TryGetItemsFromPrompts(allInteractableItems, gameData, out item1, out item2))
+                if (!TryGetItemsFromPrompts(allInteractableItems, out item1, out item2))
                 {
                     return;
                 }
@@ -60,26 +59,24 @@ namespace GameEngine.Commands
             // If we have just item1 then interact with just that
             if (item1 != null && item2 == null)
             {
-                item1.Interact(GameState.CurrentGameState, null);
+                item1.Interact(null);
             }
             else if(item1 != null && item2 != null)
             {
-                item2.Interact(GameState.CurrentGameState, item1.TrackingName);
+                item2.Interact(item1);
             }
         }
 
-        private bool TryGetItemsFromPrompts(Dictionary<string, string> allInteractableItems, GameSourceData gameData, out Item item1, out Item item2)
+        private bool TryGetItemsFromPrompts(Dictionary<Item, string> allInteractableItems, out Item item1, out Item item2)
         {
-            allInteractableItems.Add("CancelChoice", "Cancel");
-            var itemToInteractWith = Console.Choose("What do you want to use?", allInteractableItems);
-            if (itemToInteractWith == "CancelChoice")
+            var primaryItem = Console.Choose("What do you want to use?", allInteractableItems, includeCancel: true);
+            if (primaryItem == null)
             {
                 Console.WriteLine("Canceled interaction");
                 item1 = item2 = null;
                 return false;
             }
-            var item = gameData.GetItem(itemToInteractWith);
-            allInteractableItems.Remove(itemToInteractWith); // Remove the item being used
+            allInteractableItems.Remove(primaryItem); // Remove the item being used
 
             while (true)
             {
@@ -87,7 +84,7 @@ namespace GameEngine.Commands
                 string answer = "N";
                 if (allInteractableItems.Count != 1)
                 {
-                    Console.Write($"Do you want use the {item.DisplayName} on another item? (Yes, No or Cancel): ");
+                    Console.Write($"Do you want use the {primaryItem.DisplayName} on another item? (Yes, No or Cancel): ");
                     answer = Console.ReadKey().KeyChar.ToString();
                 }
 
@@ -101,22 +98,22 @@ namespace GameEngine.Commands
                 else if (answer.Equals("N", StringComparison.OrdinalIgnoreCase))
                 {
                     // Interact directly with the item
-                    item1 = item;
+                    item1 = primaryItem;
                     item2 = null;
                     return true;
                 }
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Prompt for other item to interact with
-                    var secondItemToInteractWith = Console.Choose($"What do you want to use the {item.DisplayName} on?", allInteractableItems);
-                    if (secondItemToInteractWith == "CancelChoice")
+                    var secondaryItem = Console.Choose($"What do you want to use the {primaryItem.DisplayName} on?", allInteractableItems, includeCancel: true);
+                    if (secondaryItem == null)
                     {
                         Console.WriteLine("Canceled interaction");
                         item1 = item2 = null;
                         return false;
                     }
-                    item1 = item;
-                    item2 = gameData.GetItem(secondItemToInteractWith);
+                    item1 = primaryItem;
+                    item2 = secondaryItem;
                     return true;
                 }
                 else

@@ -1,5 +1,6 @@
 ﻿using GameEngine;
 using GameEngine.Characters;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,22 @@ using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     class Wallet : Item
     {
-        public string CharacterName { get; set; }
-        public GameSourceData GameData { get; set; }
-        public int MoneyWalletContains { get; set; }
-        public Wallet(string characterName, GameSourceData gameData, int moneyInWallet) : base($"{characterName}sWallet", $"{characterName}'s wallet")
+        [JsonProperty]
+        private Guid CharacterTrackingId { get; set; }
+
+        [JsonProperty]
+        private Guid DollarItemTrackingId { get; set; }
+
+        [JsonProperty]
+        private int MoneyWalletContains { get; set; }
+
+        public Wallet(Guid characterTrackingId, Guid dollarItemTrackingId, int moneyInWallet) : base($"{characterTrackingId}'s wallet")
         {
-            GameData = gameData;
-            CharacterName = characterName;
+            CharacterTrackingId = characterTrackingId;
+            DollarItemTrackingId = dollarItemTrackingId;
             MoneyWalletContains = moneyInWallet;
             IsBound = false;
             IsInteractable = false;
@@ -24,27 +32,28 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsVisible = true;
         }
 
-        public override string GetDescription(int count, GameState gameState)
+        public override string GetDescription(int count)
         {
-            return $"{CharacterName}'s wallet";
+            var character = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
+            return $"{character.Name}'s wallet";
         }
 
-        public override void Grab(int count, string grabbingCharacterName, GameState gameState)
+        public override void Grab(int count, Guid grabbingCharacterTrackingId)
         {
-            GameData.TryGetCharacter(CharacterName, out Character attackingCharacter);
-            GameData.TryGetCharacter(PlayerCharacter.TrackingName, out Character playerCharacter);
-            if (attackingCharacter.Hp > 0)
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
+            if (attackingCharacter.HitPoints > 0)
             {
-                GameEngine.Console.WriteLine($"You have tried to steal {CharacterName}'s wallet, now you will suffer,");
-                playerCharacter.Attack(attackingCharacter, GameData);
-                GameEngine.Console.WriteLine($"{CharacterName} has hit you.");
+                GameEngine.Console.WriteLine($"You have tried to steal {CharacterTrackingId}'s wallet, now you will suffer,");
+                playerCharacter.Attack(attackingCharacter);
+                GameEngine.Console.WriteLine($"{CharacterTrackingId} has hit you.");
             }
-            if (attackingCharacter.Hp <= 0)
+            if (attackingCharacter.HitPoints <= 0)
             {
-                GameEngine.Console.WriteLine($"Since {CharacterName} is dead, you get {MoneyWalletContains} dollars!");
-                gameState.TryAddCharacterItemCount(PlayerCharacter.TrackingName, "Dollar", MoneyWalletContains, GameData);
-                var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterName);
-                gameState.TryAddLocationItemCount(locationOfWallet, TrackingName, -1, GameData);
+                GameEngine.Console.WriteLine($"Since {CharacterTrackingId} is dead, you get {MoneyWalletContains} dollars!");
+                GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, DollarItemTrackingId, MoneyWalletContains);
+                var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterTrackingId);
+                GameState.CurrentGameState.TryAddLocationItemCount(locationOfWallet.TrackingId, this.TrackingId, -1);
             }
         }
     }
