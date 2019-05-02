@@ -29,7 +29,8 @@ namespace GameEngine.Commands
                 new DropCommand(),
                 new AttackCommand(),
                 new StatsCommand(),
-                new InteractCommand()
+                new InteractCommand(),
+                new ShopCommand()
             };
 
             // Internal commands gain access to the EngineInternal when they are executed
