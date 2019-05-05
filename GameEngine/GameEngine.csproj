@@ -65,6 +65,7 @@
     <Compile Include="Console.cs" />
     <Compile Include="EqualChecker.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="ItemUseableFrom.cs" />
     <Compile Include="ItemRecipe.cs" />
     <Compile Include="ItemRecipeIngredient.cs" />
     <Compile Include="JsonPrivateSetResolver.cs" />

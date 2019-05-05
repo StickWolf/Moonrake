@@ -14,7 +14,8 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
         {
             IsUnique = false;
             IsVisible = true;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Inventory;
+            IsInteractionPrimary = true;
             IsBound = false;
         }
 
@@ -33,7 +34,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             }
             else
             {
-                GameEngine.Console.WriteLine("The talisman is not in your inventory, try picking it up first.");
+                GameEngine.Console.WriteLine("The talisman is not in your inventory, try picking it up first."); // TODO: not needed now, the game will make sure interact isn't called if the character isn't holding it
             }
         }
     }

@@ -27,7 +27,6 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             DollarItemTrackingId = dollarItemTrackingId;
             MoneyWalletContains = moneyInWallet;
             IsBound = false;
-            IsInteractable = false;
             IsUnique = false;
             IsVisible = true;
         }

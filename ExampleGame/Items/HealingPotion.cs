@@ -17,7 +17,8 @@ namespace ExampleGame.Items
         {
             Charges = charges;
             IsUnique = false;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Inventory;
+            IsInteractionPrimary = true;
         }
 
         public override string GetDescription(int count)
