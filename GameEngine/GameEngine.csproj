@@ -67,6 +67,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="ItemRecipe.cs" />
     <Compile Include="ItemRecipeIngredient.cs" />
+    <Compile Include="JsonPrivateSetResolver.cs" />
     <Compile Include="Locations\PortalAlwaysClosedRule.cs" />
     <Compile Include="Locations\PortalAlwaysOpenRule.cs" />
     <Compile Include="Locations\PortalOpenGameVarRule.cs" />
