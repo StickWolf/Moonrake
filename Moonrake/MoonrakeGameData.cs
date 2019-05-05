@@ -5,17 +5,17 @@ namespace Moonrake
 {
     public class MoonrakeGameData
     {
-        public MoonRakeCharacters MoonRakeCharacters { get; private set; }
-        public MoonRakeGameVariables MoonRakeGameVariables { get; private set; }
-        public MoonRakeItems MoonRakeItems { get; private set; }
-        public MoonRakeLocations MoonRakeLocations { get; private set; }
+        public MoonRakeCharacters MoonRakeCharacters { get; private set; } = new MoonRakeCharacters();
+        public MoonRakeGameVariables MoonRakeGameVariables { get; private set; } = new MoonRakeGameVariables();
+        public MoonRakeItems MoonRakeItems { get; private set; } = new MoonRakeItems();
+        public MoonRakeLocations MoonRakeLocations { get; private set; } = new MoonRakeLocations();
 
-        public MoonrakeGameData()
+        public void NewGame()
         {
-            MoonRakeCharacters = new MoonRakeCharacters(this);
-            MoonRakeGameVariables = new MoonRakeGameVariables(this);
-            MoonRakeItems = new MoonRakeItems(this);
-            MoonRakeLocations = new MoonRakeLocations(this);
+            MoonRakeCharacters.NewGame(this);
+            MoonRakeGameVariables.NewGame(this);
+            MoonRakeItems.NewGame(this);
+            MoonRakeLocations.NewGame(this);
 
             GameState.CurrentGameState.GameIntroductionText = "Once, there were three ancient instruments:" +
                 " The Harp, Piano, and the Drum." +
@@ -76,6 +76,13 @@ namespace Moonrake
             var TheBurgerDimplomatShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.TheBurgerDimplomatShop, "The Burger Dimplomat Shop", BigPepper);
 
             #endregion
+
+            GameState.CurrentGameState.Custom = this;
+        }
+
+        public static MoonrakeGameData Current()
+        {
+            return GameState.CurrentGameState.Custom as MoonrakeGameData;
         }
     }
 }
