@@ -13,7 +13,7 @@ namespace DreamsAndWhatTheyMean
         public Guid BlackSmithCharacter { get; private set; }
         public Guid HealingDroneInPlayersHouse { get; private set; }
 
-        public DragonKittyCharacters(TheTaleOfTheDragonKittySourceData gameData)
+        public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
         {
             Player = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("James", 50) { MaxAttack = 10, CounterAttackChance = 50 }, gameData.DkLocations.PlayersRoom);
             MomCharacter = GameState.CurrentGameState.AddCharacter(new Character("Mom", 4000) { MaxAttack = 150, CounterAttackChance = 20 }, gameData.DkLocations.PlayersLivingRoom);

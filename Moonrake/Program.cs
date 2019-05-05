@@ -6,7 +6,7 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(() => new MoonrakeGameData());
+            EngineFactory.Start(() => new MoonrakeGameData().NewGame());
         }
     }
 }

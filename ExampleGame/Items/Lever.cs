@@ -1,7 +1,5 @@
 ﻿using GameEngine;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace ExampleGame.Items
 {
@@ -11,17 +9,9 @@ namespace ExampleGame.Items
         [JsonProperty]
         private string GameVariableToggle { get; set; }
 
-        [JsonProperty]
-        private Guid StartLocation { get; set; } // TODO: I don't want to pass startlocation and the key explicitly, but it needs to be something that survives serialization
-
-        [JsonProperty]
-        private Guid DullBronzeKey { get; set; }
-
-        public Lever(string gameVariableToggle, Guid startLocation, Guid dullBronzeKey) : base("Lever")
+        public Lever(string gameVariableToggle) : base("Lever")
         {
             GameVariableToggle = gameVariableToggle;
-            StartLocation = startLocation;
-            DullBronzeKey = dullBronzeKey;
             IsUnique = false;
             IsBound = true;
             IsInteractable = true;
@@ -49,8 +39,9 @@ namespace ExampleGame.Items
         {
             if (fromPosition.Equals("off"))
             {
+                var gameData = ExampleGameSourceData.Current();
                 GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
-                GameState.CurrentGameState.TryAddLocationItemCount(StartLocation, DullBronzeKey, 1);
+                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
 
                 // TODO: try to move away from game variables and just use properties of items/locations/etc directly
                 GameState.CurrentGameState.SetGameVarValue(GameVariableToggle, "on");

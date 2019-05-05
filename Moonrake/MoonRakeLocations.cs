@@ -16,7 +16,7 @@ namespace Moonrake
 
         public Guid BigPepperShop { get; private set; }
 
-        public MoonRakeLocations(MoonrakeGameData gameData)
+        public void NewGame(MoonrakeGameData gameData)
         {
             TreeHouse = GameState.CurrentGameState.AddLocation(new Location("Tree House", "what looks like a small living space.",
                 "You are in a tree house. You see a bed covered with a blanket, curtains on the windows and a fridge full of soda. " +

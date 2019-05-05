@@ -44,9 +44,9 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
             if (attackingCharacter.HitPoints > 0)
             {
-                GameEngine.Console.WriteLine($"You have tried to steal {CharacterTrackingId}'s wallet, now you will suffer,");
+                GameEngine.Console.WriteLine($"You have tried to steal {CharacterTrackingId}'s wallet, now you will suffer,"); // TODO: this probably doesn't say the right thing now
                 playerCharacter.Attack(attackingCharacter);
-                GameEngine.Console.WriteLine($"{CharacterTrackingId} has hit you.");
+                GameEngine.Console.WriteLine($"{CharacterTrackingId} has hit you."); // TODO: this probably doesn't say the right thing now
             }
             if (attackingCharacter.HitPoints <= 0)
             {

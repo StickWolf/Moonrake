@@ -26,11 +26,8 @@ namespace GameEngine
         [JsonProperty]
         public string GameEndingText { get; set; }
 
-        // TODO: provide a Custom object here that is serialized that the game can save stuff in
-        // TODO: then separate out the game data classes with the Guids apart from the newgame constructor code
-        // TODO: and store the gamedata class here as Custom.
-        // TODO: After that, item interact code may then do:
-        // TODO: (GameState.CurrentGameState.Custom as ExampleGameData).EgItems.DullBronzeKey -- and have it refer to the correct Guid and work with serialization
+        [JsonProperty]
+        public object Custom { get; set; }
 
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
@@ -103,6 +100,16 @@ namespace GameEngine
             CurrentGameState = savedGamesDictionary[slotName];
         }
 
+        private static JsonSerializerSettings GetJsonSerializerSettings()
+        {
+            var serializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ContractResolver = new JsonPrivateSetResolver()
+            };
+            return serializerSettings;
+        }
+
         public static void SaveGameState(string slotName)
         {
             var savedGamesDictionary = GetGameStates();
@@ -110,13 +117,8 @@ namespace GameEngine
             // add (or update) the gamestate that was passed in into the dictionary we now have using slotName as the key
             savedGamesDictionary[slotName] = CurrentGameState;
 
-            var serializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.All
-            };
-
             // serialize the dictionary to a string
-            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary, Formatting.Indented, serializerSettings);
+            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary, Formatting.Indented, GetJsonSerializerSettings());
 
             // save that serialized string to the game saves file
             File.WriteAllText(SaveFileName, serializedDictionary);
@@ -133,13 +135,8 @@ namespace GameEngine
                 // read the save file to a string
                 string fileContents = File.ReadAllText(saveFile.FullName);
 
-                var serializerSettings = new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
                 // deserialize the string into a dictionary<string, gamestate>
-                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents, serializerSettings);
+                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents, GetJsonSerializerSettings());
             }
             else
             {
@@ -378,10 +375,7 @@ namespace GameEngine
             Items.Remove(sourceItem.TrackingId);
 
             // Cloning just means serializing and deserializing to a new instance
-            var serializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.All
-            };
+            var serializerSettings = GetJsonSerializerSettings();
             string serializedItem = JsonConvert.SerializeObject(sourceItem, Formatting.Indented, serializerSettings);
             var clonedItem = JsonConvert.DeserializeObject<Item>(serializedItem, serializerSettings);
 
