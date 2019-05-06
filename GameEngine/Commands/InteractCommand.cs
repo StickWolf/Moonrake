@@ -6,7 +6,7 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid interactingCharacterTrackingId)
         {
             // TODO: Instead pass this in from the character that is using the command
             var interactingCharacter = GameState.CurrentGameState.GetPlayerCharacter();

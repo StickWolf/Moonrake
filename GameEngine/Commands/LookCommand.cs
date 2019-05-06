@@ -6,7 +6,7 @@ namespace GameEngine.Commands
 {
     internal class LookCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid lookingCharacterTrackingId)
         {
             // TODO: Instead pass this in from the character that is using the command
             var lookingCharacter = GameState.CurrentGameState.GetPlayerCharacter();

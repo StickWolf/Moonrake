@@ -6,7 +6,7 @@ namespace GameEngine.Commands
 {
     internal class ExitCommand : ICommandInternal
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords)
         {
             while (true)
             {

@@ -7,19 +7,19 @@ namespace GameEngine.Commands
 {
     internal class AttackCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid attackingCharacterTrackingId)
         {
-            // TODO: instead pass in the character that is using this command
-            var attackingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLoc = GameState.CurrentGameState.GetPlayerCharacterLocation();
+            var attackingCharacter = GameState.CurrentGameState.GetCharacter(attackingCharacterTrackingId);
+            var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacterTrackingId);
 
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: false)
+            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(attackingCharacterLocation.TrackingId, includePlayer: true)
+                .Where (c => c.TrackingId != attackingCharacter.TrackingId) // don't include the character doing the attacking
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             if (otherCharactersInLoc.Count == 0)
             {
-                Console.WriteLine("There are no charaters to attack here.");
+                Console.CharacterLocationWriteLine("There are no characters to attack here.", attackingCharacterLocation.TrackingId);
                 return;
             }
 
@@ -35,10 +35,10 @@ namespace GameEngine.Commands
             }
             else
             {
-                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true);
+                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true); // TODO: rewrite to handle when NPCs are attacking
                 if (defendingCharacter == null)
                 {
-                    Console.WriteLine("Stopped Attack.");
+                    Console.CharacterLocationWriteLine("Stopped Attack.", attackingCharacterLocation.TrackingId);
                     return;
                 }
             }
