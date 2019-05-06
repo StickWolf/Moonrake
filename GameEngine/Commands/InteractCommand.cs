@@ -8,6 +8,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
+            // TODO: Instead pass this in from the character that is using the command
             var interactingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
 
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
@@ -100,12 +101,12 @@ namespace GameEngine.Commands
                 }
 
                 // Otherwise the extra words seem to have translated into the items to use properly
-                primaryItem.Interact(secondaryItem);
+                primaryItem.Interact(secondaryItem, interactingCharacter.TrackingId);
             }
             // No extra words were typed, process this command via prompt mode
             else if (TryGetItemsFromPrompts(allUseableItems, out primaryItem, out secondaryItem))
             {
-                primaryItem.Interact(secondaryItem);
+                primaryItem.Interact(secondaryItem, interactingCharacter.TrackingId);
             }
         }
 

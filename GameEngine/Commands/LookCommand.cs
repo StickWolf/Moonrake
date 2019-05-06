@@ -8,7 +8,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
-            // Figure out the location name of where the player is at
+            // TODO: Instead pass this in from the character that is using the command
             var lookingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var characterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
 

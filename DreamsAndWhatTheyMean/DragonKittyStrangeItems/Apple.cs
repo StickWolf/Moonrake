@@ -19,7 +19,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsInteractionPrimary = true;
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
         {
             var player = GameState.CurrentGameState.GetPlayerCharacter();
             var playersItems = GameState.CurrentGameState.GetCharacterItems(player.TrackingId);

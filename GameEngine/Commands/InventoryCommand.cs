@@ -8,6 +8,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
+            // TODO: Instead pass this in from the character that is using the command
             var inventorySeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var charaterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
             if(charaterItems == null || !charaterItems.Any())
