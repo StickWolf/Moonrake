@@ -8,21 +8,21 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid lookingCharacterTrackingId)
         {
-            // TODO: Instead pass this in from the character that is using the command
-            var lookingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var characterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
+            var lookingCharacter = GameState.CurrentGameState.GetCharacter(lookingCharacterTrackingId);
+            var lookingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
 
             // Display the local description of the location
-            Console.WriteLine(characterLocation?.LocalDescription);
+            lookingCharacter.SendMessage(lookingCharacterLocation?.LocalDescription);
+            lookingCharacterLocation.SendMessage($"{lookingCharacter.Name} glances around.", lookingCharacter.TrackingId);
 
             // Get all portals that have a rule that originates from the current location
-            var originPortals = GameState.CurrentGameState.GetPortalsInLocation(characterLocation.TrackingId);
+            var originPortals = GameState.CurrentGameState.GetPortalsInLocation(lookingCharacterLocation.TrackingId);
 
             var portalDesinations = originPortals
-                .Select(p => p.GetDestination(characterLocation.TrackingId));
-                //.OrderBy(d => d.Destination); // TODO: Bring sorting back
+                .Select(p => p.GetDestination(lookingCharacterLocation.TrackingId));
+            //.OrderBy(d => d.Destination); // TODO: Bring sorting back
 
-            Console.WriteLine();
+            lookingCharacter.SendMessage();
             // Loop through all destinations in that location 
             foreach (var portalDest in portalDesinations)
             {
@@ -34,17 +34,17 @@ namespace GameEngine.Commands
                 else if(portalDest.DestinationTrackingId == Guid.Empty)
                 {
                     // If we get here, the description exists, but the destination does not
-                    Console.WriteLine(portalDest.Description);
+                    lookingCharacter.SendMessage(portalDest.Description);
                 }
                 else
                 {
                     // If we got here, the description AND the destination exist.
                     var remoteLocation = GameState.CurrentGameState.GetLocation(portalDest.DestinationTrackingId);
-                    Console.WriteLine($"[{remoteLocation.LocationName}] {portalDest.Description} {remoteLocation.RemoteDescription}");
+                    lookingCharacter.SendMessage($"[{remoteLocation.LocationName}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
             }
 
-            var locationItems = GameState.CurrentGameState.GetLocationItems(characterLocation.TrackingId);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(lookingCharacterLocation.TrackingId);
             if (locationItems != null)
             {
                 string itemDescriptions = string.Empty;
@@ -71,19 +71,19 @@ namespace GameEngine.Commands
 
                 if (!string.IsNullOrWhiteSpace(itemDescriptions))
                 {
-                    Console.WriteLine();
-                    Console.WriteLine($"You see {itemDescriptions}.");
+                    lookingCharacter.SendMessage();
+                    lookingCharacter.SendMessage($"You see {itemDescriptions}.");
                 }
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(characterLocation.TrackingId, includePlayer: false);
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacterLocation.TrackingId, includePlayer: false);
             if(otherCharactersInLocation.Count != 0)
             {
-                Console.WriteLine();
-                Console.WriteLine("The following other characters are here:");
+                lookingCharacter.SendMessage();
+                lookingCharacter.SendMessage("The following other characters are here:");
                 foreach(var character in otherCharactersInLocation)
                 {
-                    Console.WriteLine($"{character.Name}");
+                    lookingCharacter.SendMessage(character.Name);
                 }
             }
         }

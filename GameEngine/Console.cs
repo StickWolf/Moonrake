@@ -18,7 +18,7 @@ namespace GameEngine
             System.Console.WriteLine();
         }
 
-        public static void WriteLine(string text)
+        public static void WriteLine(string text) // TODO: is is possible to migrate all of these calls over to only be used by Character.SendMessage or Location.SendMessage?
         {
             System.Console.WriteLine(text.AddLineReturns(true));
         }

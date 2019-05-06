@@ -55,6 +55,14 @@ namespace GameEngine.Characters
         }
 
         /// <summary>
+        /// Sends a blank line to the character
+        /// </summary>
+        public void SendMessage()
+        {
+            SendMessage(string.Empty);
+        }
+
+        /// <summary>
         /// Gets the current location of the character
         /// </summary>
         /// <returns></returns>

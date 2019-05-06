@@ -8,11 +8,9 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid interactingCharacterTrackingId)
         {
-            // TODO: Instead pass this in from the character that is using the command
-            var interactingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(playersLoc.TrackingId) ?? new Dictionary<Item, int>();
+            var interactingCharacter = GameState.CurrentGameState.GetCharacter(interactingCharacterTrackingId);
+            var interactingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(interactingCharacterLocation.TrackingId) ?? new Dictionary<Item, int>();
             var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<Item, int>();
 
             var useableLocationItems = locationItems
@@ -45,7 +43,8 @@ namespace GameEngine.Commands
             // so if none of those exist here, we are done.
             if (!allPrimaryItems.Any())
             {
-                Console.WriteLine("There is nothing available to interact with.");
+                interactingCharacter.SendMessage("There is nothing available to interact with.");
+                interactingCharacterLocation.SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter.TrackingId);
                 return;
             }
 
@@ -96,7 +95,7 @@ namespace GameEngine.Commands
                     (primaryItem != null && secondaryItem != null && foundItems.Count > 2) // the extra words looked like more items than what we could map to
                     )
                 {
-                    Console.WriteLine("I don't quite understand, make sure the target item you want to use is last in the sentence. Or just type 'use' alone to enter prompt mode.");
+                    interactingCharacter.SendMessage("I don't quite understand, make sure the target item you want to use is last in the sentence. Or just type 'use' alone to enter prompt mode.");
                     return;
                 }
 

@@ -7,11 +7,12 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid statSeekingCharacterTrackingId)
         {
-            // TODO: Instead pass this in from the character that is using the command
-            var statSeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            Console.WriteLine("Here are your stats:");
-            Console.WriteLine($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
-            Console.WriteLine($"Your max attack is {statSeekingCharacter.MaxAttack}.");
+            var statSeekingCharacter = GameState.CurrentGameState.GetCharacter(statSeekingCharacterTrackingId);
+            var statSeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(statSeekingCharacterTrackingId);
+
+            statSeekingCharacter.SendMessage("Here are your stats:");
+            statSeekingCharacter.SendMessage($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
+            statSeekingCharacter.SendMessage($"Your max attack is {statSeekingCharacter.MaxAttack}.");
         }
 
         public bool IsActivatedBy(string word)

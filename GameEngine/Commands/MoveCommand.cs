@@ -10,12 +10,11 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid movingCharacterTrackingId)
         {
-            // TODO: Instead pass this in from the character that is using the command
-            var movingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var movingCharacterLoc = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
+            var movingCharacter = GameState.CurrentGameState.GetCharacter(movingCharacterTrackingId);
+            var movingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacterTrackingId);
 
             // Get a list of locations that can be moved to from here.
-            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLoc.TrackingId)
+            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLocation.TrackingId)
                 .ToDictionary(kvp => kvp, kvp => kvp.LocationName); // convert to Dictionary[{location}] = {locationName}
 
             var wordLocationMap = CommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList());
@@ -34,7 +33,8 @@ namespace GameEngine.Commands
                 location = Console.Choose("Where would you like to move to?", validLocations, includeCancel: true);
                 if (location == null)
                 {
-                    Console.WriteLine("Canceled Move");
+                    movingCharacter.SendMessage("Canceled Move");
+                    movingCharacterLocation.SendMessage($"{movingCharacter.Name} looks indecisive.", movingCharacter.TrackingId);
                     return;
                 }
             }
@@ -42,7 +42,7 @@ namespace GameEngine.Commands
             GameState.CurrentGameState.SetCharacterLocation(movingCharacter.TrackingId, location.TrackingId);
 
             // Make the player automatically look after they move to the new location
-            Console.WriteLine();
+            movingCharacter.SendMessage();
             CommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacterTrackingId);
         }
 
