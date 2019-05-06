@@ -18,12 +18,12 @@ namespace ExampleGame.Characters
         public override void Attack(Character attackingCharacter)
         {
             WhiskerCount--;
-            Console.CharacterLocationWriteLine($"{Name}'s whisker count is now {WhiskerCount}", this.TrackingId);
+            attackingCharacter.SendMessage($"{Name}'s whisker count is now {WhiskerCount}");
         }
 
         public override void Turn()
         {
-            Console.CharacterLocationWriteLine($"{Name} squeaks.", this.TrackingId);
+            this.GetLocation().SendMessage($"{Name} squeaks.");
         }
     }
 }

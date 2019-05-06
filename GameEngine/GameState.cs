@@ -632,7 +632,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="characterTrackingId">The character name</param>
         /// <returns>Character location or null</returns>
-        public Location GetCharacterLocation(Guid characterTrackingId) 
+        public Location GetCharacterLocation(Guid characterTrackingId) // TODO: any way to make it so this is only used by Character.GetLocation?
         {
             if (CharacterLocations.ContainsKey(characterTrackingId))
             {

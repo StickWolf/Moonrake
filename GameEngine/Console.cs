@@ -23,42 +23,6 @@ namespace GameEngine
             System.Console.WriteLine(text.AddLineReturns(true));
         }
 
-        /// <summary>
-        /// Writes text that is visible only to those at the location
-        /// </summary>
-        /// <param name="text">The text to write</param>
-        /// <param name="locationTrackingId">The location to write the text at</param>
-        public static void LocationWriteLine(string text, Guid locationTrackingId)
-        {
-            // Since this is a single player game, really we only need to worry about if the player sees the text or not
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLocation = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
-            if (playerLocation.TrackingId == locationTrackingId)
-            {
-                WriteLine(text);
-            }
-            else
-            {
-                // TODO: add an admin command that lets you see these "Inaudible" messages
-                //var targetLocation = GameState.CurrentGameState.GetLocation(locationTrackingId);
-                //WriteLine($"{{Inaudible}} at \"{targetLocation.LocationName}\" : {text}");
-            }
-        }
-
-        /// <summary>
-        /// Writes text as though the specified character is speaking it.
-        /// The text will only be visible if the character and player are in the same location.
-        /// Text does not need to be in 1st person.
-        /// </summary>
-        /// <param name="text">The text to write</param>
-        /// <param name="characterTrackingId">The "speaking" character</param>
-        public static void CharacterLocationWriteLine(string text, Guid characterTrackingId)
-        {
-            // Figure out the location where the specified character is
-            var characterLocation = GameState.CurrentGameState.GetCharacterLocation(characterTrackingId);
-            LocationWriteLine(text, characterLocation.TrackingId);
-        }
-
         public static void Clear()
         {
             System.Console.Clear();
