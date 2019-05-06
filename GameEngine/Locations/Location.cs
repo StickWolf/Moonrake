@@ -35,5 +35,24 @@ namespace GameEngine.Locations
             LocalDescription = localDescription;
             RemoteDescription = remoteDescription;
         }
+
+        /// <summary>
+        /// Sends a message to the location that is visible to all characters in the location
+        /// </summary>
+        /// <param name="text">The text to send</param>
+        public void SendMessage(string text)
+        {
+            var playerLocation = GameState.CurrentGameState.GetPlayerCharacterLocation();
+            if (this.TrackingId == playerLocation.TrackingId)
+            {
+                Console.WriteLine(text);
+            }
+            else
+            {
+                // TODO: add an admin command that lets you see these "Inaudible" messages
+                //Console.WriteLine($"{{SendMessageToLocation}} \"{this.LocationName}\" : {text}");
+            }
+        }
+
     }
 }
