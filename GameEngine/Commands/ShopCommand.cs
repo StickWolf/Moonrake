@@ -12,10 +12,10 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
-            // TODO: The shopping command lets you go shopping!
-
-            //  1. Determine the player's current location from the game state
+            // TODO: Instead pass this in from the character that is using the command
             var shoppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+
+            //  1. Determine the character's current location from the game state
             var shoppersLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
             
             //  2. Look in the game data for any tradeposts that are currently at this location

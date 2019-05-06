@@ -34,7 +34,7 @@ namespace ExampleGame.Items
             return null;
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
         {
             if (otherItem == null)
             {

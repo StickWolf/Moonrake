@@ -9,8 +9,9 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
+            // TODO: instead pass in the character that is using this command
+            var attackingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playerLoc = GameState.CurrentGameState.GetPlayerCharacterLocation();
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
 
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: false)
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
@@ -42,7 +43,7 @@ namespace GameEngine.Commands
                 }
             }
 
-            defendingCharacter.Attack(playerCharacter);
+            defendingCharacter.Attack(attackingCharacter);
         }
 
         public bool IsActivatedBy(string word)

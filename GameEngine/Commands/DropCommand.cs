@@ -9,6 +9,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
+            // TODO: instead pass in the character that is using this command
             var droppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
             var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);

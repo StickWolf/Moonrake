@@ -31,7 +31,7 @@ namespace ExampleGame.Items
             return $"{count} {DisplayName}s with {Charges} use(s) left.";
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
         {
             // TODO: rewrite commands that are intended to be used by NPCs to work for them too
             // TODO: the way this is written, even if a NPC used it, it would heal the player

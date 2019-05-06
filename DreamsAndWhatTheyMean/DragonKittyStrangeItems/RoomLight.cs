@@ -40,7 +40,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             return "strange, flashing light";
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
         {
             if(IsOn)
             {
