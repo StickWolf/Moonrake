@@ -6,9 +6,9 @@ namespace GameEngine.Commands
 {
     internal class GrabCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid grabbingCharacterTrackingId)
         {
-            // TODO: instead pass in the character that is using this command
+            // TODO: instead use the passed in tracking id
             var grabbingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
             var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc.TrackingId);

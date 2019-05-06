@@ -28,7 +28,7 @@ namespace GameEngine.Characters
             }
 
             // Then look for public commands to run
-            if (CommandHelper.TryRunPublicCommand(word, extraWords))
+            if (CommandHelper.TryRunPublicCommand(word, extraWords, this.TrackingId))
             {
                 return;
             }
