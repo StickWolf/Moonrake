@@ -13,9 +13,10 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
         public Apple() : base("apple")
         {
             IsBound = false;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Inventory;
             IsUnique = false;
             IsVisible = true;
+            IsInteractionPrimary = true;
         }
 
         public override void Interact(Item otherItem)
@@ -41,7 +42,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             }
             else
             {
-                GameEngine.Console.WriteLine("The apple is not in your inventory, try picking it up first.");
+                GameEngine.Console.WriteLine("The apple is not in your inventory, try picking it up first."); // TODO: shouldn't be needed anymore
             }
         }
     }

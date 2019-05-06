@@ -3,7 +3,6 @@ using System;
 
 namespace GameEngine
 {
-    // TODO: explicityly attribute all properties of all base classes like this, Item, Location, Character etc.. Otherwise overridden classes that use opt in will only get the top level attributes.
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Item : TrackableInstance
     {
@@ -27,10 +26,17 @@ namespace GameEngine
         public bool IsBound { get; set; }
 
         /// <summary>
-        /// Indicates if an item can be interacted with.
+        /// Indicates if this item can be the primary target of interaction.
+        /// <see cref="IsUseableFrom"/> must also be set correctly for the item to actually be interacted with.
         /// </summary>
         [JsonProperty]
-        public bool IsInteractable { get; set; } // TODO: split this into 2 properties, IsInteractableFromFloor and IsInteractableFromInventory and rewrite the code to check these things before calling interact
+        public bool IsInteractionPrimary { get; set; }
+
+        /// <summary>
+        /// Indicates where an item can be used from (location, inventory, etc)
+        /// </summary>
+        [JsonProperty]
+        public ItemUseableFrom IsUseableFrom { get; set; } = ItemUseableFrom.Nowhere;
 
         /// <summary>
         /// Indicates if the item is visible or not.

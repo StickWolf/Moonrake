@@ -19,7 +19,8 @@ namespace ExampleGame.Items
             GameVarDoorIsOpen = gameVarDoorIsOpen;
             IsUnique = true;
             IsBound = true;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Location;
+            IsInteractionPrimary = true;
         }
 
         public override string GetDescription(int count)

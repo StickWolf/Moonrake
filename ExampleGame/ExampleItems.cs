@@ -44,7 +44,7 @@ namespace ExampleGame
             }
 
             // Bronze key and keyhole pair
-            DullBronzeKey = GameState.CurrentGameState.AddItem(new Item("Dull Bronze Key") { IsUnique = true, IsInteractable = true });
+            DullBronzeKey = GameState.CurrentGameState.AddItem(new Item("Dull Bronze Key") { IsUnique = true, IsUseableFrom = ItemUseableFrom.Inventory });
             BanquetToSecretWarpedHallKeyhole = GameState.CurrentGameState.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
             {
                 GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
