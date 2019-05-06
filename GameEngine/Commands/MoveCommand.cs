@@ -10,6 +10,7 @@ namespace GameEngine.Commands
     {
         public void Exceute(List<string> extraWords)
         {
+            // TODO: Instead pass this in from the character that is using the command
             var movingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var movingCharacterLoc = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
 

@@ -74,7 +74,7 @@ namespace GameEngine
         /// <param name="otherItem">
         /// If another item is being used on this item, this is that other item
         /// </param>
-        public virtual void Interact(Item otherItem) // TODO: also pass down the character that is doing the interacting
+        public virtual void Interact(Item otherItem, Guid interactingCharacterTrackingId)
         {
             Console.WriteLine("You find nothing special.");
         }

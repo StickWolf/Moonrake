@@ -1,5 +1,6 @@
 ﻿using GameEngine;
 using Newtonsoft.Json;
+using System;
 
 namespace ExampleGame.Items
 {
@@ -23,7 +24,7 @@ namespace ExampleGame.Items
             return $"a lever";
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
         {
             string leverPosition = GameState.CurrentGameState.GetGameVarValue(GameVariableToggle);
             if (leverPosition == null)
