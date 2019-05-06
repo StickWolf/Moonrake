@@ -19,7 +19,8 @@ namespace GameEngine.Commands
 
             if (otherCharactersInLoc.Count == 0)
             {
-                Console.CharacterLocationWriteLine("There are no characters to attack here.", attackingCharacterLocation.TrackingId);
+                attackingCharacter.SendMessage("There are no characters to attack here.");
+                attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is looking around for someone to attack!");
                 return;
             }
 
@@ -38,7 +39,8 @@ namespace GameEngine.Commands
                 defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true); // TODO: rewrite to handle when NPCs are attacking
                 if (defendingCharacter == null)
                 {
-                    Console.CharacterLocationWriteLine("Stopped Attack.", attackingCharacterLocation.TrackingId);
+                    attackingCharacter.SendMessage("Stopped Attack.");
+                    attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is acting dangerously!");
                     return;
                 }
             }

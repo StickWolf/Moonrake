@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GameEngine.Locations;
+using Newtonsoft.Json;
 using System;
 
 namespace GameEngine.Characters
@@ -31,6 +32,35 @@ namespace GameEngine.Characters
             Name = name;
             HitPoints = hp;
             MaxHitPoints = hp;
+        }
+
+        /// <summary>
+        /// Sends a message to the character that only the receiving character can see
+        /// </summary>
+        /// <param name="text">The text to send</param>
+        public void SendMessage(string text)
+        {
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+
+            // Only show the message if the message is for the player
+            if (this.TrackingId == playerCharacter.TrackingId)
+            {
+                Console.WriteLine(text);
+            }
+            else
+            {
+                // TODO: add an admin command that lets you see other characters messages
+                //Console.WriteLine($"{{MessageToCharacter}} \"{this.Name}\" : {text}");
+            }
+        }
+
+        /// <summary>
+        /// Gets the current location of the character
+        /// </summary>
+        /// <returns></returns>
+        public Location GetLocation()
+        {
+            return GameState.CurrentGameState.GetCharacterLocation(this.TrackingId);
         }
 
         /// <summary>
