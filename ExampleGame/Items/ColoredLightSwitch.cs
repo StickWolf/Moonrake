@@ -14,7 +14,8 @@ namespace ExampleGame.Items
             GameVariableColor = gameVariableColor;
             IsUnique = false;
             IsBound = true;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Location;
+            IsInteractionPrimary = true;
         }
 
         public override string GetDescription(int count)
