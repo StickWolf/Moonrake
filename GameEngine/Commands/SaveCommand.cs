@@ -5,7 +5,7 @@ namespace GameEngine.Commands
 {
     internal class SaveCommand : ICommandInternal
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("New Save");

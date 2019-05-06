@@ -1,5 +1,6 @@
 ﻿using GameEngine.Characters;
 using GameEngine.Locations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -52,7 +53,7 @@ namespace GameEngine.Commands
         /// <param name="extraWords">Extra words to pass along to the command</param>
         /// <param name="gameData">The game source data</param>
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        public static bool TryRunPublicCommand(string word, List<string> extraWords)
+        public static bool TryRunPublicCommand(string word, List<string> extraWords, Guid executingCharacterTrackingId)
         {
             var commandToRun = AllPublicCommands.FirstOrDefault(c => c.IsActivatedBy(word));
             if (commandToRun == null)
@@ -61,12 +62,12 @@ namespace GameEngine.Commands
             }
 
             // The command is a real command if we got this far
-            commandToRun.Exceute(extraWords);
+            commandToRun.Execute(extraWords, executingCharacterTrackingId);
             return true;
         }
 
         /// <summary>
-        /// Runs a public command
+        /// Runs an internal command
         /// </summary>
         /// <param name="word">The command word</param>
         /// <param name="extraWords">Extra words to pass along to the command</param>
@@ -81,7 +82,7 @@ namespace GameEngine.Commands
             }
 
             // The command is a real command if we got this far
-            commandToRun.Exceute(engine, extraWords);
+            commandToRun.Execute(engine, extraWords);
             return true;
         }
 

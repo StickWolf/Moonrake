@@ -10,7 +10,7 @@ namespace GameEngine.Commands
 {
     internal class ShopCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid shoppingCharacterTrackingId)
         {
             // TODO: Instead pass this in from the character that is using the command
             var shoppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();

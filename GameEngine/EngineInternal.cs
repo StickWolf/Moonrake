@@ -95,7 +95,8 @@ namespace GameEngine
             Console.WriteLine(GameState.CurrentGameState.GameIntroductionText);
             Console.WriteLine();
 
-            CommandHelper.TryRunPublicCommand("look", new List<string>());
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacter.TrackingId);
         }
     }
 }

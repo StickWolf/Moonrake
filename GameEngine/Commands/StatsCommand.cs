@@ -5,7 +5,7 @@ namespace GameEngine.Commands
 {
     class StatsCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid statSeekingCharacterTrackingId)
         {
             // TODO: Instead pass this in from the character that is using the command
             var statSeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();

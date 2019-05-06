@@ -5,7 +5,7 @@ namespace GameEngine.Commands
 {
     internal class LetPlayerChangeTheirNameCommand : ICommandInternal
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords)
         {
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             Console.Write($"What would you like your name to be?: ");

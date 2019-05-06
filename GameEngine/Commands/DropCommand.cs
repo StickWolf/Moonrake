@@ -7,9 +7,9 @@ namespace GameEngine.Commands
 {
     internal class DropCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid droppingCharacterTrackingId)
         {
-            // TODO: instead pass in the character that is using this command
+            // TODO: instead use the passed in tracking id
             var droppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
             var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);

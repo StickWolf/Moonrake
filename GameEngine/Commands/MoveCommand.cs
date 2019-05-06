@@ -8,7 +8,7 @@ namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Guid movingCharacterTrackingId)
         {
             // TODO: Instead pass this in from the character that is using the command
             var movingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
@@ -43,7 +43,7 @@ namespace GameEngine.Commands
 
             // Make the player automatically look after they move to the new location
             Console.WriteLine();
-            CommandHelper.TryRunPublicCommand("look", new List<string>());
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacterTrackingId);
         }
 
         public bool IsActivatedBy(string word)
