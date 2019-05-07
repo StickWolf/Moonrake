@@ -52,8 +52,9 @@ namespace GameEngine.Commands
         /// <param name="word">The command word</param>
         /// <param name="extraWords">Extra words to pass along to the command</param>
         /// <param name="gameData">The game source data</param>
+        /// <param name="executingCharacter">The character who is running the command</param>
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        public static bool TryRunPublicCommand(string word, List<string> extraWords, Guid executingCharacterTrackingId)
+        public static bool TryRunPublicCommand(string word, List<string> extraWords, Character executingCharacter)
         {
             var commandToRun = AllPublicCommands.FirstOrDefault(c => c.IsActivatedBy(word));
             if (commandToRun == null)
@@ -62,7 +63,7 @@ namespace GameEngine.Commands
             }
 
             // The command is a real command if we got this far
-            commandToRun.Execute(extraWords, executingCharacterTrackingId);
+            commandToRun.Execute(extraWords, executingCharacter);
             return true;
         }
 
@@ -72,8 +73,9 @@ namespace GameEngine.Commands
         /// <param name="word">The command word</param>
         /// <param name="extraWords">Extra words to pass along to the command</param>
         /// <param name="gameData">The game source data</param>
+        /// <param name="executingCharacter">The character who is running the command</param>
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        internal static bool TryRunInternalCommand(string word, List<string> extraWords, EngineInternal engine)
+        internal static bool TryRunInternalCommand(string word, List<string> extraWords, EngineInternal engine, Character executingCharacter)
         {
             var commandToRun = AllInternalCommands.FirstOrDefault(c => c.IsActivatedBy(word));
             if (commandToRun == null)
@@ -82,7 +84,7 @@ namespace GameEngine.Commands
             }
 
             // The command is a real command if we got this far
-            commandToRun.Execute(engine, extraWords);
+            commandToRun.Execute(engine, extraWords, executingCharacter);
             return true;
         }
 

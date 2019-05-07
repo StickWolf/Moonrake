@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -40,17 +41,17 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             return "strange, flashing light";
         }
 
-        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
+        public override void Interact(Item otherItem, Character interactingCharacter)
         {
             if(IsOn)
             {
                 IsOn = false;
-                GameEngine.Console.WriteLine("You turned the light off.");
+                interactingCharacter.SendMessage("You turned the light off.");
             }
             else if (!IsOn)
             {
                 IsOn = true;
-                GameEngine.Console.WriteLine("You turned the light on.");
+                interactingCharacter.SendMessage("You turned the light on.");
             }
         }
     }

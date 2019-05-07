@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
 
@@ -24,12 +25,13 @@ namespace ExampleGame.Items
             return $"a light switch";
         }
 
-        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
+        public override void Interact(Item otherItem, Character interactingCharacter)
         {
             string lightColor = GameState.CurrentGameState.GetGameVarValue(GameVariableColor);
             if (lightColor == null)
             {
-                GameEngine.Console.WriteLine($"You flip the light switch, but nothing appears to happen.");
+                interactingCharacter.SendMessage($"You flip the light switch, but nothing appears to happen.");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
             }
             else
             {
@@ -50,7 +52,8 @@ namespace ExampleGame.Items
                         break;
                 }
                 GameState.CurrentGameState.SetGameVarValue(GameVariableColor, newColor);
-                GameEngine.Console.WriteLine($"You flip the light switch and the {lightColor} light now begins to glow {newColor}.");
+                interactingCharacter.SendMessage($"You flip the light switch and the {lightColor} light now begins to glow {newColor}.");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
             }
         }
     }

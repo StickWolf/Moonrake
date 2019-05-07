@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,20 +7,18 @@ namespace GameEngine.Commands
 {
     internal class InventoryCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid inventorySeekingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character inventorySeekingCharacter)
         {
-            var inventorySeekingCharacter = GameState.CurrentGameState.GetCharacter(inventorySeekingCharacterTrackingId);
-            var inventorySeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(inventorySeekingCharacterTrackingId);
-            var charaterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
-            if(charaterItems == null || !charaterItems.Any())
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
+            if(characterItems == null || !characterItems.Any())
             {
                 inventorySeekingCharacter.SendMessage("You have no items.");
-                inventorySeekingCharacterLocation.SendMessage($"{inventorySeekingCharacter.Name} is looking at their inventory.", inventorySeekingCharacter.TrackingId);
+                inventorySeekingCharacter.GetLocation().SendMessage($"{inventorySeekingCharacter.Name} is looking at their inventory.", inventorySeekingCharacter);
                 return;
             }
 
             inventorySeekingCharacter.SendMessage("You are currently holding:");
-            foreach (var characterItem in charaterItems)
+            foreach (var characterItem in characterItems)
             {
                 var item = characterItem.Key;
                 // Don't show invisible items

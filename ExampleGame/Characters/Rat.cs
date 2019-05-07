@@ -23,7 +23,7 @@ namespace ExampleGame.Characters
 
         public override void Turn()
         {
-            this.GetLocation().SendMessage($"{Name} squeaks.", this.TrackingId);
+            this.GetLocation().SendMessage($"{Name} squeaks.", this);
         }
     }
 }

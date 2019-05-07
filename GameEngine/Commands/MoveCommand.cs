@@ -8,10 +8,9 @@ namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid movingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character movingCharacter)
         {
-            var movingCharacter = GameState.CurrentGameState.GetCharacter(movingCharacterTrackingId);
-            var movingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacterTrackingId);
+            var movingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
 
             // Get a list of locations that can be moved to from here.
             var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLocation.TrackingId)
@@ -30,11 +29,11 @@ namespace GameEngine.Commands
             }
             else
             {
-                location = Console.Choose("Where would you like to move to?", validLocations, includeCancel: true);
+                location = movingCharacter.Choose("Where would you like to move to?", validLocations, includeCancel: true);
                 if (location == null)
                 {
                     movingCharacter.SendMessage("Canceled Move");
-                    movingCharacterLocation.SendMessage($"{movingCharacter.Name} looks indecisive.", movingCharacter.TrackingId);
+                    movingCharacterLocation.SendMessage($"{movingCharacter.Name} looks indecisive.", movingCharacter);
                     return;
                 }
             }
@@ -43,7 +42,7 @@ namespace GameEngine.Commands
 
             // Make the player automatically look after they move to the new location
             movingCharacter.SendMessage();
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacterTrackingId);
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacter);
         }
 
         public bool IsActivatedBy(string word)

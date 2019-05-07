@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,15 +7,14 @@ namespace GameEngine.Commands
 {
     internal class GrabCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid grabbingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character grabbingCharacter)
         {
-            var grabbingCharacter = GameState.CurrentGameState.GetCharacter(grabbingCharacterTrackingId);
             var grabbingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
             var locationItems = GameState.CurrentGameState.GetLocationItems(grabbingCharacterLocation.TrackingId);
             if (locationItems == null || locationItems.Count == 0)
             {
                 grabbingCharacter.SendMessage("There is nothing to grab.");
-                grabbingCharacterLocation.SendMessage($"{grabbingCharacter.Name} is looking around for something.", grabbingCharacter.TrackingId);
+                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} is looking around for something.", grabbingCharacter);
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace GameEngine.Commands
             if (!availableItems.Any())
             {
                 grabbingCharacter.SendMessage("There is nothing that can be grabbed.");
-                grabbingCharacterLocation.SendMessage($"{grabbingCharacter.Name} is looking around for something.", grabbingCharacter.TrackingId);
+                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} is looking around for something.", grabbingCharacter);
                 return;
             }
 
@@ -46,17 +46,17 @@ namespace GameEngine.Commands
             }
             else
             {
-                itemToGrab = Console.Choose("What do you want to pick up?", availableItems, includeCancel: true);
+                itemToGrab = grabbingCharacter.Choose("What do you want to pick up?", availableItems, includeCancel: true);
                 if (itemToGrab == null)
                 {
                     grabbingCharacter.SendMessage("Canceled Grab");
-                    grabbingCharacterLocation.SendMessage($"{grabbingCharacter.Name} looks indecisive.", grabbingCharacter.TrackingId);
+                    grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} looks indecisive.", grabbingCharacter);
                     return;
                 }
             }
 
             var itemAmount = locationItems[itemToGrab];
-            itemToGrab.Grab(itemAmount, grabbingCharacter.TrackingId);
+            itemToGrab.Grab(itemAmount, grabbingCharacter);
         }
 
         public bool IsActivatedBy(string word)

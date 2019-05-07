@@ -1,30 +1,31 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
     internal class SaveCommand : ICommandInternal
     {
-        public void Execute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords, Character savingCharacter)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("New Save");
 
-            var slotToSave = Console.Choose("What slot do you want to save to?", validSlotNames, true);
+            var slotToSave = savingCharacter.Choose("What slot do you want to save to?", validSlotNames, includeCancel: true);
             if (slotToSave == null)
             {
-                Console.WriteLine("Canceled Save");
+                savingCharacter.SendMessage("Canceled Save");
                 return;
             }
             if (slotToSave.Equals("New Save"))
             {
-                Console.WriteLine("Slot name?");
-                slotToSave = Console.ReadLine();
+                savingCharacter.SendMessage("Slot name?");
+                slotToSave = Console.ReadLine(); // TODO: sendmessage?
             }
 
-            Console.WriteLine($"Saving {slotToSave}.");
+            savingCharacter.SendMessage($"Saving {slotToSave}.");
             GameState.SaveGameState(slotToSave);
-            Console.WriteLine("Saving complete.");
+            savingCharacter.SendMessage("Saving complete.");
         }
 
         public bool IsActivatedBy(string word)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,14 +7,13 @@ namespace GameEngine.Commands
 {
     internal class LookCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid lookingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character lookingCharacter)
         {
-            var lookingCharacter = GameState.CurrentGameState.GetCharacter(lookingCharacterTrackingId);
             var lookingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
 
             // Display the local description of the location
             lookingCharacter.SendMessage(lookingCharacterLocation?.LocalDescription);
-            lookingCharacterLocation.SendMessage($"{lookingCharacter.Name} glances around.", lookingCharacter.TrackingId);
+            lookingCharacterLocation.SendMessage($"{lookingCharacter.Name} glances around.", lookingCharacter);
 
             // Get all portals that have a rule that originates from the current location
             var originPortals = GameState.CurrentGameState.GetPortalsInLocation(lookingCharacterLocation.TrackingId);

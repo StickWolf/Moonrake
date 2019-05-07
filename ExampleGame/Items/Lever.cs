@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
 
@@ -24,25 +25,27 @@ namespace ExampleGame.Items
             return $"a lever";
         }
 
-        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
+        public override void Interact(Item otherItem, Character interactingCharacter)
         {
             string leverPosition = GameState.CurrentGameState.GetGameVarValue(GameVariableToggle);
             if (leverPosition == null)
             {
-                GameEngine.Console.WriteLine($"The lever appears to be broken and cannot be moved.");
+                interactingCharacter.SendMessage($"The lever appears to be broken and cannot be moved.");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is examining the broken lever.", interactingCharacter);
             }
             else
             {
-                StartRoomInteract(leverPosition);
+                StartRoomInteract(leverPosition, interactingCharacter);
             }
         }
 
-        private void StartRoomInteract(string fromPosition)
+        private void StartRoomInteract(string fromPosition, Character interactingCharacter)
         {
             if (fromPosition.Equals("off"))
             {
                 var gameData = ExampleGameSourceData.Current();
-                GameEngine.Console.WriteLine($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
+                interactingCharacter.SendMessage($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} moves the lever and a key falls out of the wall!.", interactingCharacter);
                 GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
 
                 // TODO: try to move away from game variables and just use properties of items/locations/etc directly
@@ -50,10 +53,9 @@ namespace ExampleGame.Items
             }
             else
             {
-                GameEngine.Console.WriteLine($"The lever is jammed and won't budge.");
+                interactingCharacter.SendMessage($"The lever is jammed and won't budge.");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is trying to move the lever, but it won't budge.", interactingCharacter);
             }
         }
-
-
     }
 }
