@@ -20,7 +20,7 @@ namespace GameEngine.Commands
             if (otherCharactersInLoc.Count == 0)
             {
                 attackingCharacter.SendMessage("There are no characters to attack here.");
-                attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is looking around for someone to attack!");
+                attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is looking around for someone to attack!", attackingCharacter.TrackingId);
                 return;
             }
 
@@ -40,7 +40,7 @@ namespace GameEngine.Commands
                 if (defendingCharacter == null)
                 {
                     attackingCharacter.SendMessage("Stopped Attack.");
-                    attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is acting dangerously!");
+                    attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is acting dangerously!", attackingCharacter.TrackingId);
                     return;
                 }
             }

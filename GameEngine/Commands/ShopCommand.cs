@@ -12,19 +12,17 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid shoppingCharacterTrackingId)
         {
-            // TODO: Instead pass this in from the character that is using the command
-            var shoppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var shoppingCharacter = GameState.CurrentGameState.GetCharacter(shoppingCharacterTrackingId);
+            var shoppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacterTrackingId);
 
-            //  1. Determine the character's current location from the game state
-            var shoppersLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
-            
             //  2. Look in the game data for any tradeposts that are currently at this location
-            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppersLocation.TrackingId);
+            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingCharacterLocation.TrackingId);
             
             //  3. If there are no tradeposts here then mention that and return.
             if (allTradePostsInPlayersLocation.Count == 0)
             {
-                Console.WriteLine("There are no availible shops in your area.");
+                shoppingCharacter.SendMessage("There are no availible shops in your area.");
+                shoppingCharacterLocation.SendMessage($"{shoppingCharacter.Name} wants to go shopping!", shoppingCharacter.TrackingId);
                 return;
             }
 
@@ -41,7 +39,7 @@ namespace GameEngine.Commands
                     .ToDictionary(t => t, t => t.Name);
                 chosenTradePost = Console.Choose("Where would you like to shop?", choices, includeCancel: false);
             }
-            Console.WriteLine($"Welcome, you will be shopping at {chosenTradePost.Name}");
+            shoppingCharacter.SendMessage($"Welcome, you will be shopping at {chosenTradePost.Name}");
 
             //  5. One they have chosen a tradepost, look through each tradeset the tradepost offers
             //     and list out each item and the cost of each item in a menu that the user can choose

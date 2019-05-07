@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace GameEngine.Locations
 {
@@ -40,10 +41,17 @@ namespace GameEngine.Locations
         /// Sends a message to the location that is visible to all characters in the location
         /// </summary>
         /// <param name="text">The text to send</param>
-        public void SendMessage(string text)
+        /// <param name="fromCharacterTrackingId">
+        /// If the message is being sent from a character then specify that here.
+        /// Otherwise use Guid.Empty
+        /// This will assure that the sender does not also get the message
+        /// </param>
+        public void SendMessage(string text, Guid fromCharacterTrackingId)
         {
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var playerLocation = GameState.CurrentGameState.GetPlayerCharacterLocation();
-            if (this.TrackingId == playerLocation.TrackingId)
+            if (this.TrackingId == playerLocation.TrackingId &&
+                (fromCharacterTrackingId == Guid.Empty || fromCharacterTrackingId != playerCharacter.TrackingId))
             {
                 Console.WriteLine(text);
             }
@@ -53,6 +61,5 @@ namespace GameEngine.Locations
                 //Console.WriteLine($"{{SendMessageToLocation}} \"{this.LocationName}\" : {text}");
             }
         }
-
     }
 }

@@ -9,17 +9,17 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid droppingCharacterTrackingId)
         {
-            // TODO: instead use the passed in tracking id
-            var droppingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playersLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);
-            if (characterItems == null || characterItems.Count == 0)
+            var droppingCharacter = GameState.CurrentGameState.GetCharacter(droppingCharacterTrackingId);
+            var droppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
+            var droppingCharacterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);
+            if (droppingCharacterItems == null || droppingCharacterItems.Count == 0)
             {
-                Console.WriteLine("You have nothing to drop.");
+                droppingCharacter.SendMessage("You have no items.");
+                droppingCharacter.SendMessage($"{droppingCharacter.Name} is happy that they have no items.");
                 return;
             }
 
-            var availableItems = characterItems
+            var availableItems = droppingCharacterItems
                 .Where(i => !i.Key.IsBound && i.Key.IsVisible) // Filter out bound and invisible items because these cannot be dropped
                 .Select(i => new KeyValuePair<Item, string>(
                                  i.Key,
@@ -29,11 +29,12 @@ namespace GameEngine.Commands
 
             if (!availableItems.Any())
             {
-                Console.WriteLine("You have nothing that can be dropped.");
+                droppingCharacter.SendMessage("You have nothing that can be dropped.");
+                droppingCharacter.SendMessage($"{droppingCharacter.Name} is digging around in their inventory looking for something."); // TODO: he/she/pronoun ?
                 return;
             }
 
-            // Try to auto-determine what the player is trying to drop
+            // Try to auto-determine what the character is trying to drop
             var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
@@ -46,15 +47,24 @@ namespace GameEngine.Commands
             }
             else
             {
+
+                // TODO: upgrade all commands to fully process the command if extra text is provided or fail out and never prompt when extra text is present
+
+                // TODO: also upgrade all commands to only go into prompt mode if it is the player who is executing the command
+
+                // TODO: add a special parsing ability to sentence parsing where if we see a guid appear that it auto-converts to the item/thing represented
+                // TODO: npcs would use this mode to assure the right thing happened
+
                 itemToDrop = Console.Choose("What do you want to drop?", availableItems, includeCancel: true);
                 if (itemToDrop == null)
                 {
-                    Console.WriteLine("Canceled Drop");
+                    droppingCharacter.SendMessage("Canceled Drop");
+                    droppingCharacter.SendMessage($"{droppingCharacter.Name} looks indecisive.");
                     return;
                 }
             }
 
-            var itemAmountToDrop = characterItems[itemToDrop];
+            var itemAmountToDrop = droppingCharacterItems[itemToDrop];
             if (itemAmountToDrop > 1)
             {
                 var leftWords = wordItemMap.Where(i => i.Value == null).Select(i => i.Key).ToList();
@@ -66,7 +76,7 @@ namespace GameEngine.Commands
                 }
                 else
                 {
-                    Console.WriteLine("How many do you want to drop?");
+                    droppingCharacter.SendMessage("How many do you want to drop?");
                     itemAmountToDrop = int.Parse(Console.ReadLine());
                 }
 
@@ -74,9 +84,9 @@ namespace GameEngine.Commands
                 {
                     return;
                 }
-                if (itemAmountToDrop > characterItems[itemToDrop])
+                if (itemAmountToDrop > droppingCharacterItems[itemToDrop])
                 {
-                    itemAmountToDrop = characterItems[itemToDrop];
+                    itemAmountToDrop = droppingCharacterItems[itemToDrop];
                 }
             }
 

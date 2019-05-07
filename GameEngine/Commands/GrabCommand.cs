@@ -8,13 +8,13 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid grabbingCharacterTrackingId)
         {
-            // TODO: instead use the passed in tracking id
-            var grabbingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(characterLoc.TrackingId);
+            var grabbingCharacter = GameState.CurrentGameState.GetCharacter(grabbingCharacterTrackingId);
+            var grabbingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(grabbingCharacterLocation.TrackingId);
             if (locationItems == null || locationItems.Count == 0)
             {
-                Console.WriteLine("There is nothing to grab.");
+                grabbingCharacter.SendMessage("There is nothing to grab.");
+                grabbingCharacterLocation.SendMessage($"{grabbingCharacter.Name} is looking around for something.", grabbingCharacter.TrackingId);
                 return;
             }
 
@@ -28,7 +28,8 @@ namespace GameEngine.Commands
 
             if (!availableItems.Any())
             {
-                Console.WriteLine("There is nothing that can be grabed.");
+                grabbingCharacter.SendMessage("There is nothing that can be grabbed.");
+                grabbingCharacterLocation.SendMessage($"{grabbingCharacter.Name} is looking around for something.", grabbingCharacter.TrackingId);
                 return;
             }
 
@@ -48,7 +49,8 @@ namespace GameEngine.Commands
                 itemToGrab = Console.Choose("What do you want to pick up?", availableItems, includeCancel: true);
                 if (itemToGrab == null)
                 {
-                    Console.WriteLine("Canceled Grab");
+                    grabbingCharacter.SendMessage("Canceled Grab");
+                    grabbingCharacterLocation.SendMessage($"{grabbingCharacter.Name} looks indecisive.", grabbingCharacter.TrackingId);
                     return;
                 }
             }
