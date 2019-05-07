@@ -8,16 +8,17 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Guid inventorySeekingCharacterTrackingId)
         {
-            // TODO: Instead pass this in from the character that is using the command
-            var inventorySeekingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var inventorySeekingCharacter = GameState.CurrentGameState.GetCharacter(inventorySeekingCharacterTrackingId);
+            var inventorySeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(inventorySeekingCharacterTrackingId);
             var charaterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
             if(charaterItems == null || !charaterItems.Any())
             {
-                Console.WriteLine("You have no items.");
+                inventorySeekingCharacter.SendMessage("You have no items.");
+                inventorySeekingCharacterLocation.SendMessage($"{inventorySeekingCharacter.Name} is looking at their inventory.", inventorySeekingCharacter.TrackingId);
                 return;
             }
 
-            Console.WriteLine("You are currently holding:");
+            inventorySeekingCharacter.SendMessage("You are currently holding:");
             foreach (var characterItem in charaterItems)
             {
                 var item = characterItem.Key;
@@ -28,7 +29,7 @@ namespace GameEngine.Commands
                 }
 
                 var description = item.GetDescription(characterItem.Value).UppercaseFirstChar();
-                Console.WriteLine(description);
+                inventorySeekingCharacter.SendMessage(description);
             }
         }
 

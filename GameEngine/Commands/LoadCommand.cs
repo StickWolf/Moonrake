@@ -19,7 +19,7 @@ namespace GameEngine.Commands
             var slotToLoad = Console.Choose("Load or start new game?", validSlotNames, includeCancel: includeCancel);
             if (slotToLoad == null)
             {
-                Console.WriteLine("Canceled Load");
+                Console.WriteLine("Canceled Load"); // TODO: convert all internal commands to still use Character.SendMessage, it's just that they'll be hardcoded to player
             }
             else if (slotToLoad.Equals("Start a new game"))
             {
