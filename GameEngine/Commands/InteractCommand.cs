@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,9 +7,8 @@ namespace GameEngine.Commands
 {
     internal class InteractCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid interactingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character interactingCharacter)
         {
-            var interactingCharacter = GameState.CurrentGameState.GetCharacter(interactingCharacterTrackingId);
             var interactingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
             var locationItems = GameState.CurrentGameState.GetLocationItems(interactingCharacterLocation.TrackingId) ?? new Dictionary<Item, int>();
             var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<Item, int>();
@@ -44,7 +44,7 @@ namespace GameEngine.Commands
             if (!allPrimaryItems.Any())
             {
                 interactingCharacter.SendMessage("There is nothing available to interact with.");
-                interactingCharacterLocation.SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter.TrackingId);
+                interactingCharacterLocation.SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter);
                 return;
             }
 
@@ -100,26 +100,26 @@ namespace GameEngine.Commands
                 }
 
                 // Otherwise the extra words seem to have translated into the items to use properly
-                primaryItem.Interact(secondaryItem, interactingCharacter.TrackingId);
+                primaryItem.Interact(secondaryItem, interactingCharacter);
             }
             // No extra words were typed, process this command via prompt mode
-            else if (TryGetItemsFromPrompts(allUseableItems, out primaryItem, out secondaryItem))
+            else if (TryGetItemsFromPrompts(allUseableItems, out primaryItem, out secondaryItem, interactingCharacter))
             {
-                primaryItem.Interact(secondaryItem, interactingCharacter.TrackingId);
+                primaryItem.Interact(secondaryItem, interactingCharacter);
             }
         }
 
-        private bool TryGetItemsFromPrompts(Dictionary<Item, string> allUseableItems, out Item primaryItem, out Item secondaryItem)
+        private bool TryGetItemsFromPrompts(Dictionary<Item, string> allUseableItems, out Item primaryItem, out Item secondaryItem, Character interactingCharacter)
         {
             // This represents only primary interaction items
             var allPrimaryItems = allUseableItems
                 .Where(i => i.Key.IsInteractionPrimary)
                 .ToDictionary(i => i.Key, i => i.Value); // This also removes duplicates
 
-            primaryItem = Console.Choose("What do you want to use?", allPrimaryItems, includeCancel: true);
+            primaryItem = interactingCharacter.Choose("What do you want to use?", allPrimaryItems, includeCancel: true);
             if (primaryItem == null)
             {
-                Console.WriteLine("Canceled interaction");
+                interactingCharacter.SendMessage("Canceled interaction");
                 primaryItem = secondaryItem = null;
                 return false;
             }
@@ -136,7 +136,7 @@ namespace GameEngine.Commands
             while (true)
             {
                 string answer = Console.ReadKey().KeyChar.ToString();
-                Console.WriteLine();
+                interactingCharacter.SendMessage();
                 if (answer.Equals("C", StringComparison.OrdinalIgnoreCase))
                 {
                     // Cancel
@@ -152,10 +152,10 @@ namespace GameEngine.Commands
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Prompt for other item to interact with
-                    secondaryItem = Console.Choose($"What item do you want to use on the {primaryItem.DisplayName}?", allUseableItems, includeCancel: true);
+                    secondaryItem = interactingCharacter.Choose($"What item do you want to use on the {primaryItem.DisplayName}?", allUseableItems, includeCancel: true);
                     if (secondaryItem == null)
                     {
-                        Console.WriteLine("Canceled interaction");
+                        interactingCharacter.SendMessage("Canceled interaction");
                         primaryItem = secondaryItem = null;
                         return false;
                     }
@@ -163,7 +163,7 @@ namespace GameEngine.Commands
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown response: {answer}");
+                    interactingCharacter.SendMessage($"Unknown response: {answer}");
                 }
             }
         }

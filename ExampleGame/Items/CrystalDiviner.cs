@@ -1,5 +1,6 @@
 ﻿using System;
 using GameEngine;
+using GameEngine.Characters;
 using Newtonsoft.Json;
 
 namespace ExampleGame.Items
@@ -18,18 +19,19 @@ namespace ExampleGame.Items
             return "a device made of crystal that has an unknown purpose"; // TODO: write asserts that check the formatting of these, check for init caps and . ending sentences that shouldn't be present
         }
 
-        public override void Grab(int count, Guid grabbingCharacterTrackingId)
+        public override void Grab(int count, Character grabbingCharacter)
         {
             // TODO: Check a character ability or some gamevar to determine this
             bool canGrab = false;
 
             if (canGrab)
             {
-                base.Grab(count, grabbingCharacterTrackingId);
+                base.Grab(count, grabbingCharacter);
             }
             else
             {
-                GameEngine.Console.WriteLine("You attempt to grab the crystal device, but your hands pass through it as though it is just a projection.");
+                grabbingCharacter.SendMessage("You attempt to grab the crystal device, but your hands pass through it as though it is just a projection.");
+                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} tries to grab the crystal device, but their hands pass right through it!", grabbingCharacter);
             }
         }
     }

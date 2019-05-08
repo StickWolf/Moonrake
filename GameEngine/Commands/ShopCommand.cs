@@ -1,19 +1,15 @@
 ﻿using GameEngine.Characters;
-using GameEngine.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameEngine.Commands
 {
     internal class ShopCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid shoppingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character shoppingCharacter)
         {
-            var shoppingCharacter = GameState.CurrentGameState.GetCharacter(shoppingCharacterTrackingId);
-            var shoppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacterTrackingId);
+            var shoppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
 
             //  2. Look in the game data for any tradeposts that are currently at this location
             var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingCharacterLocation.TrackingId);
@@ -22,7 +18,7 @@ namespace GameEngine.Commands
             if (allTradePostsInPlayersLocation.Count == 0)
             {
                 shoppingCharacter.SendMessage("There are no availible shops in your area.");
-                shoppingCharacterLocation.SendMessage($"{shoppingCharacter.Name} wants to go shopping!", shoppingCharacter.TrackingId);
+                shoppingCharacterLocation.SendMessage($"{shoppingCharacter.Name} wants to go shopping!", shoppingCharacter);
                 return;
             }
 
@@ -37,7 +33,7 @@ namespace GameEngine.Commands
                 // if there are multiple then give the user a choice on which one they want to shop at.
                 var choices = allTradePostsInPlayersLocation
                     .ToDictionary(t => t, t => t.Name);
-                chosenTradePost = Console.Choose("Where would you like to shop?", choices, includeCancel: false);
+                chosenTradePost = shoppingCharacter.Choose("Where would you like to shop?", choices, includeCancel: false);
             }
             shoppingCharacter.SendMessage($"Welcome, you will be shopping at {chosenTradePost.Name}");
 

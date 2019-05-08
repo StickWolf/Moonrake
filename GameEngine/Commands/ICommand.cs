@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine.Commands
@@ -7,6 +8,6 @@ namespace GameEngine.Commands
     {
         bool IsActivatedBy(string word);
 
-        void Execute(List<string> extraWords, Guid executingCharacterTrackingId);
+        void Execute(List<string> extraWords, Character executingCharacter);
     }
 }

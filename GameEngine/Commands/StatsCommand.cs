@@ -1,14 +1,14 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
     class StatsCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid statSeekingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character statSeekingCharacter)
         {
-            var statSeekingCharacter = GameState.CurrentGameState.GetCharacter(statSeekingCharacterTrackingId);
-            var statSeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(statSeekingCharacterTrackingId);
+            var statSeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(statSeekingCharacter.TrackingId);
 
             statSeekingCharacter.SendMessage("Here are your stats:");
             statSeekingCharacter.SendMessage($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");

@@ -7,11 +7,9 @@ namespace GameEngine.Commands
 {
     internal class AttackCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid attackingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character attackingCharacter)
         {
-            var attackingCharacter = GameState.CurrentGameState.GetCharacter(attackingCharacterTrackingId);
-            var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacterTrackingId);
-
+            var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacter.TrackingId);
             var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(attackingCharacterLocation.TrackingId, includePlayer: true)
                 .Where (c => c.TrackingId != attackingCharacter.TrackingId) // don't include the character doing the attacking
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
@@ -20,7 +18,7 @@ namespace GameEngine.Commands
             if (otherCharactersInLoc.Count == 0)
             {
                 attackingCharacter.SendMessage("There are no characters to attack here.");
-                attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is looking around for someone to attack!", attackingCharacter.TrackingId);
+                attackingCharacter.GetLocation().SendMessage($"{attackingCharacter.Name} is looking around for someone to attack!", attackingCharacter);
                 return;
             }
 
@@ -36,11 +34,11 @@ namespace GameEngine.Commands
             }
             else
             {
-                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true); // TODO: rewrite to handle when NPCs are attacking
+                defendingCharacter = attackingCharacter.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true ); // TODO: rewrite to handle when NPCs are attacking
                 if (defendingCharacter == null)
                 {
                     attackingCharacter.SendMessage("Stopped Attack.");
-                    attackingCharacterLocation.SendMessage($"{attackingCharacter.Name} is acting dangerously!", attackingCharacter.TrackingId);
+                    attackingCharacter.GetLocation().SendMessage($"{attackingCharacter.Name} is acting dangerously!", attackingCharacter);
                     return;
                 }
             }
