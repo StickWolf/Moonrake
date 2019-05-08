@@ -7,15 +7,14 @@ namespace GameEngine.Commands
 {
     internal class DropCommand : ICommand
     {
-        public void Execute(List<string> extraWords, Guid droppingCharacterTrackingId)
+        public void Execute(List<string> extraWords, Character droppingCharacter)
         {
-            var droppingCharacter = GameState.CurrentGameState.GetCharacter(droppingCharacterTrackingId);
             var droppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
             var droppingCharacterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);
             if (droppingCharacterItems == null || droppingCharacterItems.Count == 0)
             {
                 droppingCharacter.SendMessage("You have no items.");
-                droppingCharacter.SendMessage($"{droppingCharacter.Name} is happy that they have no items.");
+                droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} is happy that they have no items.", droppingCharacter);
                 return;
             }
 
@@ -30,7 +29,7 @@ namespace GameEngine.Commands
             if (!availableItems.Any())
             {
                 droppingCharacter.SendMessage("You have nothing that can be dropped.");
-                droppingCharacter.SendMessage($"{droppingCharacter.Name} is digging around in their inventory looking for something."); // TODO: he/she/pronoun ?
+                droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} is digging around in their inventory looking for something.", droppingCharacter); // TODO: he/she/pronoun ?
                 return;
             }
 
@@ -47,19 +46,18 @@ namespace GameEngine.Commands
             }
             else
             {
-
-                // TODO: upgrade all commands to fully process the command if extra text is provided or fail out and never prompt when extra text is present
+                // TODO: upgrade all commands to only go into prompt mode if a player character is executing them
 
                 // TODO: also upgrade all commands to only go into prompt mode if it is the player who is executing the command
 
                 // TODO: add a special parsing ability to sentence parsing where if we see a guid appear that it auto-converts to the item/thing represented
                 // TODO: npcs would use this mode to assure the right thing happened
 
-                itemToDrop = Console.Choose("What do you want to drop?", availableItems, includeCancel: true);
+                itemToDrop = droppingCharacter.Choose("What do you want to drop?", availableItems, includeCancel: true);
                 if (itemToDrop == null)
                 {
                     droppingCharacter.SendMessage("Canceled Drop");
-                    droppingCharacter.SendMessage($"{droppingCharacter.Name} looks indecisive.");
+                    droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} looks indecisive.", droppingCharacter);
                     return;
                 }
             }
@@ -90,7 +88,7 @@ namespace GameEngine.Commands
                 }
             }
 
-            itemToDrop.Drop(itemAmountToDrop, droppingCharacter.TrackingId);
+            itemToDrop.Drop(itemAmountToDrop, droppingCharacter);
         }
 
         public bool IsActivatedBy(string word)

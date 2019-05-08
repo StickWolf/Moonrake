@@ -1,11 +1,12 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
     internal class LoadCommand : ICommandInternal
     {
-        public void Execute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords, Character loadingCharacter)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("Start a new game");
@@ -16,10 +17,10 @@ namespace GameEngine.Commands
                 includeCancel = true;
             }
 
-            var slotToLoad = Console.Choose("Load or start new game?", validSlotNames, includeCancel: includeCancel);
+            var slotToLoad = loadingCharacter.Choose("Load or start new game?", validSlotNames, includeCancel: includeCancel);
             if (slotToLoad == null)
             {
-                Console.WriteLine("Canceled Load"); // TODO: convert all internal commands to still use Character.SendMessage, it's just that they'll be hardcoded to player
+                loadingCharacter.SendMessage("Canceled Load");
             }
             else if (slotToLoad.Equals("Start a new game"))
             {
@@ -27,10 +28,10 @@ namespace GameEngine.Commands
             }
             else
             {
-                Console.WriteLine();
-                Console.WriteLine($"Loading {slotToLoad}.");
+                loadingCharacter.SendMessage();
+                loadingCharacter.SendMessage($"Loading {slotToLoad}.");
                 GameState.LoadGameState(slotToLoad);
-                Console.WriteLine("Loading complete.");
+                loadingCharacter.SendMessage("Loading complete.");
             }
         }
 

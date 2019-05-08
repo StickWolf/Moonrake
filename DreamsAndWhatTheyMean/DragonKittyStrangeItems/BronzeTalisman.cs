@@ -1,10 +1,5 @@
 ﻿using GameEngine;
 using GameEngine.Characters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
@@ -19,23 +14,13 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             IsBound = false;
         }
 
-        public override void Interact(Item otherItem, Guid interactingCharacterTrackingId)
+        public override void Interact(Item otherItem, Character interactingCharacter)
         {
-            var player = GameState.CurrentGameState.GetPlayerCharacter();
-            var playersItems = GameState.CurrentGameState.GetCharacterItems(player.TrackingId);
-
-            var playersItemsNames = playersItems.Keys.Select(i => i.DisplayName);
-            if (playersItemsNames.Contains("BronzeTalisman"))
-            {
-                player.MaxAttack = player.MaxAttack + 20;
-                player.MaxHitPoints = player.MaxHitPoints + 30;
-                GameEngine.Console.WriteLine("You put the talisman on, it vanishes and you feel stronger.");
-                GameState.CurrentGameState.TryAddCharacterItemCount(player.TrackingId, this.TrackingId, -1);
-            }
-            else
-            {
-                GameEngine.Console.WriteLine("The talisman is not in your inventory, try picking it up first."); // TODO: not needed now, the game will make sure interact isn't called if the character isn't holding it
-            }
+            interactingCharacter.MaxAttack += 20;
+            interactingCharacter.MaxHitPoints += 30;
+            interactingCharacter.SendMessage("You put the talisman on, it vanishes and you feel stronger.");
+            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} puts on a talisman and looks stronger.", interactingCharacter);
+            GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1);
         }
     }
 }

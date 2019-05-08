@@ -1,6 +1,7 @@
 ﻿using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace GameEngine.Characters
 {
@@ -38,19 +39,26 @@ namespace GameEngine.Characters
         /// Sends a message to the character that only the receiving character can see
         /// </summary>
         /// <param name="text">The text to send</param>
-        public void SendMessage(string text)
+        public void SendMessage(string text, bool newLine = true)
         {
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
 
             // Only show the message if the message is for the player
             if (this.TrackingId == playerCharacter.TrackingId)
             {
-                Console.WriteLine(text);
+                if (newLine)
+                {
+                    Console.WriteLine(text); // SendMessage
+                }
+                else
+                {
+                    Console.Write(text); // SendMessage
+                }
             }
             else
             {
                 // TODO: add an admin command that lets you see other characters messages
-                //Console.WriteLine($"{{MessageToCharacter}} \"{this.Name}\" : {text}");
+                //Console.WriteLine($"{{MessageToCharacter}} \"{this.Name}\" : {text}"); // SendMessage
             }
         }
 
@@ -60,6 +68,16 @@ namespace GameEngine.Characters
         public void SendMessage()
         {
             SendMessage(string.Empty);
+        }
+
+        public string Choose(string prompt, List<string> choices, bool includeCancel)
+        {
+            return Console.Choose(prompt, choices, this, includeCancel);
+        }
+
+        public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
+        {
+            return Console.Choose(prompt, choices, this, includeCancel);
         }
 
         /// <summary>
@@ -81,22 +99,18 @@ namespace GameEngine.Characters
         public virtual void Attack(Character attackingCharacter)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
-            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: true);
-            HitPoints = HitPoints - attackDamage;
+
+            HitPoints -= attackDamage;
             if (HitPoints <= 0)
             {
                 // Makes sure that the player has 0 hp, so when a heal
                 // comes in, it isn't like -100 to -50.
                 HitPoints = 0;
-                Console.WriteLine($"{Name} is dead.");
+                this.GetLocation().SendMessage($"{Name} is dead.", this);
                 return;
             }
-            if (charactersInLocation.Contains(this))
-            {
-                Console.WriteLine($"{Name} has {HitPoints}/{MaxHitPoints} left");
-            }
+
+            this.GetLocation().SendMessage($"{Name} has {HitPoints}/{MaxHitPoints} left", this);
 
             var counterAttackPosiblity = rnd.Next(CounterAttackChance, 100);
             if(counterAttackPosiblity >= 75)
@@ -105,7 +119,8 @@ namespace GameEngine.Characters
                 {
                     return;
                 }
-                Console.WriteLine($"{Name} countered!");
+                this.GetLocation().SendMessage($"{Name} countered!", this);
+
                 var maxAttackDamage = MaxAttack / 2;
                 var counterAttackDamage = GetAttackDamage(maxAttackDamage);
                 attackingCharacter.HitPoints = attackingCharacter.HitPoints - counterAttackDamage;
@@ -114,13 +129,11 @@ namespace GameEngine.Characters
                     // Makes sure that the player has 0 hp, so when a heal
                     // comes in, it isn't like -100 to -50.
                     attackingCharacter.HitPoints = 0;
-                    Console.WriteLine($"{attackingCharacter.Name} is dead.");
+                    this.GetLocation().SendMessage($"{attackingCharacter.Name} is dead.", this);
                     return;
                 }
-                if (charactersInLocation.Contains(attackingCharacter))
-                {
-                    Console.WriteLine($"{attackingCharacter.Name} has {attackingCharacter.HitPoints}/{attackingCharacter.MaxHitPoints} left");
-                }
+
+                this.GetLocation().SendMessage($"{attackingCharacter.Name} has {attackingCharacter.HitPoints}/{attackingCharacter.MaxHitPoints} left", this);
             }
         }
 
@@ -160,14 +173,8 @@ namespace GameEngine.Characters
                 return;
             }
             var healAmount = GetHealAmount(MaxHeal);
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLoc = GameState.CurrentGameState.GetCharacterLocation(playerCharacter.TrackingId);
-            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: true);
             Heal(healAmount);
-            if (charactersInLocation.Contains(this))
-            {
-                Console.WriteLine($"{Name} has been healed for {healAmount}.");
-            }
+            this.GetLocation().SendMessage($"{Name} has been healed for {healAmount}.", this);
         }
 
         private int GetHealAmount(int maxHeal)
