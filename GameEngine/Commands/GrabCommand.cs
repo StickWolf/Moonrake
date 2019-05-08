@@ -44,6 +44,11 @@ namespace GameEngine.Commands
             {
                 itemToGrab = foundItems[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!grabbingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
                 itemToGrab = grabbingCharacter.Choose("What do you want to pick up?", availableItems, includeCancel: true);

@@ -77,7 +77,6 @@ namespace GameEngine
         /// <param name="interactingCharacter">The character that is initiating the interaction</param>
         public virtual void Interact(Item otherItem, Character interactingCharacter)
         {
-            // TODO: go through all interact inmplementations and make sure they are using the correct .SendMessage calls
             interactingCharacter.SendMessage("You find nothing special.");
         }
 
@@ -88,7 +87,6 @@ namespace GameEngine
         /// <param name="grabbingCharacter">The character that is doing the grabbing</param>
         public virtual void Grab(int count, Character grabbingCharacter)
         {
-            // TODO: go through all grab implementations and make sure they are using the correct .SendMessage calls
             var description = GetDescription(count);
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
             // Remove it from the floor
@@ -112,7 +110,6 @@ namespace GameEngine
         /// <param name="droppingCharacter">The character that is doing the dropping</param>
         public virtual void Drop(int count, Character droppingCharacter)
         {
-            // TODO: go through all drop implementations and make sure they are using the correct .SendMessage calls
             var description = GetDescription(count);
             var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
 

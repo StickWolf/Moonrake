@@ -20,7 +20,7 @@ namespace GameEngine.Commands
             if (slotToSave.Equals("New Save"))
             {
                 savingCharacter.SendMessage("Slot name?");
-                slotToSave = Console.ReadLine(); // TODO: sendmessage?
+                slotToSave = Console.ReadLine();
             }
 
             savingCharacter.SendMessage($"Saving {slotToSave}.");

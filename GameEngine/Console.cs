@@ -24,7 +24,7 @@ namespace GameEngine
             System.Console.Clear();
         }
 
-        public static ConsoleKeyInfo ReadKey() // TODO: make sure calls to readkey and readline are no-ops if they are for a NPC
+        public static ConsoleKeyInfo ReadKey()
         {
             return System.Console.ReadKey();
         }
