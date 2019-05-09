@@ -9,7 +9,7 @@ namespace GameEngine.Commands
         public void Execute(EngineInternal engine, List<string> extraWords, Character nameChangingCharacter)
         {
             nameChangingCharacter.SendMessage($"What would you like your name to be?: ");
-            nameChangingCharacter.Name = Console.ReadLine(); // TODO: sendMessage?
+            nameChangingCharacter.Name = Console.ReadLine();
             nameChangingCharacter.SendMessage($"Your new name is {nameChangingCharacter.Name}.");
         }
 

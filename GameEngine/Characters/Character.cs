@@ -35,6 +35,11 @@ namespace GameEngine.Characters
             MaxHitPoints = hp;
         }
 
+        public bool IsPlayerCharacter()
+        {
+            return this is PlayerCharacter;
+        }
+
         /// <summary>
         /// Sends a message to the character that only the receiving character can see
         /// </summary>

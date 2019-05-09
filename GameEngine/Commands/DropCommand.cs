@@ -44,12 +44,13 @@ namespace GameEngine.Commands
             {
                 itemToDrop = foundItems[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!droppingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
-                // TODO: upgrade all commands to only go into prompt mode if a player character is executing them
-
-                // TODO: also upgrade all commands to only go into prompt mode if it is the player who is executing the command
-
                 // TODO: add a special parsing ability to sentence parsing where if we see a guid appear that it auto-converts to the item/thing represented
                 // TODO: npcs would use this mode to assure the right thing happened
 
@@ -71,6 +72,11 @@ namespace GameEngine.Commands
                 if (foundNumbers.Count > 0)
                 {
                     itemAmountToDrop = foundNumbers[0];
+                }
+                // Don't prompt NPCs who are running actions
+                else if (!droppingCharacter.IsPlayerCharacter())
+                {
+                    return;
                 }
                 else
                 {

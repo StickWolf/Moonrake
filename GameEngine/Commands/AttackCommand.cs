@@ -32,9 +32,14 @@ namespace GameEngine.Commands
             {
                 defendingCharacter = foundCharacters[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!attackingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
-                defendingCharacter = attackingCharacter.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true ); // TODO: rewrite to handle when NPCs are attacking
+                defendingCharacter = attackingCharacter.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true );
                 if (defendingCharacter == null)
                 {
                     attackingCharacter.SendMessage("Stopped Attack.");

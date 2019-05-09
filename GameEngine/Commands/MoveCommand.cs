@@ -27,6 +27,11 @@ namespace GameEngine.Commands
             {
                 location = foundLocations[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!movingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
                 location = movingCharacter.Choose("Where would you like to move to?", validLocations, includeCancel: true);
