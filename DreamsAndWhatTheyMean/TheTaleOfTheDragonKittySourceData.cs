@@ -11,8 +11,8 @@ namespace DreamsAndWhatTheyMean
 
         public TheTaleOfTheDragonKittySourceData()
         {
-            DkCharacters = new DragonKittyCharacters(this);
             DkLocations = new DragonKittyLocations(this);
+            DkCharacters = new DragonKittyCharacters(this);
             GameVarables = new DragonKittyGameVarables(this);
             DkItems = new DragonKittyItems(this);
 
