@@ -22,6 +22,8 @@ namespace DreamsAndWhatTheyMean
 
         public Guid BlackSmithShop { get; private set; }
 
+        public Guid AbandonedAlley { get; private set; }
+
         public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
         {
             PlayersRoom = GameState.CurrentGameState.AddLocation(new Location("Your House (Your Room)", "a messy room that most would run from.",
@@ -51,6 +53,10 @@ namespace DreamsAndWhatTheyMean
 
             BlackSmithShop = GameState.CurrentGameState.AddLocation(new Location("The Black-Smith", "a shop that makes metal for you",
                 "You stand in the Black-Smith store, you wish you had ice-cream here, because it is very hot."
+                ));
+
+            AbandonedAlley = GameState.CurrentGameState.AddLocation(new Location("Abandoned Alley", "a very creepy place.",
+                "You stand in the alley, you find many broken machine parts here and a bit of human flesh."
                 ));
 
             // PlayersLivingRoom <-> PlayersRoom

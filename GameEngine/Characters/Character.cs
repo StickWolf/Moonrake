@@ -46,10 +46,10 @@ namespace GameEngine.Characters
         /// <param name="text">The text to send</param>
         public void SendMessage(string text, bool newLine = true)
         {
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            var playerCharacter = GameState.CurrentGameState?.GetPlayerCharacter();
 
             // Only show the message if the message is for the player
-            if (this.TrackingId == playerCharacter.TrackingId)
+            if (playerCharacter == null || this.TrackingId == playerCharacter.TrackingId)
             {
                 if (newLine)
                 {
