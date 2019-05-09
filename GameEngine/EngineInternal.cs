@@ -32,8 +32,9 @@ namespace GameEngine
         /// </summary>
         public void StartEngine()
         {
-            // Ask the player to pick to load a saved game if there are any
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            // We can't get the real PlayerCharacter because the game isn't loaded yet.
+            // But we can fake it out for this call
+            var playerCharacter = new PlayerCharacter("loader", 1);
             CommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacter);
 
             // Main game loop goes 1 loop for 1 game turn.

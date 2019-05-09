@@ -11,8 +11,8 @@ namespace DreamsAndWhatTheyMean
 
         public void NewGame()
         {
-            DkCharacters.NewGame(this);
             DkLocations.NewGame(this);
+            DkCharacters.NewGame(this);
             GameVarables.NewGame(this);
             DkItems.NewGame(this);
 

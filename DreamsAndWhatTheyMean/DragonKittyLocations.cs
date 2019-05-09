@@ -24,7 +24,7 @@ namespace DreamsAndWhatTheyMean
 
         public Guid AbandonedAlley { get; private set; }
 
-        public DragonKittyLocations(TheTaleOfTheDragonKittySourceData gameData)
+        public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
         {
             PlayersRoom = GameState.CurrentGameState.AddLocation(new Location("Your House (Your Room)", "a messy room that most would run from.",
                 "You are in your room, yet you find nothing of use here, except the paper on your table." +
