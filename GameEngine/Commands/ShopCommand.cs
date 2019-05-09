@@ -28,6 +28,11 @@ namespace GameEngine.Commands
             {
                 chosenTradePost = allTradePostsInPlayersLocation[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!shoppingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
                 // if there are multiple then give the user a choice on which one they want to shop at.

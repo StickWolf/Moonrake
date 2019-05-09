@@ -102,6 +102,11 @@ namespace GameEngine.Commands
                 // Otherwise the extra words seem to have translated into the items to use properly
                 primaryItem.Interact(secondaryItem, interactingCharacter);
             }
+            // Don't prompt NPCs who are running actions
+            else if (!interactingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             // No extra words were typed, process this command via prompt mode
             else if (TryGetItemsFromPrompts(allUseableItems, out primaryItem, out secondaryItem, interactingCharacter))
             {
