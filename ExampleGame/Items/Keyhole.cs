@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
 
@@ -19,7 +20,8 @@ namespace ExampleGame.Items
             GameVarDoorIsOpen = gameVarDoorIsOpen;
             IsUnique = true;
             IsBound = true;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Location;
+            IsInteractionPrimary = true;
         }
 
         public override string GetDescription(int count)
@@ -33,23 +35,26 @@ namespace ExampleGame.Items
             return null;
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Character interactingCharacter)
         {
             if (otherItem == null)
             {
-                GameEngine.Console.WriteLine("The keyhole looks like it needs a key.");
+                interactingCharacter.SendMessage("The keyhole looks like it needs a key.");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is examining the keyhole.", interactingCharacter);
                 return;
             }
 
             if (otherItem.TrackingId == RequiredKeyItemTrackingId)
             {
-                GameEngine.Console.WriteLine("The door unlocks and swings open!");
+                interactingCharacter.SendMessage("The door unlocks and swings open!");
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} has unlocked the door!", interactingCharacter);
                 GameState.CurrentGameState.SetGameVarValue(GameVarDoorIsOpen, "true");
                 IsVisible = false;
                 return;
             }
 
-            GameEngine.Console.WriteLine("This item doesn't seem to work with the keyhole.");
+            interactingCharacter.SendMessage("This item doesn't seem to work with the keyhole.");
+            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is examining the keyhole.", interactingCharacter);
         }
     }
 }

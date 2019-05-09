@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using GameEngine.Characters;
+using Newtonsoft.Json;
 using System;
 
 namespace GameEngine
 {
-    // TODO: explicityly attribute all properties of all base classes like this, Item, Location, Character etc.. Otherwise overridden classes that use opt in will only get the top level attributes.
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Item : TrackableInstance
     {
@@ -27,10 +27,17 @@ namespace GameEngine
         public bool IsBound { get; set; }
 
         /// <summary>
-        /// Indicates if an item can be interacted with.
+        /// Indicates if this item can be the primary target of interaction.
+        /// <see cref="IsUseableFrom"/> must also be set correctly for the item to actually be interacted with.
         /// </summary>
         [JsonProperty]
-        public bool IsInteractable { get; set; } // TODO: split this into 2 properties, IsInteractableFromFloor and IsInteractableFromInventory and rewrite the code to check these things before calling interact
+        public bool IsInteractionPrimary { get; set; }
+
+        /// <summary>
+        /// Indicates where an item can be used from (location, inventory, etc)
+        /// </summary>
+        [JsonProperty]
+        public ItemUseableFrom IsUseableFrom { get; set; } = ItemUseableFrom.Nowhere;
 
         /// <summary>
         /// Indicates if the item is visible or not.
@@ -64,37 +71,35 @@ namespace GameEngine
         /// <summary>
         /// Interacts with an item
         /// </summary>
-        /// <param name="gameState">The current game state</param>
         /// <param name="otherItem">
         /// If another item is being used on this item, this is that other item
         /// </param>
-        public virtual void Interact(Item otherItem)
+        /// <param name="interactingCharacter">The character that is initiating the interaction</param>
+        public virtual void Interact(Item otherItem, Character interactingCharacter)
         {
-            Console.WriteLine("You find nothing special.");
+            interactingCharacter.SendMessage("You find nothing special.");
         }
 
         /// <summary>
         /// Allows an item to specify what happens when it is grabbed.
         /// </summary>
         /// <param name="count">The number of items being grabbed</param>
-        /// <param name="grabbingCharacterTrackingId">The name of the character who is grabbing</param>
-        /// <param name="gameState">The current game state</param>
-        /// <param name="gameData">The current game data</param>
-        public virtual void Grab(int count, Guid grabbingCharacterTrackingId)
+        /// <param name="grabbingCharacter">The character that is doing the grabbing</param>
+        public virtual void Grab(int count, Character grabbingCharacter)
         {
             var description = GetDescription(count);
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacterTrackingId);
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
             // Remove it from the floor
             var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, -count);
             // And place it in the player's inventory, but only if it was removed from the floor successfully
             if (removeLocationResult)
             {
-                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacterTrackingId, this.TrackingId, count);
-                Console.WriteLine($"You grabbed {description}.");
+                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, this.TrackingId, count);
+                grabbingCharacter.SendMessage($"You grabbed {description}.");
             }
             else
             {
-                Console.WriteLine($"Something prevented you from grabbing {description}.");
+                grabbingCharacter.SendMessage($"Something prevented you from grabbing {description}.");
             }
         }
 
@@ -102,26 +107,24 @@ namespace GameEngine
         /// Allows an item to specify what happens when it is dropped.
         /// </summary>
         /// <param name="count">The number of items being dropped</param>
-        /// <param name="droppingCharacterTrackingId">The name of the character who is dropping</param>
-        /// <param name="gameState">The current game state</param>
-        /// <param name="gameData">The current game data</param>
-        public virtual void Drop(int count, Guid droppingCharacterTrackingId)
+        /// <param name="droppingCharacter">The character that is doing the dropping</param>
+        public virtual void Drop(int count, Character droppingCharacter)
         {
             var description = GetDescription(count);
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacterTrackingId);
+            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
 
             // Remove it from the character's inventory
-            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacterTrackingId, this.TrackingId, -count);
+            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacter.TrackingId, this.TrackingId, -count);
 
             // And place it on the floor, but only if it was removed from the inventory successfully
             if (removeCharResult)
             {
                 GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, count);
-                Console.WriteLine($"You dropped {description}.");
+                droppingCharacter.SendMessage($"You dropped {description}.");
             }
             else
             {
-                Console.WriteLine($"Something prevented you from dropping {description}.");
+                droppingCharacter.SendMessage($"Something prevented you from dropping {description}.");
             }
         }
     }

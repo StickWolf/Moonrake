@@ -14,26 +14,26 @@ namespace GameEngine.Characters
         internal void InternalTurn(EngineInternal engine)
         {
             string input;
-            Console.Write(">");
+            this.SendMessage(">", false);
             input = Console.ReadLine();
-            Console.WriteLine();
+            SendMessage();
             var extraWords = new List<string>(input.Split(' '));
             var word = extraWords[0];
             extraWords.RemoveAt(0);
 
             // Look for internal commands to run
-            if (CommandHelper.TryRunInternalCommand(word, extraWords, engine))
+            if (CommandHelper.TryRunInternalCommand(word, extraWords, engine, this))
             {
                 return;
             }
 
             // Then look for public commands to run
-            if (CommandHelper.TryRunPublicCommand(word, extraWords))
+            if (CommandHelper.TryRunPublicCommand(word, extraWords, this))
             {
                 return;
             }
 
-            Console.WriteLine($"I don't know what you mean by '{word}'.");
+            SendMessage($"I don't know what you mean by '{word}'.");
         }
     }
 }

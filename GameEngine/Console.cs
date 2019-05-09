@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine
@@ -11,11 +12,6 @@ namespace GameEngine
         public static void Write(string text)
         {
             System.Console.Write(text);
-        }
-
-        public static void WriteLine()
-        {
-            System.Console.WriteLine();
         }
 
         public static void WriteLine(string text)
@@ -45,14 +41,14 @@ namespace GameEngine
         /// <param name="prompt">The text to display above the choices</param>
         /// <param name="includeCancel">Include the cancel option</param>
         /// <returns>The chosen item</returns>
-        public static string Choose(string prompt, List<string> choices, bool includeCancel)
+        public static string Choose(string prompt, List<string> choices, Character choosingCharacter, bool includeCancel)
         {
             Dictionary<string, string> choicesDictionary = new Dictionary<string, string>();
             foreach (var choice in choices)
             {
                 choicesDictionary.Add(choice, choice);
             }
-            return Choose(prompt, choicesDictionary, includeCancel);
+            return Choose(prompt, choicesDictionary, choosingCharacter, includeCancel);
         }
 
         /// <summary>
@@ -61,29 +57,29 @@ namespace GameEngine
         /// <param name="choices">All the available choices</param>
         /// <param name="prompt">The text to display above the choices</param>
         /// <returns>The chosen key or default(T) if cancelled</returns>
-        public static T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
+        public static T Choose<T>(string prompt, Dictionary<T, string> choices, Character choosingCharacter, bool includeCancel)
         {
-            WriteLine(prompt);
+            choosingCharacter.SendMessage(prompt);
 
             Dictionary<int, T> numberedKeys = new Dictionary<int, T>();
             int itemIndex = 1;
             foreach (var choice in choices)
             {
-                WriteLine();
-                WriteLine($"{itemIndex}. {choice.Value}");
+                choosingCharacter.SendMessage(string.Empty);
+                choosingCharacter.SendMessage($"{itemIndex}. {choice.Value}");
                 numberedKeys.Add(itemIndex++, choice.Key);
             }
             if (includeCancel)
             {
-                WriteLine();
-                WriteLine($"{itemIndex}. Cancel");
+                choosingCharacter.SendMessage(string.Empty);
+                choosingCharacter.SendMessage($"{itemIndex}. Cancel");
             }
 
-            WriteLine("-----------------------------------------");
+            choosingCharacter.SendMessage("-----------------------------------------");
 
             while (true)
             {
-                Write("> ");
+                choosingCharacter.SendMessage("> ", false);
                 if (int.TryParse(ReadLine(), out int userChoiceIndex))
                 {
                     if (userChoiceIndex >= 1 && userChoiceIndex < itemIndex)
@@ -95,7 +91,7 @@ namespace GameEngine
                         return default(T);
                     }
                 }
-                WriteLine("Please pick one of the numbers above.");
+                choosingCharacter.SendMessage("Please pick one of the numbers above.");
             }
         }
     }

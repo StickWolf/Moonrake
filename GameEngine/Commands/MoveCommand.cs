@@ -8,13 +8,12 @@ namespace GameEngine.Commands
 {
     internal class MoveCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Character movingCharacter)
         {
-            var movingCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var movingCharacterLoc = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
+            var movingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
 
             // Get a list of locations that can be moved to from here.
-            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLoc.TrackingId)
+            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLocation.TrackingId)
                 .ToDictionary(kvp => kvp, kvp => kvp.LocationName); // convert to Dictionary[{location}] = {locationName}
 
             var wordLocationMap = CommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList());
@@ -28,12 +27,18 @@ namespace GameEngine.Commands
             {
                 location = foundLocations[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!movingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
-                location = Console.Choose("Where would you like to move to?", validLocations, includeCancel: true);
+                location = movingCharacter.Choose("Where would you like to move to?", validLocations, includeCancel: true);
                 if (location == null)
                 {
-                    Console.WriteLine("Canceled Move");
+                    movingCharacter.SendMessage("Canceled Move");
+                    movingCharacterLocation.SendMessage($"{movingCharacter.Name} looks indecisive.", movingCharacter);
                     return;
                 }
             }
@@ -41,8 +46,8 @@ namespace GameEngine.Commands
             GameState.CurrentGameState.SetCharacterLocation(movingCharacter.TrackingId, location.TrackingId);
 
             // Make the player automatically look after they move to the new location
-            Console.WriteLine();
-            CommandHelper.TryRunPublicCommand("look", new List<string>());
+            movingCharacter.SendMessage();
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacter);
         }
 
         public bool IsActivatedBy(string word)

@@ -26,11 +26,8 @@ namespace GameEngine
         [JsonProperty]
         public string GameEndingText { get; set; }
 
-        // TODO: provide a Custom object here that is serialized that the game can save stuff in
-        // TODO: then separate out the game data classes with the Guids apart from the newgame constructor code
-        // TODO: and store the gamedata class here as Custom.
-        // TODO: After that, item interact code may then do:
-        // TODO: (GameState.CurrentGameState.Custom as ExampleGameData).EgItems.DullBronzeKey -- and have it refer to the correct Guid and work with serialization
+        [JsonProperty]
+        public object Custom { get; set; }
 
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
@@ -103,6 +100,16 @@ namespace GameEngine
             CurrentGameState = savedGamesDictionary[slotName];
         }
 
+        private static JsonSerializerSettings GetJsonSerializerSettings()
+        {
+            var serializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ContractResolver = new JsonPrivateSetResolver()
+            };
+            return serializerSettings;
+        }
+
         public static void SaveGameState(string slotName)
         {
             var savedGamesDictionary = GetGameStates();
@@ -110,13 +117,8 @@ namespace GameEngine
             // add (or update) the gamestate that was passed in into the dictionary we now have using slotName as the key
             savedGamesDictionary[slotName] = CurrentGameState;
 
-            var serializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.All
-            };
-
             // serialize the dictionary to a string
-            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary, Formatting.Indented, serializerSettings);
+            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary, Formatting.Indented, GetJsonSerializerSettings());
 
             // save that serialized string to the game saves file
             File.WriteAllText(SaveFileName, serializedDictionary);
@@ -133,13 +135,8 @@ namespace GameEngine
                 // read the save file to a string
                 string fileContents = File.ReadAllText(saveFile.FullName);
 
-                var serializerSettings = new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                };
-
                 // deserialize the string into a dictionary<string, gamestate>
-                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents, serializerSettings);
+                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents, GetJsonSerializerSettings());
             }
             else
             {
@@ -378,10 +375,7 @@ namespace GameEngine
             Items.Remove(sourceItem.TrackingId);
 
             // Cloning just means serializing and deserializing to a new instance
-            var serializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.All
-            };
+            var serializerSettings = GetJsonSerializerSettings();
             string serializedItem = JsonConvert.SerializeObject(sourceItem, Formatting.Indented, serializerSettings);
             var clonedItem = JsonConvert.DeserializeObject<Item>(serializedItem, serializerSettings);
 
@@ -409,34 +403,74 @@ namespace GameEngine
                             continue;
                         }
 
-                        // If the items are not the same type then there is
-                        // no change to stack them, ignore this comparison.
-                        if (itemA.GetType() != itemB.GetType())
+                        if (EqualChecker.AreEqual(itemA, itemB))
                         {
-                            continue;
-                        }
-
-                        if (CompareJsonProperties(itemA, itemB))
-                        {
-                            // TODO: this still needs to be implemented to make deduping work
                             dupeFound = true;
 
-                            // TODO: do the work to remove itemB, transfer all counts of itemB to instead be linked to itemA
-
+                            // TODO: Not sure how we would update refs to itemB that are found in other object properties
+                            // TODO: Maybe we can raise an event here that can be subscribed to
                             Items.Remove(itemB.TrackingId);
+                            StackItems(itemB.TrackingId, itemA.TrackingId);
+                            break;
                         }
+                    }
+                    if (dupeFound)
+                    {
+                        break;
                     }
                 }
             }
         }
 
-        private bool CompareJsonProperties(object obj1, object obj2)
+        private void StackItems(Guid removeItemTrackingId, Guid receiveItemTrackingId)
         {
-            return false;
+            foreach (var characterTrackingId in CharactersItems.Keys)
+            {
+                if (CharactersItems[characterTrackingId] == null)
+                {
+                    continue;
+                }
 
-            // TODO: Get all properties via reflection
-            // TODO: compare the values of properties that have the JsonProperty on them
-            // TODO: if they are all equal, return true.
+                if (!CharactersItems[characterTrackingId].ContainsKey(removeItemTrackingId))
+                {
+                    continue;
+                }
+
+                var removedCount = CharactersItems[characterTrackingId][removeItemTrackingId];
+                CharactersItems[characterTrackingId].Remove(removeItemTrackingId);
+                if (CharactersItems[characterTrackingId].ContainsKey(receiveItemTrackingId))
+                {
+                    CharactersItems[characterTrackingId][receiveItemTrackingId] += removedCount;
+                }
+                else
+                {
+                    CharactersItems[characterTrackingId][receiveItemTrackingId] = removedCount;
+                }
+            }
+
+            foreach (var locationTrackingId in LocationItems.Keys)
+            {
+                if (LocationItems[locationTrackingId] == null)
+                {
+                    continue;
+                }
+
+                if (!LocationItems[locationTrackingId].ContainsKey(removeItemTrackingId))
+                {
+                    continue;
+                }
+
+                var removedCount = LocationItems[locationTrackingId][removeItemTrackingId];
+                LocationItems[locationTrackingId].Remove(removeItemTrackingId);
+                if (LocationItems[locationTrackingId].ContainsKey(receiveItemTrackingId))
+                {
+                    LocationItems[locationTrackingId][receiveItemTrackingId] += removedCount;
+                }
+                else
+                {
+                    LocationItems[locationTrackingId][receiveItemTrackingId] = removedCount;
+                }
+            }
         }
 
         public Guid AddLocation(Location location)
@@ -598,7 +632,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="characterTrackingId">The character name</param>
         /// <returns>Character location or null</returns>
-        public Location GetCharacterLocation(Guid characterTrackingId) 
+        public Location GetCharacterLocation(Guid characterTrackingId) // TODO: any way to make it so this is only used by Character.GetLocation?
         {
             if (CharacterLocations.ContainsKey(characterTrackingId))
             {

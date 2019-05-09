@@ -16,7 +16,7 @@ namespace ExampleGame
 
         public Guid SecretWarpedHall { get; private set; }
 
-        public ExampleLocations(ExampleGameSourceData gameData)
+        public void NewGame(ExampleGameSourceData gameData)
         {
             Start = GameState.CurrentGameState.AddLocation(new Location("Starting Area", "an open area with a small marble colleseum",
                     "You stand in the midsts of a miniture marble colleseum. " +

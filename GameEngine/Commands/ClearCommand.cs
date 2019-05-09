@@ -1,11 +1,12 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
     internal class ClearCommand : ICommandInternal
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords, Character clearingCharacter)
         {
             Console.Clear();
         }

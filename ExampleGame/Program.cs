@@ -6,7 +6,7 @@ namespace ExampleGame
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(() => new ExampleGameSourceData());
+            EngineFactory.Start(() => new ExampleGameSourceData().NewGame());
         }
     }
 }

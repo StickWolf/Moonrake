@@ -7,18 +7,18 @@ namespace GameEngine.Commands
 {
     internal class AttackCommand : ICommand
     {
-        public void Exceute(List<string> extraWords)
+        public void Execute(List<string> extraWords, Character attackingCharacter)
         {
-            var playerLoc = GameState.CurrentGameState.GetPlayerCharacterLocation();
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(playerLoc.TrackingId, includePlayer: false)
+            var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacter.TrackingId);
+            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(attackingCharacterLocation.TrackingId, includePlayer: true)
+                .Where (c => c.TrackingId != attackingCharacter.TrackingId) // don't include the character doing the attacking
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             if (otherCharactersInLoc.Count == 0)
             {
-                Console.WriteLine("There are no charaters to attack here.");
+                attackingCharacter.SendMessage("There are no characters to attack here.");
+                attackingCharacter.GetLocation().SendMessage($"{attackingCharacter.Name} is looking around for someone to attack!", attackingCharacter);
                 return;
             }
 
@@ -32,17 +32,23 @@ namespace GameEngine.Commands
             {
                 defendingCharacter = foundCharacters[0];
             }
+            // Don't prompt NPCs who are running actions
+            else if (!attackingCharacter.IsPlayerCharacter())
+            {
+                return;
+            }
             else
             {
-                defendingCharacter = Console.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true);
+                defendingCharacter = attackingCharacter.Choose("Who do you want to hit?", otherCharactersInLoc, includeCancel: true );
                 if (defendingCharacter == null)
                 {
-                    Console.WriteLine("Stopped Attack.");
+                    attackingCharacter.SendMessage("Stopped Attack.");
+                    attackingCharacter.GetLocation().SendMessage($"{attackingCharacter.Name} is acting dangerously!", attackingCharacter);
                     return;
                 }
             }
 
-            defendingCharacter.Attack(playerCharacter);
+            defendingCharacter.Attack(attackingCharacter);
         }
 
         public bool IsActivatedBy(string word)

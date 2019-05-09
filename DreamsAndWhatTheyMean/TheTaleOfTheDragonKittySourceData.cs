@@ -4,17 +4,17 @@ namespace DreamsAndWhatTheyMean
 {
     class TheTaleOfTheDragonKittySourceData
     {
-        public DragonKittyCharacters DkCharacters { get; private set; }
-        public DragonKittyLocations DkLocations { get; private set; }
-        public DragonKittyGameVarables GameVarables { get; private set; }
-        public DragonKittyItems DkItems { get; private set; }
+        public DragonKittyCharacters DkCharacters { get; private set; } = new DragonKittyCharacters();
+        public DragonKittyLocations DkLocations { get; private set; } = new DragonKittyLocations();
+        public DragonKittyGameVarables GameVarables { get; private set; } = new DragonKittyGameVarables();
+        public DragonKittyItems DkItems { get; private set; } = new DragonKittyItems();
 
-        public TheTaleOfTheDragonKittySourceData()
+        public void NewGame()
         {
-            DkCharacters = new DragonKittyCharacters(this);
-            DkLocations = new DragonKittyLocations(this);
-            GameVarables = new DragonKittyGameVarables(this);
-            DkItems = new DragonKittyItems(this);
+            DkCharacters.NewGame(this);
+            DkLocations.NewGame(this);
+            GameVarables.NewGame(this);
+            DkItems.NewGame(this);
 
             GameState.CurrentGameState.GameIntroductionText = "Once, there was a group of kids." +
                 " These kids played around every day, they even had a youtube channel that they shared." +
@@ -54,6 +54,13 @@ namespace DreamsAndWhatTheyMean
             var tpBlackSmith = GameState.CurrentGameState.AddTradePost(DkLocations.BlackSmithShop, "The Black-Smith",
                 tsBlackSmith);
             #endregion
+
+            GameState.CurrentGameState.Custom = this;
+        }
+
+        public static TheTaleOfTheDragonKittySourceData Current()
+        {
+            return GameState.CurrentGameState.Custom as TheTaleOfTheDragonKittySourceData;
         }
     }
 }
