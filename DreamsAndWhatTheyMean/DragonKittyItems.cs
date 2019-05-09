@@ -17,7 +17,7 @@ namespace DreamsAndWhatTheyMean
         public Guid Apple { get; private set; }
         public Guid DadsWallet { get; private set; }
 
-        public DragonKittyItems(TheTaleOfTheDragonKittySourceData gameData)
+        public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
         {
             Money = GameState.CurrentGameState.AddItem(new Item("dollar"));
             Paper = GameState.CurrentGameState.AddItem(new Item("paper piece"));

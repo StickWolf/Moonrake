@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
 
@@ -17,7 +18,8 @@ namespace ExampleGame.Items
         {
             Charges = charges;
             IsUnique = false;
-            IsInteractable = true;
+            IsUseableFrom = ItemUseableFrom.Inventory;
+            IsInteractionPrimary = true;
         }
 
         public override string GetDescription(int count)
@@ -30,35 +32,28 @@ namespace ExampleGame.Items
             return $"{count} {DisplayName}s with {Charges} use(s) left.";
         }
 
-        public override void Interact(Item otherItem)
+        public override void Interact(Item otherItem, Character interactingCharacter)
         {
-            // TODO: rewrite commands that are intended to be used by NPCs to work for them too
-            // TODO: the way this is written, even if a NPC used it, it would heal the player
-            var healee = GameState.CurrentGameState.GetPlayerCharacter();
-
-            // TODO: be able to write code like this, so we can check to make sure this item in in the characters inventory
-            // TODO: but maybe the below removeResult is good enough
-            ///if (healee.IsHoldingItem(this)) ...
-
             if (Charges == 0)
             {
-                GameEngine.Console.WriteLine($"The potion bottle is empty!");
+                interactingCharacter.SendMessage($"The potion bottle is empty!");
                 return;
             }
 
-            bool removeResult = GameState.CurrentGameState.TryAddCharacterItemCount(healee.TrackingId, this.TrackingId, -1);
+            bool removeResult = GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1);
             if (!removeResult)
             {
-                GameEngine.Console.WriteLine($"You don't appear to be holding a potion.");
+                interactingCharacter.SendMessage($"You don't appear to be holding a potion.");
                 return;
 
             }
             GameState.CurrentGameState.ConvertItemToClone(this.TrackingId);
-            GameState.CurrentGameState.TryAddCharacterItemCount(healee.TrackingId, this.TrackingId, 1);
+            GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, 1);
 
-            healee.Heal(HealPerCharge);
+            interactingCharacter.Heal(HealPerCharge);
             Charges--;
-            GameEngine.Console.WriteLine($"You feel refreshed. The potion has {Charges} uses left.");
+            interactingCharacter.SendMessage($"You feel refreshed. The potion has {Charges} uses left.");
+            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} takes a swig of a healing potion and looks refreshed.", interactingCharacter);
 
             GameState.CurrentGameState.DedupeItems();
         }

@@ -33,7 +33,8 @@ namespace GameEngine
         public void StartEngine()
         {
             // Ask the player to pick to load a saved game if there are any
-            CommandHelper.TryRunInternalCommand("load", new List<string>(), this);
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            CommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacter);
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
@@ -59,23 +60,22 @@ namespace GameEngine
                     }
                 }
 
-                var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
                 if (playerCharacter.HitPoints <= 0)
                 {
                     PlayerIsDead = true;
                 }
                 if (PlayerIsDead)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine("You have died. Please press a key.");
+                    playerCharacter.SendMessage();
+                    playerCharacter.SendMessage("You have died. Please press a key.");
                     Console.ReadKey();
                     RunGameLoop = false;
                 }
                 // TODO: Find a way to figure out when the player has won.
                 else if (PlayerHasWon)
                 {
-                    Console.WriteLine(GameState.CurrentGameState.GameEndingText);
-                    Console.WriteLine("             |--The End--|             ");
+                    playerCharacter.SendMessage(GameState.CurrentGameState.GameEndingText);
+                    playerCharacter.SendMessage("             |--The End--|             ");
                     Console.ReadLine();
                     RunGameLoop = false;
                 }
@@ -87,15 +87,16 @@ namespace GameEngine
         /// </summary>
         public void StartNewGame()
         {
+            // Create a new game
             GameState.CreateNewGameState();
             NewGameFiller();
 
-            // Show the intro
-            Console.Clear();
-            Console.WriteLine(GameState.CurrentGameState.GameIntroductionText);
-            Console.WriteLine();
-
-            CommandHelper.TryRunPublicCommand("look", new List<string>());
+            // Show the intro and take a look around
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
+            CommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacter);
+            playerCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
+            playerCharacter.SendMessage();
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacter);
         }
     }
 }

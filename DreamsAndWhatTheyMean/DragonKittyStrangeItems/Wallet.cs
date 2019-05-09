@@ -27,7 +27,6 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             DollarItemTrackingId = dollarItemTrackingId;
             MoneyWalletContains = moneyInWallet;
             IsBound = false;
-            IsInteractable = false;
             IsUnique = false;
             IsVisible = true;
         }
@@ -38,19 +37,19 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             return $"{character.Name}'s wallet";
         }
 
-        public override void Grab(int count, Guid grabbingCharacterTrackingId)
+        public override void Grab(int count, Character grabbingCharacter)
         {
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
             var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
             if (attackingCharacter.HitPoints > 0)
             {
-                GameEngine.Console.WriteLine($"You have tried to steal {CharacterTrackingId}'s wallet, now you will suffer,");
+                grabbingCharacter.SendMessage($"You have tried to steal {attackingCharacter.Name}'s wallet, now you will suffer,");
                 playerCharacter.Attack(attackingCharacter);
-                GameEngine.Console.WriteLine($"{CharacterTrackingId} has hit you.");
+                grabbingCharacter.SendMessage($"{attackingCharacter.Name} has hit you.");
             }
             if (attackingCharacter.HitPoints <= 0)
             {
-                GameEngine.Console.WriteLine($"Since {CharacterTrackingId} is dead, you get {MoneyWalletContains} dollars!");
+                grabbingCharacter.SendMessage($"Since {attackingCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
                 GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, DollarItemTrackingId, MoneyWalletContains);
                 var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterTrackingId);
                 GameState.CurrentGameState.TryAddLocationItemCount(locationOfWallet.TrackingId, this.TrackingId, -1);

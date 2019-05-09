@@ -1,16 +1,16 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 
 namespace GameEngine.Commands
 {
     internal class LetPlayerChangeTheirNameCommand : ICommandInternal
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords, Character nameChangingCharacter)
         {
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            Console.Write($"What would you like your name to be?: ");
-            playerCharacter.Name = Console.ReadLine();
-            Console.WriteLine($"Your new name is {playerCharacter.Name}.");
+            nameChangingCharacter.SendMessage($"What would you like your name to be?: ");
+            nameChangingCharacter.Name = Console.ReadLine(); // TODO: sendMessage?
+            nameChangingCharacter.SendMessage($"Your new name is {nameChangingCharacter.Name}.");
         }
 
         public bool IsActivatedBy(string word)

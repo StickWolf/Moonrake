@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,13 +7,13 @@ namespace GameEngine.Commands
 {
     internal class ExitCommand : ICommandInternal
     {
-        public void Exceute(EngineInternal engine, List<string> extraWords)
+        public void Execute(EngineInternal engine, List<string> extraWords, Character exitingCharacter)
         {
             while (true)
             {
-                Console.Write("Would you like to save your game first? (Yes, No or Cancel): ");
+                exitingCharacter.SendMessage("Would you like to save your game first? (Yes, No or Cancel): ");
                 var answer = Console.ReadKey().KeyChar.ToString();
-                Console.WriteLine();
+                exitingCharacter.SendMessage();
                 if (answer.Equals("C", StringComparison.OrdinalIgnoreCase))
                 {
                     // Cancel exit operation
@@ -28,14 +29,14 @@ namespace GameEngine.Commands
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Save and then exit
-                    CommandHelper.TryRunInternalCommand("save", new List<string>(), engine);
+                    CommandHelper.TryRunInternalCommand("save", new List<string>(), engine, exitingCharacter);
                     engine.RunGameLoop = false;
                     engine.RunFactory = false;
                     return;
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown response: {answer}");
+                    exitingCharacter.SendMessage($"Unknown response: {answer}");
                 }
             }
         }
