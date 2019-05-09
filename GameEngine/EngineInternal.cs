@@ -17,7 +17,6 @@ namespace GameEngine
         /// </summary>
         public bool RunFactory { get; set; } = true;
 
-        public bool PlayerIsDead { get; set; } = false;
         public bool PlayerHasWon { get; set; } = false;
 
         public Action NewGameFiller { get; private set; }
@@ -61,11 +60,7 @@ namespace GameEngine
                     }
                 }
 
-                if (playerCharacter.HitPoints <= 0)
-                {
-                    PlayerIsDead = true;
-                }
-                if (PlayerIsDead)
+                if (playerCharacter.IsDead())
                 {
                     playerCharacter.SendMessage();
                     playerCharacter.SendMessage("You have died. Please press a key.");
