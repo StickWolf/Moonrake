@@ -46,7 +46,7 @@
     <Compile Include="MoonRakeGameVariables.cs" />
     <Compile Include="MoonRakeItems.cs" />
     <Compile Include="MoonRakeLocations.cs" />
-    <Compile Include="MoonRakePlayers.cs" />
+    <Compile Include="MoonRakePlayersAndCharacters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Moonrake
 {
-    public class MoonRakePlayers
+    public class MoonRakePlayersAndCharacters
     {
         public Guid Paige { get; private set; }
 
@@ -16,7 +16,7 @@ namespace Moonrake
 
         public void NewGame(MoonrakeGameData gameData)
         {
-            Paige = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Paige", 100), gameData.MoonRakeLocations.TreeHouse);
+            Paige = GameState.CurrentGameState.AddCharacter(new Character("Paige", 100), gameData.MoonRakeLocations.TreeHouse);
             Player = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Player", 100), gameData.MoonRakeLocations.TreeHouse);
         }
     }

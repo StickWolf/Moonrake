@@ -5,7 +5,7 @@ namespace Moonrake
 {
     public class MoonrakeGameData
     {
-        public MoonRakePlayers MoonRakePlayers { get; private set; } = new MoonRakePlayers();
+        public MoonRakePlayersAndCharacters MoonRakePlayers { get; private set; } = new MoonRakePlayersAndCharacters();
         public MoonRakeGameVariables MoonRakeGameVariables { get; private set; } = new MoonRakeGameVariables();
         public MoonRakeItems MoonRakeItems { get; private set; } = new MoonRakeItems();
         public MoonRakeLocations MoonRakeLocations { get; private set; } = new MoonRakeLocations();
