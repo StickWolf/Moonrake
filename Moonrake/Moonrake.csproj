@@ -42,11 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MoonRakeCharacters.cs" />
     <Compile Include="MoonrakeGameData.cs" />
     <Compile Include="MoonRakeGameVariables.cs" />
     <Compile Include="MoonRakeItems.cs" />
     <Compile Include="MoonRakeLocations.cs" />
+    <Compile Include="MoonRakePlayers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
