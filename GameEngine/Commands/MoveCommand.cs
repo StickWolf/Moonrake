@@ -16,7 +16,7 @@ namespace GameEngine.Commands
             var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLocation.TrackingId)
                 .ToDictionary(kvp => kvp, kvp => kvp.LocationName); // convert to Dictionary[{location}] = {locationName}
 
-            var wordLocationMap = CommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList());
+            var wordLocationMap = PublicCommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList());
             var foundLocations = wordLocationMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -47,7 +47,7 @@ namespace GameEngine.Commands
 
             // Make the player automatically look after they move to the new location
             movingCharacter.SendMessage();
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacter);
+            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacter);
         }
 
         public bool IsActivatedBy(string word)

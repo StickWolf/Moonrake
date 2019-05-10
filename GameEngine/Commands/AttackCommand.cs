@@ -22,7 +22,7 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList());
+            var wordCharacterMap = PublicCommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList());
             var foundCharacters = wordCharacterMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)

@@ -21,7 +21,7 @@ namespace GameEngine.Characters
         public int MaxAttack { get; set; }
 
         [JsonProperty]
-        public int CounterAttackChance { get; set; }
+        public int CounterAttackPercent { get; set; }
 
         [JsonProperty]
         public int MaxHeal { get; set; }
@@ -104,41 +104,29 @@ namespace GameEngine.Characters
         public virtual void Attack(Character attackingCharacter)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-
-            HitPoints -= attackDamage;
-            if (HitPoints <= 0)
+            Hit(attackDamage);
+            var attackMessage = $"{attackingCharacter.Name} has hit {this.Name} for {attackDamage} damage!";
+            this.GetLocation().SendMessage(attackMessage, null);
+            if (IsDead())
             {
-                // Makes sure that the player has 0 hp, so when a heal
-                // comes in, it isn't like -100 to -50.
-                HitPoints = 0;
-                this.GetLocation().SendMessage($"{Name} is dead.", this);
+                this.GetLocation().SendMessage($"{Name} has been killed.", null);
                 return;
             }
 
-            this.GetLocation().SendMessage($"{Name} has {HitPoints}/{MaxHitPoints} left", this);
-
-            var counterAttackPosiblity = rnd.Next(CounterAttackChance, 100);
-            if(counterAttackPosiblity >= 75)
+            var counterAttackRoll = rnd.Next(1, 100);
+            if(counterAttackRoll >= (100 - CounterAttackPercent))
             {
-                if (IsDead())
-                {
-                    return;
-                }
-                this.GetLocation().SendMessage($"{Name} countered!", this);
-
                 var maxAttackDamage = MaxAttack / 2;
                 var counterAttackDamage = GetAttackDamage(maxAttackDamage);
-                attackingCharacter.HitPoints = attackingCharacter.HitPoints - counterAttackDamage;
-                if (attackingCharacter.HitPoints <= 0)
+                attackingCharacter.Hit(counterAttackDamage);
+                var counterAttackMessage = $"{this.Name} counter attacks and hits {attackingCharacter.Name} for {counterAttackDamage} damage!";
+                this.GetLocation().SendMessage(counterAttackMessage, null);
+
+                if (attackingCharacter.IsDead())
                 {
-                    // Makes sure that the player has 0 hp, so when a heal
-                    // comes in, it isn't like -100 to -50.
-                    attackingCharacter.HitPoints = 0;
-                    this.GetLocation().SendMessage($"{attackingCharacter.Name} is dead.", this);
+                    this.GetLocation().SendMessage($"{attackingCharacter.Name} has been killed.", null);
                     return;
                 }
-
-                this.GetLocation().SendMessage($"{attackingCharacter.Name} has {attackingCharacter.HitPoints}/{attackingCharacter.MaxHitPoints} left", this);
             }
         }
 
@@ -157,6 +145,20 @@ namespace GameEngine.Characters
             return false;
         }
 
+        public void Hit(int hitAmount)
+        {
+            if (IsDead())
+            {
+                return;
+            }
+
+            if ((HitPoints - hitAmount) < 0)
+            {
+                hitAmount = HitPoints;
+            }
+            HitPoints -= hitAmount;
+        }
+
         public void Heal(int healAmount)
         {
             if (IsDead())
@@ -168,7 +170,7 @@ namespace GameEngine.Characters
             {
                 healAmount = MaxHitPoints - HitPoints;
             }
-            HitPoints = HitPoints + healAmount;
+            HitPoints += HitPoints;
         }
 
         public void Heal(Character healingCharacter)

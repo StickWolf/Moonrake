@@ -51,9 +51,10 @@
     <Compile Include="Commands\InteractCommand.cs" />
     <Compile Include="Commands\GrabCommand.cs" />
     <Compile Include="Commands\InventoryCommand.cs" />
+    <Compile Include="Commands\InternalCommandHelper.cs" />
     <Compile Include="Commands\ShopCommand.cs" />
     <Compile Include="Commands\ClearCommand.cs" />
-    <Compile Include="Commands\CommandHelper.cs" />
+    <Compile Include="Commands\PublicCommandHelper.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LetPlayerChangeTheirNameCommand.cs" />
