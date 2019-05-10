@@ -55,7 +55,7 @@ namespace GameEngine.Commands
             if (extraWords.Count > 0)
             {
                 // Try to auto-determine the choices if extra words are typed in
-                var wordItemMap = CommandHelper.WordsToItems(extraWords, allUseableItems.Keys.ToList());
+                var wordItemMap = PublicCommandHelper.WordsToItems(extraWords, allUseableItems.Keys.ToList());
                 var foundItems = wordItemMap
                     .Where(i => i.Value != null)
                     .Select(i => i.Value)

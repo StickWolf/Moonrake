@@ -83,7 +83,13 @@ namespace GameEngine.Commands
                 lookingCharacter.SendMessage("The following other characters are here:");
                 foreach(var character in otherCharactersInLocation)
                 {
-                    lookingCharacter.SendMessage(character.Name);
+                    var characterName = character.Name;
+                    if (character.IsDead())
+                    {
+                        characterName += " (dead)";
+                    }
+
+                    lookingCharacter.SendMessage(characterName);
                 }
             }
         }

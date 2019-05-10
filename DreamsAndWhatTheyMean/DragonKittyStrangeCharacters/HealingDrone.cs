@@ -16,7 +16,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeCharacters
 
         public HealingDrone(Guid mainLocationOfDrone) : base("Drone", 20)
         {
-            CounterAttackChance = 10;
+            CounterAttackPercent = 10;
             MaxAttack = 10;
             MaxHeal = 500;
             MainLocation = mainLocationOfDrone;
