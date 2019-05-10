@@ -5,17 +5,17 @@ namespace Moonrake
 {
     public class MoonrakeGameData
     {
-        public MoonRakeCharacters MoonRakeCharacters { get; private set; } = new MoonRakeCharacters();
+        public MoonRakePlayersAndCharacters MoonRakePlayers { get; private set; } = new MoonRakePlayersAndCharacters();
         public MoonRakeGameVariables MoonRakeGameVariables { get; private set; } = new MoonRakeGameVariables();
         public MoonRakeItems MoonRakeItems { get; private set; } = new MoonRakeItems();
         public MoonRakeLocations MoonRakeLocations { get; private set; } = new MoonRakeLocations();
 
         public void NewGame()
         {
-            MoonRakeCharacters.NewGame(this);
+            MoonRakeLocations.NewGame(this);
+            MoonRakePlayers.NewGame(this);
             MoonRakeGameVariables.NewGame(this);
             MoonRakeItems.NewGame(this);
-            MoonRakeLocations.NewGame(this);
 
             GameState.CurrentGameState.GameIntroductionText = "Once, there were three ancient instruments:" +
                 " The Harp, Piano, and the Drum." +
@@ -23,9 +23,9 @@ namespace Moonrake
                 " A ruby, sapphire, and a diamond." +
                 " When the gems are merged, it will the create an ancient weapon:" +
                 " The Moonrake." +
-                " Hello, Welcome to Moonrake, a text adventure game.";
+                "And also...... wanna go inside? Play somethin' or somethin'?";
 
-            GameState.CurrentGameState.TryAddCharacterItemCount(MoonRakeCharacters.Player, MoonRakeItems.Money, 35);
+            //GameState.CurrentGameState.TryAddCharacterItemCount(MoonRakePlayers.Player, MoonRakeItems.Money, 35);
 
             #region TradeSets
 

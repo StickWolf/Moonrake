@@ -79,18 +79,20 @@ namespace GameEngine.Commands
             var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacterLocation.TrackingId, includePlayer: false);
             if(otherCharactersInLocation.Count != 0)
             {
-                lookingCharacter.SendMessage();
-                lookingCharacter.SendMessage("The following other characters are here:");
-                foreach(var character in otherCharactersInLocation)
+                string otherCharactersMessage = "";
+                for (int i = 0; i < otherCharactersInLocation.Count; i++)
                 {
-                    var characterName = character.Name;
-                    if (character.IsDead())
+                    var character = otherCharactersInLocation[i];
+                    if (i > 0)
                     {
-                        characterName += " (dead)";
+                        otherCharactersMessage += (i == otherCharactersInLocation.Count - 1) ? " and " : ", ";
                     }
 
-                    lookingCharacter.SendMessage(characterName);
+                    otherCharactersMessage += character.IsDead() ? $"{character.Name} (dead)" : character.Name;
                 }
+                otherCharactersMessage += otherCharactersInLocation.Count > 1 ? " are here." : " is here.";
+                lookingCharacter.SendMessage();
+                lookingCharacter.SendMessage(otherCharactersMessage);
             }
         }
 
