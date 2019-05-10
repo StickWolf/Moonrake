@@ -34,7 +34,7 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine what the player is trying to grab
-            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
+            var wordItemMap = PublicCommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)

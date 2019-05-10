@@ -34,7 +34,7 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine what the character is trying to drop
-            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
+            var wordItemMap = PublicCommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -67,7 +67,7 @@ namespace GameEngine.Commands
             if (itemAmountToDrop > 1)
             {
                 var leftWords = wordItemMap.Where(i => i.Value == null).Select(i => i.Key).ToList();
-                var wordNumberMap = CommandHelper.WordsToNumbers(leftWords);
+                var wordNumberMap = PublicCommandHelper.WordsToNumbers(leftWords);
                 var foundNumbers = wordNumberMap.Where(i => i.Value.HasValue).Select(i => i.Value.Value).ToList();
                 if (foundNumbers.Count > 0)
                 {

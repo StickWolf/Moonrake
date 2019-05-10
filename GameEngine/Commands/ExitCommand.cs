@@ -29,7 +29,7 @@ namespace GameEngine.Commands
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Save and then exit
-                    CommandHelper.TryRunInternalCommand("save", new List<string>(), engine, exitingCharacter);
+                    InternalCommandHelper.TryRunInternalCommand("save", new List<string>(), engine, exitingCharacter);
                     engine.RunGameLoop = false;
                     engine.RunFactory = false;
                     return;
