@@ -29,18 +29,40 @@ namespace ExampleGame.Characters
 
         public override void Turn()
         {
-            var choice = rnd.Next(0, 5);
+            var choice = rnd.Next(0, 8);
+
+            if (choice > 2)
+            {
+                this.GetLocation().SendMessage($"{Name} squeaks.", this);
+            }
 
             switch (choice)
             {
                 case 0:
-                    this.GetLocation().SendMessage($"{Name} squeaks.", this);
-                    break;
+                    // TODO: Look
                 case 1:
+                    // TODO: Interact
                 case 2:
+                    var randomItem = PickRandomLocationItem();
+                    if (randomItem.HasValue)
+                    {
+                        var extraWords = new List<string>()
+                        {
+                            randomItem.Value.Value.ToString(),
+                            randomItem.Value.Key.TrackingId.ToString(),
+                        };
+                        PublicCommandHelper.TryRunPublicCommand("grab", extraWords, this);
+                    }
+                    break;
                 case 3:
+                    // TODO: Move
                 case 4:
+                    // TODO: Drop
                 case 5:
+                    // TODO: Stats
+                case 6:
+                    // TODO: Inventory
+                case 7:
                     var randomCharacter = PickRandomCharacterInRoom();
                     if (randomCharacter != null)
                     {
@@ -59,9 +81,22 @@ namespace ExampleGame.Characters
             {
                 return null;
             }
-            var index = rnd.Next(0, roomCharactersExceptRat.Count-1);
+            var index = rnd.Next(0, roomCharactersExceptRat.Count);
             return roomCharactersExceptRat[index];
         }
+
+        private KeyValuePair<Item, int>? PickRandomLocationItem()
+        {
+            var locationItems = GameState.CurrentGameState.GetLocationItems(GetLocation().TrackingId)
+                .Where(i => !i.Key.IsBound && i.Key.IsVisible).ToList();
+            if (locationItems.Count == 0)
+            {
+                return null;
+            }
+            var index = rnd.Next(0, locationItems.Count);
+            return locationItems.ElementAt(index);
+        }
+
 
     }
 }
