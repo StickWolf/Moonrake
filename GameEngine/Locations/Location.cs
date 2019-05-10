@@ -1,6 +1,7 @@
 ﻿using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace GameEngine.Locations
 {
@@ -49,10 +50,11 @@ namespace GameEngine.Locations
         /// </param>
         public void SendMessage(string text, Character fromCharacter)
         {
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLocation = GameState.CurrentGameState.GetPlayerCharacterLocation();
-            if (this.TrackingId == playerLocation.TrackingId &&
-                (fromCharacter == null || fromCharacter.TrackingId != playerCharacter.TrackingId))
+            var playerCharacters = GameState.CurrentGameState.GetPlayerCharacters();
+            var playerLocations = GameState.CurrentGameState.GetPlayerCharacterLocations();
+            var location = GameState.CurrentGameState.GetLocation(TrackingId);
+            if (playerLocations.Contains(location) &&
+                (fromCharacter == null || fromCharacter.TrackingId != playerCharacters[0].TrackingId))
             {
                 Console.WriteLine(text); // SendMessage
             }

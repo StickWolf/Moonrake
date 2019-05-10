@@ -14,6 +14,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
     {
         [JsonProperty]
         private Guid CharacterTrackingId { get; set; }
+        private List<Guid> Id = new List<Guid>();
 
         [JsonProperty]
         private Guid DollarItemTrackingId { get; set; }
@@ -26,6 +27,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             CharacterTrackingId = characterTrackingId;
             DollarItemTrackingId = dollarItemTrackingId;
             MoneyWalletContains = moneyInWallet;
+            Id.Add(CharacterTrackingId);
             IsBound = false;
             IsUnique = false;
             IsVisible = true;
@@ -33,26 +35,17 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 
         public override string GetDescription(int count)
         {
-            var character = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
-            return $"{character.Name}'s wallet";
+            var character = GameState.CurrentGameState.GetCharacters(Id);
+            return $"{character[0].Name}'s wallet";
         }
 
         public override void Grab(int count, Character grabbingCharacter)
         {
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
-            if (attackingCharacter.HitPoints > 0)
+            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacters();
+            var attackingCharacter = GameState.CurrentGameState.GetCharacters(Id);
+            if (attackingCharacter[0].HitPoints > 0)
             {
-                grabbingCharacter.SendMessage($"You have tried to steal {attackingCharacter.Name}'s wallet, now you will suffer,");
-                playerCharacter.Attack(attackingCharacter);
-                grabbingCharacter.SendMessage($"{attackingCharacter.Name} has hit you.");
-            }
-            if (attackingCharacter.HitPoints <= 0)
-            {
-                grabbingCharacter.SendMessage($"Since {attackingCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
-                GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, DollarItemTrackingId, MoneyWalletContains);
-                var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterTrackingId);
-                GameState.CurrentGameState.TryAddLocationItemCount(locationOfWallet.TrackingId, this.TrackingId, -1);
+                grabbingCharacter.SendMessage($"You can't take {attackingCharacter[0].Name}'s wallet.");
             }
         }
     }

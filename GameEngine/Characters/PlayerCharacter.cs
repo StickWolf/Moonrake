@@ -14,7 +14,10 @@ namespace GameEngine.Characters
         internal void InternalTurn(EngineInternal engine)
         {
             string input;
-            this.SendMessage(">", false);
+            this.SendMessage($"{Name}:", false);
+            Console.WriteLine("");
+            CommandHelper.TryRunPublicCommand("Look", null, this);
+            SendMessage("> ", false);
             input = Console.ReadLine();
             SendMessage();
             var extraWords = new List<string>(input.Split(' '));

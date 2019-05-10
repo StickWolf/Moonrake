@@ -18,7 +18,7 @@ namespace GameEngine
     {
         // This data goes into save files
         [JsonProperty]
-        private Guid PlayerTrackingId { get; set; }
+        private List<Guid> PlayerTrackingIds = new List<Guid>();
 
         [JsonProperty]
         public string GameIntroductionText { get; set; }
@@ -544,17 +544,30 @@ namespace GameEngine
             // If this is the player character, then keep track of the tracking id
             if (character is PlayerCharacter)
             {
-                Debug.Assert(PlayerTrackingId == Guid.Empty, $"A player character has already been set in the gamestate.");
-                PlayerTrackingId = character.TrackingId;
+                PlayerTrackingIds.Add(character.TrackingId);
             }
             Characters.Add(character.TrackingId, character);
             CharacterLocations[character.TrackingId] = locationTrackingId;
             return character.TrackingId;
         }
 
-        public Character GetPlayerCharacter()
+        public List<Character> GetPlayerCharacters()
         {
-            return GetCharacter(PlayerTrackingId);
+            return GetCharacters(PlayerTrackingIds);
+        }
+
+        public List<Character> GetCharacters(List<Guid> characterTrackingIds)
+        {
+            var characterList = new List<Character>();
+            foreach (var characterTrackingId in characterTrackingIds)
+            {
+                if (Characters.ContainsKey(characterTrackingId))
+                {
+                    var character = GetCharacter(characterTrackingId);
+                    characterList.Add(character);
+                }
+            }
+            return characterList;
         }
 
         public Character GetCharacter(Guid characterTrackingId)
@@ -610,23 +623,40 @@ namespace GameEngine
         {
             var characters = CharacterLocations
                 .Where(kvp => kvp.Value == locationTrackingId) // Where location is the one passed in
-                .Select(kvp => GetCharacter(kvp.Key));
+                .Select(kvp => GetCharacter(kvp.Key)).ToList();
 
             // remove player if needed.
             if (!includePlayer)
             {
-                characters = characters
-                    .Where(c => c.TrackingId != PlayerTrackingId);
+                foreach(var playerId in PlayerTrackingIds)
+                {
+                    var player = GetCharacter(playerId);
+                    characters.Remove(player);
+                }
             }
 
             return characters.ToList();
         }
 
-        public Location GetPlayerCharacterLocation()
+        public List<Location> GetPlayerCharacterLocations()
         {
-            return GetCharacterLocation(PlayerTrackingId);
+            return GetCharacterLocation(PlayerTrackingIds);
         }
 
+        public List<Location> GetCharacterLocation(List<Guid> characterTrackingIds) // TODO: any way to make it so this is only used by Character.GetLocation?
+        {
+            List<Location> locationList = new List<Location>();
+            foreach (var characterTrackingId in characterTrackingIds)
+            {
+                if (CharacterLocations.ContainsKey(characterTrackingId))
+                {
+                    var locationTrackingId = CharacterLocations[characterTrackingId];
+                    var location = GetLocation(locationTrackingId);
+                    locationList.Add(location);
+                }
+            }
+            return locationList;
+        }
         /// <summary>
         /// Gets the location of the specified character
         /// </summary>

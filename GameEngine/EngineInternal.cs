@@ -33,8 +33,12 @@ namespace GameEngine
         {
             // We can't get the real PlayerCharacter because the game isn't loaded yet.
             // But we can fake it out for this call
-            var playerCharacter = new PlayerCharacter("loader", 1);
-            CommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacter);
+            var playerCharacters = new List<Character>()
+            {
+                {new PlayerCharacter("The Loader", 20)}
+            };
+            CommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacters[0]);
+            playerCharacters = GameState.CurrentGameState.GetPlayerCharacters();
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
@@ -60,18 +64,22 @@ namespace GameEngine
                     }
                 }
 
-                if (playerCharacter.IsDead())
+                foreach (var playerCharacter in playerCharacters)
                 {
-                    playerCharacter.SendMessage();
-                    playerCharacter.SendMessage("You have died. Please press a key.");
-                    Console.ReadKey();
-                    RunGameLoop = false;
+                    if (playerCharacter.IsDead())
+                    {
+                        playerCharacter.SendMessage();
+                        playerCharacter.SendMessage("You have died. Please press a key.");
+                        Console.ReadKey();
+                        RunGameLoop = false;
+                    }
                 }
                 // TODO: Find a way to figure out when the player has won.
-                else if (PlayerHasWon)
+                if (PlayerHasWon)
                 {
-                    playerCharacter.SendMessage(GameState.CurrentGameState.GameEndingText);
-                    playerCharacter.SendMessage("             |--The End--|             ");
+
+                    playerCharacters[1].SendMessage(GameState.CurrentGameState.GameEndingText);
+                    playerCharacters[1].SendMessage("             |--The End--|             ");
                     Console.ReadLine();
                     RunGameLoop = false;
                 }
@@ -88,11 +96,11 @@ namespace GameEngine
             NewGameFiller();
 
             // Show the intro and take a look around
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            CommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacter);
-            playerCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
-            playerCharacter.SendMessage();
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacter);
+            var playerCharacters = GameState.CurrentGameState.GetPlayerCharacters();
+            CommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacters[0]);
+            playerCharacters[0].SendMessage(GameState.CurrentGameState.GameIntroductionText);
+            playerCharacters[0].SendMessage();
+            CommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacters[0]);
         }
     }
 }

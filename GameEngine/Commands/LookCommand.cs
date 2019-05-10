@@ -76,7 +76,8 @@ namespace GameEngine.Commands
                 }
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacterLocation.TrackingId, includePlayer: false);
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacterLocation.TrackingId, includePlayer: true);
+            otherCharactersInLocation.Remove(lookingCharacter);
             if(otherCharactersInLocation.Count != 0)
             {
                 lookingCharacter.SendMessage();

@@ -25,7 +25,7 @@ namespace DreamsAndWhatTheyMean
             GameState.CurrentGameState.GameEndingText = "You have saved the last of the dragonkittys and you have won the game.";
 
             #region Starter Items
-            GameState.CurrentGameState.TryAddCharacterItemCount(DkCharacters.Player, DkItems.Money, 200);
+            GameState.CurrentGameState.TryAddCharacterItemCount(DkCharacters.Player1, DkItems.Money, 200);
             #endregion
 
             #region Room Items
