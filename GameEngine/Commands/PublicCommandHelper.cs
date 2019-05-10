@@ -83,7 +83,10 @@ namespace GameEngine.Commands
 
                     // Get a set of items that match this word
                     var wordItemMatches = availableItems
-                        .Where(i => i.DisplayName.ToLower().Contains(wiMapping.Key))
+                        .Where(i => 
+                            i.TrackingId.ToString() == wiMapping.Key || // NPCs may write guids instead of normal words
+                            i.DisplayName.ToLower().Contains(wiMapping.Key)
+                            )
                         .ToList();
 
                     // If there is just one item it matches then assign that word to
@@ -151,7 +154,10 @@ namespace GameEngine.Commands
 
                     // Get a set of locations that match this word
                     var wordLocationMatches = availableLocations
-                        .Where(i => i.LocationName.ToLower().Contains(wlMapping.Key))
+                        .Where(i => 
+                            i.TrackingId.ToString() == wlMapping.Key || // NPCs may write guids instead of normal words
+                            i.LocationName.ToLower().Contains(wlMapping.Key)
+                            )
                         .ToList();
 
                     // If there is just one location it matches then assign that word to
@@ -198,7 +204,7 @@ namespace GameEngine.Commands
                     // Get a set of characters that match this word
                     var wordCharacterMatches = availableCharacters
                         .Where(c => 
-                            c.TrackingId.ToString() == wcMapping.Key ||  // NPCs will write guids to avoid issues with characters that have spaces in their names
+                            c.TrackingId.ToString() == wcMapping.Key ||  // NPCs may write guids instead of normal words
                             c.Name.ToLower().Contains(wcMapping.Key)
                             )
                         .ToList();

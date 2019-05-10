@@ -105,7 +105,7 @@ namespace GameEngine.Characters
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
             Hit(attackDamage);
-            var attackMessage = $"{attackingCharacter.Name} has hit {this.Name} for {attackDamage} damage!";
+            var attackMessage = $"{attackingCharacter.Name} hits {this.Name} for {attackDamage} damage!";
             this.GetLocation().SendMessage(attackMessage, null);
             if (IsDead())
             {
