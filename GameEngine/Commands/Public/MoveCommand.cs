@@ -1,13 +1,14 @@
 ﻿using GameEngine.Characters;
 using GameEngine.Locations;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
-    internal class MoveCommand : ICommand
+    public class MoveCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "go", "move", "travel" };
+
         public void Execute(List<string> extraWords, Character movingCharacter)
         {
             var movingCharacterStartLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
@@ -50,12 +51,6 @@ namespace GameEngine.Commands
             // Make the player automatically look after they move to the new location
             movingCharacter.SendMessage();
             PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), movingCharacter);
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var validWords = new List<string>() { "go", "move", "travel" };
-            return validWords.Contains(word.ToLower());
         }
     }
 }

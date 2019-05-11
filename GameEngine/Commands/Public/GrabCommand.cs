@@ -1,12 +1,13 @@
 ﻿using GameEngine.Characters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
-    internal class GrabCommand : ICommand
+    public class GrabCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "grab", "take" };
+
         public void Execute(List<string> extraWords, Character grabbingCharacter)
         {
             var grabbingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
@@ -92,12 +93,6 @@ namespace GameEngine.Commands
             }
 
             itemToGrab.Grab(itemAmountToGrab, grabbingCharacter);
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "grab", "take" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

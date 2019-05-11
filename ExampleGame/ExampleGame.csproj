@@ -49,6 +49,7 @@
     <Compile Include="Characters\Behaviors\CustomTurnBehavior.cs" />
     <Compile Include="Characters\Behaviors\SqueakTurnBehavior.cs" />
     <Compile Include="Characters\Rat.cs" />
+    <Compile Include="Commands\DanceCommand.cs" />
     <Compile Include="ExampleItems.cs" />
     <Compile Include="ExampleLocations.cs" />
     <Compile Include="ExampleGameSourceData.cs" />
