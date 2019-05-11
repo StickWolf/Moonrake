@@ -582,7 +582,7 @@ namespace GameEngine
             }
             else
             {
-                return null;
+                return new Dictionary<Item, int>();
             }
         }
 
@@ -596,7 +596,7 @@ namespace GameEngine
             }
             else
             {
-                return null;
+                return new Dictionary<Item, int>();
             }
         }
 

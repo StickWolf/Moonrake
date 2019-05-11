@@ -1,6 +1,7 @@
 ﻿using GameEngine;
 using GameEngine.Characters;
 using GameEngine.Commands;
+using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,48 +30,113 @@ namespace ExampleGame.Characters
 
         public override void Turn()
         {
-            var choice = rnd.Next(0, 8);
-
-            if (choice > 2)
-            {
-                this.GetLocation().SendMessage($"{Name} squeaks.", this);
-            }
+            var choice = rnd.Next(0, 30);
 
             switch (choice)
             {
                 case 0:
-                    // TODO: Look
+                    ExecuteLookCommand();
+                    break;
                 case 1:
-                    // TODO: Interact
+                    RatAiRandomInteract();
+                    break;
                 case 2:
-                    var randomItem = PickRandomLocationItem();
-                    if (randomItem.HasValue)
-                    {
-                        var extraWords = new List<string>()
-                        {
-                            randomItem.Value.Value.ToString(),
-                            randomItem.Value.Key.TrackingId.ToString(),
-                        };
-                        PublicCommandHelper.TryRunPublicCommand("grab", extraWords, this);
-                    }
+                    RatAiRandomGrab();
                     break;
                 case 3:
-                    // TODO: Move
+                    RatAiRandomMove();
+                    break;
                 case 4:
-                    // TODO: Drop
+                    RatAiRandomDrop();
+                    break;
                 case 5:
-                    // TODO: Stats
+                    ExecuteStatsCommand();
+                    break;
                 case 6:
-                    // TODO: Inventory
+                    ExecuteInventoryCommand();
+                    break;
                 case 7:
-                    var randomCharacter = PickRandomCharacterInRoom();
-                    if (randomCharacter != null)
-                    {
-                        var extraWords = new List<string>() { randomCharacter.TrackingId.ToString() };
-                        PublicCommandHelper.TryRunPublicCommand("attack", extraWords, this);
-                    }
+                    RatAiRandomAttack();
+                    break;
+                case 8:
+                    this.GetLocation().SendMessage($"{Name} squeaks.", this);
                     break;
             }
+        }
+
+        private void RatAiRandomAttack()
+        {
+            var randomCharacter = PickRandomCharacterInRoom();
+            if (randomCharacter != null)
+            {
+                ExecuteAttackCommand(randomCharacter);
+            }
+        }
+
+        private void RatAiRandomGrab()
+        {
+            var randomItem = PickRandomGrabbableLocationItem();
+            if (randomItem.HasValue)
+            {
+                var rndCount = rnd.Next(0, randomItem.Value.Value + 1);
+
+                ExecuteGrabCommand(randomItem.Value.Key, rndCount);
+            }
+        }
+
+        private void RatAiRandomDrop()
+        {
+            var randomItem = PickRandomDroppableInventoryItem();
+            if (randomItem.HasValue)
+            {
+                var rndCount = rnd.Next(0, randomItem.Value.Value + 1);
+                ExecuteDropCommand(randomItem.Value.Key, rndCount);
+            }
+        }
+
+        private void RatAiRandomMove()
+        {
+            var randomLocation = PickRandomMoveableLocation();
+            if (randomLocation != null)
+            {
+                ExecuteMoveCommand(randomLocation);
+            }
+        }
+
+        private void RatAiRandomInteract()
+        {
+            var secondaryItems = GetUseableInventoryItems()
+                .Union(GetLocation().GetUseableItems()).ToList();
+
+            var primaryItems = secondaryItems
+                .Where(kvp => kvp.Key.IsInteractionPrimary).ToList();
+
+            if (primaryItems.Count == 0)
+            {
+                return;
+            }
+            var rndPrimary = rnd.Next(0, primaryItems.Count);
+            var primaryItem = primaryItems[rndPrimary].Key;
+
+            if (secondaryItems.Count == 0)
+            {
+                return;
+            }
+            var rndSecondary = rnd.Next(0, secondaryItems.Count);
+            var secondaryItem = secondaryItems[rndSecondary].Key;
+
+            ExecuteInteractCommand(primaryItem, secondaryItem);
+        }
+
+        private Location PickRandomMoveableLocation()
+        {
+            var destLocations = GameState.CurrentGameState.GetConnectedLocations(this.GetLocation().TrackingId);
+            if (destLocations.Count == 0)
+            {
+                return null;
+            }
+            var index = rnd.Next(0, destLocations.Count);
+            return destLocations[index];
         }
 
         private Character PickRandomCharacterInRoom()
@@ -85,7 +151,7 @@ namespace ExampleGame.Characters
             return roomCharactersExceptRat[index];
         }
 
-        private KeyValuePair<Item, int>? PickRandomLocationItem()
+        private KeyValuePair<Item, int>? PickRandomGrabbableLocationItem()
         {
             var locationItems = GameState.CurrentGameState.GetLocationItems(GetLocation().TrackingId)
                 .Where(i => !i.Key.IsBound && i.Key.IsVisible).ToList();
@@ -95,6 +161,18 @@ namespace ExampleGame.Characters
             }
             var index = rnd.Next(0, locationItems.Count);
             return locationItems.ElementAt(index);
+        }
+
+        private KeyValuePair<Item, int>? PickRandomDroppableInventoryItem()
+        {
+            var inventoryItems = GameState.CurrentGameState.GetCharacterItems(this.TrackingId)
+                .Where(i => !i.Key.IsBound && i.Key.IsVisible).ToList();
+            if (inventoryItems.Count == 0)
+            {
+                return null;
+            }
+            var index = rnd.Next(0, inventoryItems.Count);
+            return inventoryItems.ElementAt(index);
         }
 
 
