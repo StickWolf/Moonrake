@@ -13,6 +13,7 @@ namespace GameEngine.Characters
 
         internal void InternalTurn(EngineInternal engine)
         {
+            Console.Clear();
             string input;
             this.SendMessage($"{Name}:", false);
             Console.WriteLine("");
