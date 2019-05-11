@@ -18,6 +18,10 @@ namespace DreamsAndWhatTheyMean
 
         public Guid JamesKitchen { get; private set; }
 
+        public Guid LilysMainRoom { get; private set; }
+
+        public Guid LilysSecretRoom { get; private set; }
+
         public Guid BRStreet { get; private set; }
 
         public Guid ESStreet { get; private set; }
@@ -38,40 +42,71 @@ namespace DreamsAndWhatTheyMean
                 "You sit in the backyard of Jame's House, you see lots of bones, you are scared."
                 ));
 
-            BRStreet = GameState.CurrentGameState.AddLocation(new Location("BR Street", "a dangerous area to go to during the daytime, since the cars are everywhere.",
-                "You stand in the middle of the street you walk on every day, while you are lucky that you haven't been hit by a car." +
-                " The best thing for you do now is to move out of the road."
+            JamesKitchen = GameState.CurrentGameState.AddLocation(new Location("Jame's House (Kitchen)", "a place to cook food.",
+                "You stand in the kicthen of Jame's house, you greatly want to grab a snack from here."
+                ));
+
+            LilysMainRoom = GameState.CurrentGameState.AddLocation(new Location("Lily's Shed (Main Room)", "a strange, lone place.",
+                "You stand in a tidy room, wanting to know who is cleaning this place."
+                ));
+
+            LilysSecretRoom = GameState.CurrentGameState.AddLocation(new Location("Lily's Shed (Secret Room)", "a room full of machines.",
+                "You stand in a place that is full of machines, you want to know who made these and why."
+                ));
+
+
+            BRStreet = GameState.CurrentGameState.AddLocation(new Location("BR Street", "a very calm street.",
+                "You stand on the street you and you friends live on, you can visit a friend's house from here."
                 ));
 
             ESStreet = GameState.CurrentGameState.AddLocation(new Location("ES Street", "a area so crowded with cars, making it imposible for an accident to happen.",
-                "You stand in the middle of a street less familiar to you, there are stores all over the place." +
-                " But you are also standing in the middle of the road, move fast, there are cars beeping at you."
+                "You stand in a street that has lots of stores in it, you can by something here."
                 ));
 
             BlackSmithShop = GameState.CurrentGameState.AddLocation(new Location("The Black-Smith", "a shop that makes metal for you",
                 "You stand in the Black-Smith store, you wish you had ice-cream here, because it is very hot."
                 ));
 
-            // PlayersLivingRoom <-> PlayersRoom
+            // JamesLivingRoom <-> JamesRoom
             GameState.CurrentGameState.AddPortal(
                new PortalAlwaysOpenRule(JamesRoom, JamesLivingRoom, "Through a white door you see"),
 
                new PortalAlwaysOpenRule(JamesLivingRoom, JamesRoom, "Through a white door you see")
                );
 
-            // PlayersLivingRoom <-> PlayersBackyard
+            // JamesLivingRoom <-> JamesBackyard
             GameState.CurrentGameState.AddPortal(
                 new PortalAlwaysOpenRule(JamesLivingRoom, JamesBackyard, "Through the screen door you see"),
 
                 new PortalAlwaysOpenRule(JamesBackyard, JamesLivingRoom, "Through the screen door you see")
                 );
 
-            // PlayersLivingRoom <-> BRStreet
+            // JamesLivingRoon <-> JamesKitchen
+            GameState.CurrentGameState.AddPortal(
+                new PortalAlwaysOpenRule(JamesLivingRoom, JamesKitchen, "Through the open door you see"),
+
+                new PortalAlwaysOpenRule(JamesKitchen, JamesRoom, "Through the open door you see")
+                );
+            // JamesLivingRoom <-> BRStreet
             GameState.CurrentGameState.AddPortal(
                 new PortalAlwaysOpenRule(JamesLivingRoom, BRStreet, "Through the front door you see"),
 
                 new PortalAlwaysOpenRule(BRStreet, JamesLivingRoom, "Through the door to your house, you see")
                 );
+
+            // BRStreet <-> LilysMainRoom
+            GameState.CurrentGameState.AddPortal(
+                new PortalAlwaysOpenRule(BRStreet, LilysMainRoom, "Through a broken door you see"),
+
+                new PortalAlwaysOpenRule(LilysMainRoom, BRStreet, "Through a hole in the door you see")
+                );
+
+            //LilysMainRoom <-> LilysSecretRoom
+            GameState.CurrentGameState.AddPortal(
+              new PortalAlwaysOpenRule(LilysMainRoom, LilysSecretRoom, "Through a trapdoor you see"),
+
+              new PortalAlwaysOpenRule(LilysSecretRoom, LilysMainRoom, "Through the trapdoor you see")
+              );
 
             // BRStreet <-> ESStreet
             GameState.CurrentGameState.AddPortal(

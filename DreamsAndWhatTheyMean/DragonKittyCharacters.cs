@@ -21,7 +21,7 @@ namespace DreamsAndWhatTheyMean
             Player1 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("James", 50) { MaxAttack = 10, CounterAttackPercent = 50 }, gameData.DkLocations.JamesRoom);
             Player2 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Owen", 60) { MaxAttack = 15, CounterAttackPercent = 60 }, gameData.DkLocations.JamesLivingRoom);
             Player3 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Matthew", 50) { MaxAttack = 10, CounterAttackPercent = 100 }, gameData.DkLocations.BlackSmithShop);
-            Player4 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Lily", 30) { MaxAttack = 5, CounterAttackPercent = 20 }, gameData.DkLocations.BRStreet);
+            Player4 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Lily", 30) { MaxAttack = 5, CounterAttackPercent = 20 }, gameData.DkLocations.LilysSecretRoom);
         }
     }
 }
