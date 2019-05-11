@@ -6,6 +6,8 @@ namespace GameEngine.Commands.Internal
 {
     internal class SaveCommand : ICommandInternal
     {
+        public List<string> ActivatingWords => new List<string>() { "save" };
+
         public void Execute(EngineInternal engine, List<string> extraWords, Character savingCharacter)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
@@ -26,11 +28,6 @@ namespace GameEngine.Commands.Internal
             savingCharacter.SendMessage($"Saving {slotToSave}.");
             GameState.SaveGameState(slotToSave);
             savingCharacter.SendMessage("Saving complete.");
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("save", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace GameEngine
 
             // Add built-in things
             GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
-            // TODO: should commands also be added to GameState like this so games can provide custom commands?
+            PublicCommandHelper.AddPublicCommandsToGameState();
 
             // Have the game fill in its game data
             NewGameFiller();

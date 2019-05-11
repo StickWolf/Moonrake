@@ -1,12 +1,13 @@
 ﻿using GameEngine.Characters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Commands.Public
 {
-    internal class DropCommand : ICommand
+    public class DropCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "drop" };
+
         public void Execute(List<string> extraWords, Character droppingCharacter)
         {
             var droppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
@@ -92,12 +93,6 @@ namespace GameEngine.Commands.Public
             }
 
             itemToDrop.Drop(itemAmountToDrop, droppingCharacter);
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "drop" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

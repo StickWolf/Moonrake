@@ -1,4 +1,5 @@
-﻿using GameEngine;
+﻿using ExampleGame.Commands;
+using GameEngine;
 
 namespace ExampleGame
 {
@@ -22,6 +23,8 @@ namespace ExampleGame
 
             GameState.CurrentGameState.GameIntroductionText = "There once was an example game.";
             GameState.CurrentGameState.Custom = this;
+
+            GameState.CurrentGameState.AddPublicCommand(new DanceCommand());
 
             // TODO: From the cemetary theatre you'll need to set the numbers on a combination lock to 1234 through the use command.
             // TODO: When a new game starts the combination should be initially set to 8734.

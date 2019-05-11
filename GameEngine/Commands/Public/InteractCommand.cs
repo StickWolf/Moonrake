@@ -5,8 +5,10 @@ using System.Linq;
 
 namespace GameEngine.Commands.Public
 {
-    internal class InteractCommand : ICommand
+    public class InteractCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "use", "interact" };
+
         public void Execute(List<string> extraWords, Character interactingCharacter)
         {
             var useableLocationItems = interactingCharacter.GetLocation().GetUseableItems()
@@ -163,12 +165,6 @@ namespace GameEngine.Commands.Public
                     interactingCharacter.SendMessage($"Unknown response: {answer}");
                 }
             }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "use", "interact" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

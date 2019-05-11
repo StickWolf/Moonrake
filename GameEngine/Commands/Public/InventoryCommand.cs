@@ -1,12 +1,13 @@
 ﻿using GameEngine.Characters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Commands.Public
 {
-    internal class InventoryCommand : ICommand
+    public class InventoryCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "inv", "inventory" };
+
         public void Execute(List<string> extraWords, Character inventorySeekingCharacter)
         {
             var characterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
@@ -30,12 +31,6 @@ namespace GameEngine.Commands.Public
                 var description = item.GetDescription(characterItem.Value).UppercaseFirstChar();
                 inventorySeekingCharacter.SendMessage(description);
             }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "inv", "inventory" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

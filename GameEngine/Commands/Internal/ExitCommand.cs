@@ -1,12 +1,13 @@
 ﻿using GameEngine.Characters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GameEngine.Commands.Internal
 {
     internal class ExitCommand : ICommandInternal
     {
+        public List<string> ActivatingWords => new List<string>() { "exit" };
+
         public void Execute(EngineInternal engine, List<string> extraWords, Character exitingCharacter)
         {
             while (true)
@@ -39,11 +40,6 @@ namespace GameEngine.Commands.Internal
                     exitingCharacter.SendMessage($"Unknown response: {answer}");
                 }
             }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("exit", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

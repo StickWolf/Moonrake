@@ -5,8 +5,10 @@ using System.Linq;
 
 namespace GameEngine.Commands.Public
 {
-    internal class LookCommand : ICommand
+    public class LookCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "look" };
+
         public void Execute(List<string> extraWords, Character lookingCharacter)
         {
             var lookingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
@@ -94,11 +96,6 @@ namespace GameEngine.Commands.Public
                 lookingCharacter.SendMessage();
                 lookingCharacter.SendMessage(otherCharactersMessage);
             }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("look", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

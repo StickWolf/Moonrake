@@ -5,8 +5,10 @@ using System.Linq;
 
 namespace GameEngine.Commands.Public
 {
-    internal class ShopCommand : ICommand
+    public class ShopCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "shop" };
+
         public void Execute(List<string> extraWords, Character shoppingCharacter)
         {
             var shoppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
@@ -76,12 +78,6 @@ namespace GameEngine.Commands.Public
             //  8. If the user exits the shop then the command ends and they are back at the location the were previously.
 
             // TODO: determine how bound items will be presented in shops
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("shop", StringComparison.OrdinalIgnoreCase);
-            
         }
     }
 }

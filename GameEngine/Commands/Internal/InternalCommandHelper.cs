@@ -1,4 +1,5 @@
 ﻿using GameEngine.Characters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,7 +33,8 @@ namespace GameEngine.Commands.Internal
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
         internal static bool TryRunInternalCommand(string word, List<string> extraWords, EngineInternal engine, Character executingCharacter)
         {
-            var commandToRun = AllInternalCommands.FirstOrDefault(c => c.IsActivatedBy(word));
+            var commandToRun = AllInternalCommands
+                .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(word, StringComparison.OrdinalIgnoreCase)));
             if (commandToRun == null)
             {
                 return false;

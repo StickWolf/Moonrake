@@ -1,5 +1,6 @@
 ﻿using GameEngine.Characters.Behaviors;
 using GameEngine.Commands;
+using GameEngine.Commands.Public;
 using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;

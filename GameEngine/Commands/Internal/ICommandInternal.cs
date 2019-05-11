@@ -5,7 +5,7 @@ namespace GameEngine.Commands.Internal
 {
     internal interface ICommandInternal
     {
-        bool IsActivatedBy(string word);
+        List<string> ActivatingWords { get; }
 
         void Execute(EngineInternal engine, List<string> extraWords, Character executingCharacter);
     }
