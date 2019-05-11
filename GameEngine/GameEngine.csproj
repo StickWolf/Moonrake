@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Characters\Behaviors\BuiltInTurnBehaviors.cs" />
+    <Compile Include="Characters\Behaviors\ITurnBehavior.cs" />
+    <Compile Include="Characters\Behaviors\TurnBehaviorRandom.cs" />
     <Compile Include="Characters\PlayerCharacter.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DropCommand.cs" />
@@ -51,9 +54,10 @@
     <Compile Include="Commands\InteractCommand.cs" />
     <Compile Include="Commands\GrabCommand.cs" />
     <Compile Include="Commands\InventoryCommand.cs" />
+    <Compile Include="Commands\InternalCommandHelper.cs" />
     <Compile Include="Commands\ShopCommand.cs" />
     <Compile Include="Commands\ClearCommand.cs" />
-    <Compile Include="Commands\CommandHelper.cs" />
+    <Compile Include="Commands\PublicCommandHelper.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LetPlayerChangeTheirNameCommand.cs" />

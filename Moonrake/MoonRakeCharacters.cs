@@ -10,7 +10,7 @@ namespace Moonrake
 
         public void NewGame(MoonrakeGameData gameData)
         {
-            Player = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Eric", 50) { MaxAttack = 100, CounterAttackChance = 75 }, gameData.MoonRakeLocations.TreeHouse);
+            Player = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Eric", 50) { MaxAttack = 100, CounterAttackPercent = 75 }, gameData.MoonRakeLocations.TreeHouse);
         }
     }
 }

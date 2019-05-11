@@ -1,4 +1,5 @@
 ﻿using GameEngine.Characters;
+using GameEngine.Characters.Behaviors;
 using GameEngine.Commands;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,12 @@ namespace GameEngine
         {
             // Create a new game
             GameState.CreateNewGameState();
+
+            // Add built-in things
+            GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
+            // TODO: should commands also be added to GameState like this so games can provide custom commands?
+
+            // Have the game fill in its game data
             NewGameFiller();
 
             // Show the intro and take a look around

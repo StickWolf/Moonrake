@@ -16,7 +16,7 @@ namespace ExampleGame.Items
 
         public override string GetDescription(int count)
         {
-            return "a device made of crystal that has an unknown purpose"; // TODO: write asserts that check the formatting of these, check for init caps and . ending sentences that shouldn't be present
+            return "a device made of crystal that has an unknown purpose";
         }
 
         public override void Grab(int count, Character grabbingCharacter)

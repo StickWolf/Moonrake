@@ -26,13 +26,13 @@ namespace GameEngine.Characters
             extraWords.RemoveAt(0);
 
             // Look for internal commands to run
-            if (CommandHelper.TryRunInternalCommand(word, extraWords, engine, this))
+            if (InternalCommandHelper.TryRunInternalCommand(word, extraWords, engine, this))
             {
                 return;
             }
 
             // Then look for public commands to run
-            if (CommandHelper.TryRunPublicCommand(word, extraWords, this))
+            if (PublicCommandHelper.TryRunPublicCommand(word, extraWords, this))
             {
                 return;
             }

@@ -1,15 +1,13 @@
 ﻿using GameEngine.Characters;
 using GameEngine.Locations;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Commands
 {
-    internal static class CommandHelper
+    public static class PublicCommandHelper
     {
         private static List<ICommand> AllPublicCommands { get; set; }
-        private static List<ICommandInternal> AllInternalCommands { get; set; }
 
         /// <summary>
         /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
@@ -17,7 +15,7 @@ namespace GameEngine.Commands
         /// </summary>
         private static List<string> SkipWords { get; set; } = new List<string>() { "the", "on", "with", "in" };
 
-        static CommandHelper()
+        static PublicCommandHelper()
         {
             // Public commands do not get passed the engine internal when they are called
             // Public commands are available to the player and npcs
@@ -32,17 +30,6 @@ namespace GameEngine.Commands
                 new StatsCommand(),
                 new InteractCommand(),
                 new ShopCommand()
-            };
-
-            // Internal commands gain access to the EngineInternal when they are executed
-            // The intention is that internal commands are only available to the player
-            AllInternalCommands = new List<ICommandInternal>()
-            {
-                new ClearCommand(),
-                new LetPlayerChangeTheirNameCommand(),
-                new LoadCommand(),
-                new SaveCommand(),
-                new ExitCommand(),
             };
         }
 
@@ -64,27 +51,6 @@ namespace GameEngine.Commands
 
             // The command is a real command if we got this far
             commandToRun.Execute(extraWords, executingCharacter);
-            return true;
-        }
-
-        /// <summary>
-        /// Runs an internal command
-        /// </summary>
-        /// <param name="word">The command word</param>
-        /// <param name="extraWords">Extra words to pass along to the command</param>
-        /// <param name="gameData">The game source data</param>
-        /// <param name="executingCharacter">The character who is running the command</param>
-        /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        internal static bool TryRunInternalCommand(string word, List<string> extraWords, EngineInternal engine, Character executingCharacter)
-        {
-            var commandToRun = AllInternalCommands.FirstOrDefault(c => c.IsActivatedBy(word));
-            if (commandToRun == null)
-            {
-                return false;
-            }
-
-            // The command is a real command if we got this far
-            commandToRun.Execute(engine, extraWords, executingCharacter);
             return true;
         }
 
@@ -117,7 +83,10 @@ namespace GameEngine.Commands
 
                     // Get a set of items that match this word
                     var wordItemMatches = availableItems
-                        .Where(i => i.DisplayName.ToLower().Contains(wiMapping.Key))
+                        .Where(i => 
+                            i.TrackingId.ToString() == wiMapping.Key || // NPCs may write guids instead of normal words
+                            i.DisplayName.ToLower().Contains(wiMapping.Key)
+                            )
                         .ToList();
 
                     // If there is just one item it matches then assign that word to
@@ -185,7 +154,10 @@ namespace GameEngine.Commands
 
                     // Get a set of locations that match this word
                     var wordLocationMatches = availableLocations
-                        .Where(i => i.LocationName.ToLower().Contains(wlMapping.Key))
+                        .Where(i => 
+                            i.TrackingId.ToString() == wlMapping.Key || // NPCs may write guids instead of normal words
+                            i.LocationName.ToLower().Contains(wlMapping.Key)
+                            )
                         .ToList();
 
                     // If there is just one location it matches then assign that word to
@@ -231,7 +203,10 @@ namespace GameEngine.Commands
 
                     // Get a set of characters that match this word
                     var wordCharacterMatches = availableCharacters
-                        .Where(i => i.Name.ToLower().Contains(wcMapping.Key))
+                        .Where(c => 
+                            c.TrackingId.ToString() == wcMapping.Key ||  // NPCs may write guids instead of normal words
+                            c.Name.ToLower().Contains(wcMapping.Key)
+                            )
                         .ToList();
 
                     // If there is just one character it matches then assign that word to

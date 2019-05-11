@@ -1,7 +1,10 @@
-﻿using GameEngine.Locations;
+﻿using GameEngine.Characters.Behaviors;
+using GameEngine.Commands;
+using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.Characters
 {
@@ -21,10 +24,13 @@ namespace GameEngine.Characters
         public int MaxAttack { get; set; }
 
         [JsonProperty]
-        public int CounterAttackChance { get; set; }
+        public int CounterAttackPercent { get; set; }
 
         [JsonProperty]
         public int MaxHeal { get; set; }
+
+        [JsonProperty]
+        public List<string> TurnBehaviors { get; set; }
 
         private static Random rnd = new Random();
 
@@ -99,46 +105,42 @@ namespace GameEngine.Characters
         /// </summary>
         public virtual void Turn()
         {
+            if (TurnBehaviors != null)
+            {
+                foreach (var turnBehaviorName in TurnBehaviors)
+                {
+                    var behavior = GameState.CurrentGameState.GetTurnBehavior(turnBehaviorName);
+                    behavior?.Turn(this);
+                }
+            }
         }
 
         public virtual void Attack(Character attackingCharacter)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
-
-            HitPoints -= attackDamage;
-            if (HitPoints <= 0)
+            Hit(attackDamage);
+            var attackMessage = $"{attackingCharacter.Name} hits {this.Name} for {attackDamage} damage!";
+            this.GetLocation().SendMessage(attackMessage, null);
+            if (IsDead())
             {
-                // Makes sure that the player has 0 hp, so when a heal
-                // comes in, it isn't like -100 to -50.
-                HitPoints = 0;
-                this.GetLocation().SendMessage($"{Name} is dead.", this);
+                this.GetLocation().SendMessage($"{Name} has been killed.", null);
                 return;
             }
 
-            this.GetLocation().SendMessage($"{Name} has {HitPoints}/{MaxHitPoints} left", this);
-
-            var counterAttackPosiblity = rnd.Next(CounterAttackChance, 100);
-            if(counterAttackPosiblity >= 75)
+            var counterAttackRoll = rnd.Next(1, 100);
+            if(counterAttackRoll >= (100 - CounterAttackPercent))
             {
-                if (IsDead())
-                {
-                    return;
-                }
-                this.GetLocation().SendMessage($"{Name} countered!", this);
-
                 var maxAttackDamage = MaxAttack / 2;
                 var counterAttackDamage = GetAttackDamage(maxAttackDamage);
-                attackingCharacter.HitPoints = attackingCharacter.HitPoints - counterAttackDamage;
-                if (attackingCharacter.HitPoints <= 0)
+                attackingCharacter.Hit(counterAttackDamage);
+                var counterAttackMessage = $"{this.Name} counter attacks and hits {attackingCharacter.Name} for {counterAttackDamage} damage!";
+                this.GetLocation().SendMessage(counterAttackMessage, null);
+
+                if (attackingCharacter.IsDead())
                 {
-                    // Makes sure that the player has 0 hp, so when a heal
-                    // comes in, it isn't like -100 to -50.
-                    attackingCharacter.HitPoints = 0;
-                    this.GetLocation().SendMessage($"{attackingCharacter.Name} is dead.", this);
+                    this.GetLocation().SendMessage($"{attackingCharacter.Name} has been killed.", null);
                     return;
                 }
-
-                this.GetLocation().SendMessage($"{attackingCharacter.Name} has {attackingCharacter.HitPoints}/{attackingCharacter.MaxHitPoints} left", this);
             }
         }
 
@@ -157,6 +159,20 @@ namespace GameEngine.Characters
             return false;
         }
 
+        public void Hit(int hitAmount)
+        {
+            if (IsDead())
+            {
+                return;
+            }
+
+            if ((HitPoints - hitAmount) < 0)
+            {
+                hitAmount = HitPoints;
+            }
+            HitPoints -= hitAmount;
+        }
+
         public void Heal(int healAmount)
         {
             if (IsDead())
@@ -168,7 +184,7 @@ namespace GameEngine.Characters
             {
                 healAmount = MaxHitPoints - HitPoints;
             }
-            HitPoints = HitPoints + healAmount;
+            HitPoints += HitPoints;
         }
 
         public void Heal(Character healingCharacter)
@@ -186,6 +202,118 @@ namespace GameEngine.Characters
         {
             int heal = rnd.Next(0, maxHeal);
             return maxHeal;
+        }
+
+        /// <summary>
+        /// Gets all items the character is holding in their inventory that can be used
+        /// </summary>
+        /// <returns></returns>
+        public List<KeyValuePair<Item, int>> GetUseableInventoryItems()
+        {
+            var useableCharacterItems = GameState.CurrentGameState.GetCharacterItems(this.TrackingId)
+                .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
+                .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Inventory) // Only choose items that can be used
+                .Select(i => new KeyValuePair<Item, int>(i.Key, i.Value))
+                .ToList();
+            return useableCharacterItems;
+        }
+
+        /// <summary>
+        /// Makes the character use the interact command
+        /// </summary>
+        /// <param name="primaryItem">The primary item to have the character interact with</param>
+        /// <param name="secondaryItem">The secondary item to have the character interact with</param>
+        public void ExecuteInteractCommand(Item primaryItem, Item secondaryItem)
+        {
+            var extraWords = new List<string>();
+            if (secondaryItem != null)
+            {
+                extraWords.Add(secondaryItem.TrackingId.ToString());
+            }
+            if (primaryItem != null)
+            {
+                extraWords.Add(primaryItem.TrackingId.ToString());
+            }
+
+            PublicCommandHelper.TryRunPublicCommand("use", extraWords, this);
+        }
+
+        /// <summary>
+        /// Makes the character run the grab command on the specified item.
+        /// Note that the item must be present in the amount specified in 
+        /// order for the command to succeed.
+        /// </summary>
+        /// <param name="itemToGrab">The item to grab</param>
+        /// <param name="countToGrab">The number of items the character should try to grab</param>
+        public void ExecuteGrabCommand(Item itemToGrab, int countToGrab)
+        {
+            var extraWords = new List<string>()
+                {
+                    countToGrab.ToString(),
+                    itemToGrab.TrackingId.ToString(),
+                };
+            PublicCommandHelper.TryRunPublicCommand("grab", extraWords, this);
+        }
+
+        /// <summary>
+        /// Makes the character run the drop command on the specified item.
+        /// Note that the item must be present in the amount specified in
+        /// order for the command to succeed.
+        /// </summary>
+        /// <param name="itemToDrop">The item to drop</param>
+        /// <param name="countToDrop">The cound of items the character should try to drop</param>
+        public void ExecuteDropCommand(Item itemToDrop, int countToDrop)
+        {
+            var extraWords = new List<string>()
+                {
+                    countToDrop.ToString(),
+                    itemToDrop.TrackingId.ToString(),
+                };
+            PublicCommandHelper.TryRunPublicCommand("drop", extraWords, this);
+        }
+
+        /// <summary>
+        /// Makes the character run the attack command on the specified character.
+        /// </summary>
+        /// <param name="characterToAttack">The character that this character should attack</param>
+        public void ExecuteAttackCommand(Character characterToAttack)
+        {
+            var extraWords = new List<string>() { characterToAttack.TrackingId.ToString() };
+            PublicCommandHelper.TryRunPublicCommand("attack", extraWords, this);
+        }
+
+        /// <summary>
+        /// Makes the character run the move command
+        /// </summary>
+        /// <param name="locationToMoveTo">The location to attempt to move to</param>
+        public void ExecuteMoveCommand(Location locationToMoveTo)
+        {
+            var extraWords = new List<string>() { locationToMoveTo.TrackingId.ToString() };
+            PublicCommandHelper.TryRunPublicCommand("move", extraWords, this);
+        }
+
+        /// <summary>
+        /// Makes the character run the look command
+        /// </summary>
+        public void ExecuteLookCommand()
+        {
+            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), this);
+        }
+
+        /// <summary>
+        /// Makes the character run the stats command
+        /// </summary>
+        public void ExecuteStatsCommand()
+        {
+            PublicCommandHelper.TryRunPublicCommand("stats", new List<string>(), this);
+        }
+
+        /// <summary>
+        /// Makes the character run the inventory command
+        /// </summary>
+        public void ExecuteInventoryCommand()
+        {
+            PublicCommandHelper.TryRunPublicCommand("inv", new List<string>(), this);
         }
     }
 }
