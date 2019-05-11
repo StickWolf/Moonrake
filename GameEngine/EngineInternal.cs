@@ -80,8 +80,8 @@ namespace GameEngine
                 if (PlayerHasWon)
                 {
 
-                    playerCharacters[1].SendMessage(GameState.CurrentGameState.GameEndingText);
-                    playerCharacters[1].SendMessage("             |--The End--|             ");
+                    playerCharacters[0].SendMessage(GameState.CurrentGameState.GameEndingText);
+                    playerCharacters[0].SendMessage("             |--The End--|             ");
                     Console.ReadLine();
                     RunGameLoop = false;
                 }
