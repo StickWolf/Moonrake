@@ -14,7 +14,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
     {
         [JsonProperty]
         private Guid CharacterTrackingId { get; set; }
-        private List<Guid> Id = new List<Guid>();
+        private List<Guid> CharacterId = new List<Guid>();
 
         [JsonProperty]
         private Guid DollarItemTrackingId { get; set; }
