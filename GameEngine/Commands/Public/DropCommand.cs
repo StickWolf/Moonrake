@@ -51,9 +51,6 @@ namespace GameEngine.Commands.Public
             }
             else
             {
-                // TODO: add a special parsing ability to sentence parsing where if we see a guid appear that it auto-converts to the item/thing represented
-                // TODO: npcs would use this mode to assure the right thing happened
-
                 itemToDrop = droppingCharacter.Choose("What do you want to drop?", availableItems, includeCancel: true);
                 if (itemToDrop == null)
                 {

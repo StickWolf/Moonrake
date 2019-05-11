@@ -10,10 +10,10 @@ namespace GameEngine.Commands.Public
     {
         public void Execute(List<string> extraWords, Character movingCharacter)
         {
-            var movingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
+            var movingCharacterStartLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
 
             // Get a list of locations that can be moved to from here.
-            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterLocation.TrackingId)
+            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterStartLocation.TrackingId)
                 .ToDictionary(kvp => kvp, kvp => kvp.LocationName); // convert to Dictionary[{location}] = {locationName}
 
             var wordLocationMap = PublicCommandHelper.WordsToLocations(extraWords, validLocations.Keys.ToList());
@@ -38,12 +38,14 @@ namespace GameEngine.Commands.Public
                 if (location == null)
                 {
                     movingCharacter.SendMessage("Canceled Move");
-                    movingCharacterLocation.SendMessage($"{movingCharacter.Name} looks indecisive.", movingCharacter);
+                    movingCharacter.GetLocation().SendMessage($"{movingCharacter.Name} looks indecisive.", movingCharacter);
                     return;
                 }
             }
 
+            movingCharacter.GetLocation().SendMessage($"{movingCharacter.Name} moves to the {location.LocationName}.", movingCharacter);
             GameState.CurrentGameState.SetCharacterLocation(movingCharacter.TrackingId, location.TrackingId);
+            movingCharacter.GetLocation().SendMessage($"{movingCharacter.Name} has arrived in the area.", movingCharacter);
 
             // Make the player automatically look after they move to the new location
             movingCharacter.SendMessage();

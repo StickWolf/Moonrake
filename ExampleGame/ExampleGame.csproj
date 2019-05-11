@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Characters\Behaviors\CustomTurnBehavior.cs" />
+    <Compile Include="Characters\Behaviors\SqueakTurnBehavior.cs" />
     <Compile Include="Characters\Rat.cs" />
     <Compile Include="ExampleItems.cs" />
     <Compile Include="ExampleLocations.cs" />

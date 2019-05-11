@@ -1,6 +1,8 @@
 ﻿using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.Locations
 {
@@ -61,6 +63,20 @@ namespace GameEngine.Locations
                 // TODO: add an admin command that lets you see these "Inaudible" messages
                 //Console.WriteLine($"{{SendMessageToLocation}} \"{this.LocationName}\" : {text}"); // SendMessage
             }
+        }
+
+        /// <summary>
+        /// Gets all items at the location that are useable
+        /// </summary>
+        /// <returns></returns>
+        public List<KeyValuePair<Item, int>> GetUseableItems()
+        {
+            var useableLocationItems = GameState.CurrentGameState.GetLocationItems(this.TrackingId)
+                .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
+                .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Location) // Only choose items that can be used
+                .Select(i => new KeyValuePair<Item, int>(i.Key, i.Value))
+                .ToList();
+            return useableLocationItems;
         }
     }
 }

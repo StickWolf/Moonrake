@@ -60,8 +60,38 @@ namespace GameEngine.Commands.Public
                 }
             }
 
-            var itemAmount = locationItems[itemToGrab];
-            itemToGrab.Grab(itemAmount, grabbingCharacter);
+            var itemAmountToGrab = locationItems[itemToGrab];
+            if (itemAmountToGrab > 1)
+            {
+                var leftWords = wordItemMap.Where(i => i.Value == null).Select(i => i.Key).ToList();
+                var wordNumberMap = PublicCommandHelper.WordsToNumbers(leftWords);
+                var foundNumbers = wordNumberMap.Where(i => i.Value.HasValue).Select(i => i.Value.Value).ToList();
+                if (foundNumbers.Count > 0)
+                {
+                    itemAmountToGrab = foundNumbers[0];
+                }
+                // Don't prompt NPCs who are running actions
+                else if (!grabbingCharacter.IsPlayerCharacter())
+                {
+                    return;
+                }
+                else
+                {
+                    grabbingCharacter.SendMessage("How many do you want to grab?");
+                    itemAmountToGrab = int.Parse(Console.ReadLine());
+                }
+
+                if (itemAmountToGrab <= 0)
+                {
+                    return;
+                }
+                if (itemAmountToGrab > locationItems[itemToGrab])
+                {
+                    itemAmountToGrab = locationItems[itemToGrab];
+                }
+            }
+
+            itemToGrab.Grab(itemAmountToGrab, grabbingCharacter);
         }
 
         public bool IsActivatedBy(string word)
