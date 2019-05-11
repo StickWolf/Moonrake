@@ -721,7 +721,7 @@ namespace GameEngine
 
         public TradePost GetTradePost(Guid tradePostTrackingId)
         {
-            if (TradeSets.ContainsKey(tradePostTrackingId))
+            if (TradePosts.ContainsKey(tradePostTrackingId))
             {
                 return TradePosts[tradePostTrackingId];
             }
