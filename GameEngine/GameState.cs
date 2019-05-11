@@ -1,5 +1,6 @@
 ﻿using GameEngine.Characters;
 using GameEngine.Characters.Behaviors;
+using GameEngine.Commands.Public;
 using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
@@ -29,6 +30,9 @@ namespace GameEngine
 
         [JsonProperty]
         public object Custom { get; set; }
+
+        [JsonProperty]
+        private List<ICommand> PublicCommands { get; set; } = new List<ICommand>();
 
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
@@ -794,6 +798,22 @@ namespace GameEngine
                 return TurnBehaviors[behaviorName];
             }
             return null;
+        }
+
+        public void AddPublicCommand(ICommand command)
+        {
+            PublicCommands.Add(command);
+        }
+
+        public ICommand GetPublicCommand(string commandName)
+        {
+            if (commandName == null)
+            {
+                return null;
+            }
+            var command = PublicCommands
+                .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
+            return command;
         }
     }
 }

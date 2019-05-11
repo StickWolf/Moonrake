@@ -3,34 +3,27 @@ using GameEngine.Locations;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
     public static class PublicCommandHelper
     {
-        private static List<ICommand> AllPublicCommands { get; set; }
-
         /// <summary>
         /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
         /// to match them to something.
         /// </summary>
         private static List<string> SkipWords { get; set; } = new List<string>() { "the", "on", "with", "in" };
 
-        static PublicCommandHelper()
+        public static void AddPublicCommandsToGameState()
         {
-            // Public commands do not get passed the engine internal when they are called
-            // Public commands are available to the player and npcs
-            AllPublicCommands = new List<ICommand>()
-            {
-                new MoveCommand(),
-                new LookCommand(),
-                new InventoryCommand(),
-                new GrabCommand(),
-                new DropCommand(),
-                new AttackCommand(),
-                new StatsCommand(),
-                new InteractCommand(),
-                new ShopCommand()
-            };
+            GameState.CurrentGameState.AddPublicCommand(new MoveCommand());
+            GameState.CurrentGameState.AddPublicCommand(new LookCommand());
+            GameState.CurrentGameState.AddPublicCommand(new InventoryCommand());
+            GameState.CurrentGameState.AddPublicCommand(new GrabCommand());
+            GameState.CurrentGameState.AddPublicCommand(new DropCommand());
+            GameState.CurrentGameState.AddPublicCommand(new AttackCommand());
+            GameState.CurrentGameState.AddPublicCommand(new StatsCommand());
+            GameState.CurrentGameState.AddPublicCommand(new InteractCommand());
+            GameState.CurrentGameState.AddPublicCommand(new ShopCommand());
         }
 
         /// <summary>
@@ -43,7 +36,7 @@ namespace GameEngine.Commands
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
         public static bool TryRunPublicCommand(string word, List<string> extraWords, Character executingCharacter)
         {
-            var commandToRun = AllPublicCommands.FirstOrDefault(c => c.IsActivatedBy(word));
+            var commandToRun = GameState.CurrentGameState.GetPublicCommand(word);
             if (commandToRun == null)
             {
                 return false;
