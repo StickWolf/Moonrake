@@ -17,7 +17,7 @@ namespace GameEngine.Characters
             Console.Clear();
             string input;
             this.SendMessage($"{Name}:", false);
-            Console.WriteLine("");
+            SendMessage();
             PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), this);
             SendMessage("> ", false);
             input = Console.ReadLine();
@@ -25,7 +25,7 @@ namespace GameEngine.Characters
             var extraWords = new List<string>(input.Split(' '));
             var word = extraWords[0];
             extraWords.RemoveAt(0);
-            GameState.CurrentGameState.
+            GameState.CurrentGameState.GetPublicCommand("look");
             // Look for internal commands to run
             if (InternalCommandHelper.TryRunInternalCommand(word, extraWords, engine, this))
             {
