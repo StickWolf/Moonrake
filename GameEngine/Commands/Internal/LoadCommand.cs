@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Internal
 {
     internal class LoadCommand : ICommandInternal
     {
+        public List<string> ActivatingWords => new List<string>() { "load" };
+
         public void Execute(EngineInternal engine, List<string> extraWords, Character loadingCharacter)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
@@ -33,11 +35,6 @@ namespace GameEngine.Commands
                 GameState.LoadGameState(slotToLoad);
                 loadingCharacter.SendMessage("Loading complete.");
             }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("load", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

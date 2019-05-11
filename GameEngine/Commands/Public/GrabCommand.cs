@@ -1,12 +1,13 @@
 ﻿using GameEngine.Characters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
-    internal class GrabCommand : ICommand
+    public class GrabCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "grab", "take" };
+
         public void Execute(List<string> extraWords, Character grabbingCharacter)
         {
             var grabbingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
@@ -34,7 +35,7 @@ namespace GameEngine.Commands
             }
 
             // Try to auto-determine what the player is trying to grab
-            var wordItemMap = CommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
+            var wordItemMap = PublicCommandHelper.WordsToItems(extraWords, availableItems.Keys.ToList());
             var foundItems = wordItemMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -60,14 +61,38 @@ namespace GameEngine.Commands
                 }
             }
 
-            var itemAmount = locationItems[itemToGrab];
-            itemToGrab.Grab(itemAmount, grabbingCharacter);
-        }
+            var itemAmountToGrab = locationItems[itemToGrab];
+            if (itemAmountToGrab > 1)
+            {
+                var leftWords = wordItemMap.Where(i => i.Value == null).Select(i => i.Key).ToList();
+                var wordNumberMap = PublicCommandHelper.WordsToNumbers(leftWords);
+                var foundNumbers = wordNumberMap.Where(i => i.Value.HasValue).Select(i => i.Value.Value).ToList();
+                if (foundNumbers.Count > 0)
+                {
+                    itemAmountToGrab = foundNumbers[0];
+                }
+                // Don't prompt NPCs who are running actions
+                else if (!grabbingCharacter.IsPlayerCharacter())
+                {
+                    return;
+                }
+                else
+                {
+                    grabbingCharacter.SendMessage("How many do you want to grab?");
+                    itemAmountToGrab = int.Parse(Console.ReadLine());
+                }
 
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "grab", "take" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
+                if (itemAmountToGrab <= 0)
+                {
+                    return;
+                }
+                if (itemAmountToGrab > locationItems[itemToGrab])
+                {
+                    itemAmountToGrab = locationItems[itemToGrab];
+                }
+            }
+
+            itemToGrab.Grab(itemAmountToGrab, grabbingCharacter);
         }
     }
 }

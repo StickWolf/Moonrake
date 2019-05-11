@@ -1,12 +1,13 @@
 ﻿using GameEngine.Characters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
-    internal class AttackCommand : ICommand
+    public class AttackCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "attack", "hit", "fight", "injure" };
+
         public void Execute(List<string> extraWords, Character attackingCharacter)
         {
             var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacter.TrackingId);
@@ -22,7 +23,7 @@ namespace GameEngine.Commands
                 return;
             }
 
-            var wordCharacterMap = CommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList());
+            var wordCharacterMap = PublicCommandHelper.WordsToCharacters(extraWords, otherCharactersInLoc.Keys.ToList());
             var foundCharacters = wordCharacterMap
                 .Where(i => i.Value != null)
                 .Select(i => i.Value)
@@ -49,12 +50,6 @@ namespace GameEngine.Commands
             }
 
             defendingCharacter.Attack(attackingCharacter);
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "attack", "hit", "fight", "injure" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

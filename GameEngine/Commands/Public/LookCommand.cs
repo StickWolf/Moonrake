@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
-    internal class LookCommand : ICommand
+    public class LookCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "look" };
+
         public void Execute(List<string> extraWords, Character lookingCharacter)
         {
             var lookingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
@@ -79,18 +81,21 @@ namespace GameEngine.Commands
             var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacterLocation.TrackingId, includePlayer: false);
             if(otherCharactersInLocation.Count != 0)
             {
-                lookingCharacter.SendMessage();
-                lookingCharacter.SendMessage("The following other characters are here:");
-                foreach(var character in otherCharactersInLocation)
+                string otherCharactersMessage = "";
+                for (int i = 0; i < otherCharactersInLocation.Count; i++)
                 {
-                    lookingCharacter.SendMessage(character.Name);
-                }
-            }
-        }
+                    var character = otherCharactersInLocation[i];
+                    if (i > 0)
+                    {
+                        otherCharactersMessage += (i == otherCharactersInLocation.Count - 1) ? " and " : ", ";
+                    }
 
-        public bool IsActivatedBy(string word)
-        {
-            return word.Equals("look", StringComparison.OrdinalIgnoreCase);
+                    otherCharactersMessage += character.IsDead() ? $"{character.Name} (dead)" : character.Name;
+                }
+                otherCharactersMessage += otherCharactersInLocation.Count > 1 ? " are here." : " is here.";
+                lookingCharacter.SendMessage();
+                lookingCharacter.SendMessage(otherCharactersMessage);
+            }
         }
     }
 }

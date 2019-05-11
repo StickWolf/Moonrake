@@ -3,27 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
-    internal class InteractCommand : ICommand
+    public class InteractCommand : ICommand
     {
+        public List<string> ActivatingWords => new List<string>() { "use", "interact" };
+
         public void Execute(List<string> extraWords, Character interactingCharacter)
         {
-            var interactingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(interactingCharacterLocation.TrackingId) ?? new Dictionary<Item, int>();
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<Item, int>();
-
-            var useableLocationItems = locationItems
-                .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
-                .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Location) // Only choose items that can be used
+            var useableLocationItems = interactingCharacter.GetLocation().GetUseableItems()
                 .Select(i => new KeyValuePair<Item, string>(
                                  i.Key,
                                  i.Key.GetDescription(i.Value).UppercaseFirstChar()
                                  ));
 
-            var useableCharacterItems = characterItems
-                .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
-                .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Inventory) // Only choose items that can be used
+            var useableCharacterItems = interactingCharacter.GetUseableInventoryItems()
                 .Select(i => new KeyValuePair<Item, string>(
                                  i.Key,
                                  i.Key.GetDescription(i.Value).UppercaseFirstChar()
@@ -44,7 +38,7 @@ namespace GameEngine.Commands
             if (!allPrimaryItems.Any())
             {
                 interactingCharacter.SendMessage("There is nothing available to interact with.");
-                interactingCharacterLocation.SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter);
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter);
                 return;
             }
 
@@ -55,7 +49,7 @@ namespace GameEngine.Commands
             if (extraWords.Count > 0)
             {
                 // Try to auto-determine the choices if extra words are typed in
-                var wordItemMap = CommandHelper.WordsToItems(extraWords, allUseableItems.Keys.ToList());
+                var wordItemMap = PublicCommandHelper.WordsToItems(extraWords, allUseableItems.Keys.ToList());
                 var foundItems = wordItemMap
                     .Where(i => i.Value != null)
                     .Select(i => i.Value)
@@ -171,12 +165,6 @@ namespace GameEngine.Commands
                     interactingCharacter.SendMessage($"Unknown response: {answer}");
                 }
             }
-        }
-
-        public bool IsActivatedBy(string word)
-        {
-            var activators = new List<string>() { "use", "interact" };
-            return activators.Any(a => a.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using GameEngine.Characters;
+using GameEngine.Characters.Behaviors;
+using GameEngine.Commands.Public;
 using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
@@ -28,6 +30,9 @@ namespace GameEngine
 
         [JsonProperty]
         public object Custom { get; set; }
+
+        [JsonProperty]
+        private List<ICommand> PublicCommands { get; set; } = new List<ICommand>();
 
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
@@ -72,6 +77,9 @@ namespace GameEngine
         // CurrentTradePostLocations[{TradePostTrackingId}] = {LocationTrackingId}
         [JsonProperty]
         private Dictionary<Guid, Guid> CurrentTradePostLocations { get; set; } = new Dictionary<Guid, Guid>();
+
+        [JsonProperty]
+        private Dictionary<string, ITurnBehavior> TurnBehaviors { get; set; } = new Dictionary<string, ITurnBehavior>();
 
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
@@ -582,7 +590,7 @@ namespace GameEngine
             }
             else
             {
-                return null;
+                return new Dictionary<Item, int>();
             }
         }
 
@@ -596,7 +604,7 @@ namespace GameEngine
             }
             else
             {
-                return null;
+                return new Dictionary<Item, int>();
             }
         }
 
@@ -742,6 +750,40 @@ namespace GameEngine
                 .Select(kvp => GetTradePost(kvp.Key))
                 .ToList();
             return tradePostNames;
+        }
+
+        public void AddTurnBehavior(string behaviorName, ITurnBehavior behavior)
+        {
+            TurnBehaviors[behaviorName] = behavior;
+        }
+
+        public ITurnBehavior GetTurnBehavior(string behaviorName)
+        {
+            if (behaviorName == null)
+            {
+                return null;
+            }
+            if (TurnBehaviors.ContainsKey(behaviorName))
+            {
+                return TurnBehaviors[behaviorName];
+            }
+            return null;
+        }
+
+        public void AddPublicCommand(ICommand command)
+        {
+            PublicCommands.Add(command);
+        }
+
+        public ICommand GetPublicCommand(string commandName)
+        {
+            if (commandName == null)
+            {
+                return null;
+            }
+            var command = PublicCommands
+                .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
+            return command;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using GameEngine.Characters;
-using GameEngine.Commands;
+using GameEngine.Characters.Behaviors;
+using GameEngine.Commands.Internal;
+using GameEngine.Commands.Public;
 using System;
 using System.Collections.Generic;
 
@@ -34,7 +36,7 @@ namespace GameEngine
             // We can't get the real PlayerCharacter because the game isn't loaded yet.
             // But we can fake it out for this call
             var playerCharacter = new PlayerCharacter("loader", 1);
-            CommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacter);
+            InternalCommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacter);
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
@@ -85,14 +87,20 @@ namespace GameEngine
         {
             // Create a new game
             GameState.CreateNewGameState();
+
+            // Add built-in things
+            GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
+            PublicCommandHelper.AddPublicCommandsToGameState();
+
+            // Have the game fill in its game data
             NewGameFiller();
 
             // Show the intro and take a look around
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            CommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacter);
+            PublicCommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacter);
             playerCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
             playerCharacter.SendMessage();
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacter);
+            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacter);
         }
     }
 }

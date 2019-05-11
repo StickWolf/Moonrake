@@ -78,6 +78,7 @@ namespace GameEngine
         public virtual void Interact(Item otherItem, Character interactingCharacter)
         {
             interactingCharacter.SendMessage("You find nothing special.");
+            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} examines {GetDescription(1)}.", interactingCharacter);
         }
 
         /// <summary>
@@ -96,10 +97,12 @@ namespace GameEngine
             {
                 GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, this.TrackingId, count);
                 grabbingCharacter.SendMessage($"You grabbed {description}.");
+                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} grabbed {description}.", grabbingCharacter);
             }
             else
             {
                 grabbingCharacter.SendMessage($"Something prevented you from grabbing {description}.");
+                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} tried to grab {description}, but failed!", grabbingCharacter);
             }
         }
 
@@ -121,10 +124,12 @@ namespace GameEngine
             {
                 GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, count);
                 droppingCharacter.SendMessage($"You dropped {description}.");
+                droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} dropped {description}.", droppingCharacter);
             }
             else
             {
                 droppingCharacter.SendMessage($"Something prevented you from dropping {description}.");
+                droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} tried to drop {description}, but failed!", droppingCharacter);
             }
         }
     }
