@@ -55,7 +55,7 @@ namespace GameEngine.Characters
             var playerCharacters = GameState.CurrentGameState?.GetPlayerCharacters();
 
             // Only show the message if the message is for the player
-            if (true)
+            if (playerCharacters == null)
             {
                 if (newLine)
                 {

@@ -27,7 +27,7 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
             CharacterTrackingId = characterTrackingId;
             DollarItemTrackingId = dollarItemTrackingId;
             MoneyWalletContains = moneyInWallet;
-            Id.Add(CharacterTrackingId);
+            CharacterId.Add(CharacterTrackingId);
             IsBound = false;
             IsUnique = false;
             IsVisible = true;
@@ -35,14 +35,14 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 
         public override string GetDescription(int count)
         {
-            var character = GameState.CurrentGameState.GetCharacters(Id);
+            var character = GameState.CurrentGameState.GetCharacters(CharacterId);
             return $"{character[0].Name}'s wallet";
         }
 
         public override void Grab(int count, Character grabbingCharacter)
         {
             var playerCharacter = GameState.CurrentGameState.GetPlayerCharacters();
-            var attackingCharacter = GameState.CurrentGameState.GetCharacters(Id);
+            var attackingCharacter = GameState.CurrentGameState.GetCharacters(CharacterId);
             if (attackingCharacter[0].HitPoints > 0)
             {
                 grabbingCharacter.SendMessage($"You can't take {attackingCharacter[0].Name}'s wallet.");
