@@ -18,14 +18,10 @@ namespace DreamsAndWhatTheyMean
 
         public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
         {
-            Player1 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("James", 50) { MaxAttack = 10, CounterAttackChance = 50 }, gameData.DkLocations.PlayersRoom);
-            Player2 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Owen", 60) { MaxAttack = 15, CounterAttackChance = 60 }, gameData.DkLocations.PlayersLivingRoom);
-            Player3 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Matthew", 50) { MaxAttack = 10, CounterAttackChance = 100 }, gameData.DkLocations.BlackSmithShop);
-            Player4 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Lily", 30) { MaxAttack = 5, CounterAttackChance = 20 }, gameData.DkLocations.BRStreet);
-            MomCharacter = GameState.CurrentGameState.AddCharacter(new Character("Mom", 4000) { MaxAttack = 150, CounterAttackChance = 20 }, gameData.DkLocations.PlayersLivingRoom);
-            DadCharacter = GameState.CurrentGameState.AddCharacter(new Character("Dad", 5000) { MaxAttack = 250, CounterAttackChance = 30 }, gameData.DkLocations.PlayersBackyard);
-            BlackSmithCharacter = GameState.CurrentGameState.AddCharacter(new Character("The Black-Smith", 10000) { MaxAttack = 700, CounterAttackChance = 40 }, gameData.DkLocations.BlackSmithShop);
-            HealingDroneInPlayersHouse = GameState.CurrentGameState.AddCharacter(new HealingDrone(gameData.DkLocations.PlayersLivingRoom), gameData.DkLocations.PlayersLivingRoom);
+            Player1 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("James", 50) { MaxAttack = 10, CounterAttackPercent = 50 }, gameData.DkLocations.JamesRoom);
+            Player2 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Owen", 60) { MaxAttack = 15, CounterAttackPercent = 60 }, gameData.DkLocations.JamesLivingRoom);
+            Player3 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Matthew", 50) { MaxAttack = 10, CounterAttackPercent = 100 }, gameData.DkLocations.BlackSmithShop);
+            Player4 = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Lily", 30) { MaxAttack = 5, CounterAttackPercent = 20 }, gameData.DkLocations.BRStreet);
         }
     }
 }

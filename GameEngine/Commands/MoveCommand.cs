@@ -43,7 +43,7 @@ namespace GameEngine.Commands
                 }
             }
 
-            movingCharacter.GetLocation().SendMessage($"{movingCharacter.Name} moves to the {location.LocationName}.", movingCharacter);
+            movingCharacter.GetLocation().SendMessage($"{movingCharacter.Name} moves to the area [{location.LocationName}].", movingCharacter);
             GameState.CurrentGameState.SetCharacterLocation(movingCharacter.TrackingId, location.TrackingId);
             movingCharacter.GetLocation().SendMessage($"{movingCharacter.Name} has arrived in the area.", movingCharacter);
 

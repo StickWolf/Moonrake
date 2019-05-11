@@ -29,17 +29,17 @@ namespace DreamsAndWhatTheyMean
             #endregion
 
             #region Room Items
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Money, 30);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Paper, 21);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.BronzeChunk, 9);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.Money, 2);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesRoom, DkItems.Money, 30);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesRoom, DkItems.Paper, 21);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesBackyard, DkItems.BronzeChunk, 9);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesBackyard, DkItems.Money, 2);
             GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.BlackSmithShop, DkItems.BronzeBar, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlasticChunk, 23);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.PlayersRoomLight, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlayersLivingRoomLight, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesLivingRoom, DkItems.PlasticChunk, 23);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesRoom, DkItems.PlayersRoomLight, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesLivingRoom, DkItems.PlayersLivingRoomLight, 1);
             GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.ESStreet, DkItems.BronzeTalisman, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.Apple, 10);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.DadsWallet, 1);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesLivingRoom, DkItems.Apple, 10);
+            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.JamesBackyard, DkItems.DadsWallet, 1);
             #endregion
 
             #region Trade-Sets

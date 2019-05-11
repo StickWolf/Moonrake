@@ -1,6 +1,7 @@
 ﻿using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameEngine.Locations

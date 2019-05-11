@@ -38,7 +38,7 @@ namespace GameEngine
             {
                 {new PlayerCharacter("The Loader", 20)}
             };
-            CommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacters[0]);
+            InternalCommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacters[0]);
             playerCharacters = GameState.CurrentGameState.GetPlayerCharacters();
 
             // Main game loop goes 1 loop for 1 game turn.
@@ -104,10 +104,10 @@ namespace GameEngine
 
             // Show the intro and take a look around
             var playerCharacters = GameState.CurrentGameState.GetPlayerCharacters();
-            CommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacters[0]);
+            InternalCommandHelper.TryRunInternalCommand("clear", new List<string>(), this, playerCharacters[0]);
             playerCharacters[0].SendMessage(GameState.CurrentGameState.GameIntroductionText);
             playerCharacters[0].SendMessage();
-            CommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacters[0]);
+            InternalCommandHelper.TryRunInternalCommand("look", new List<string>(), this, playerCharacters[0]);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GameEngine.Characters
             string input;
             this.SendMessage($"{Name}:", false);
             Console.WriteLine("");
-            CommandHelper.TryRunPublicCommand("Look", null, this);
+            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), this);
             SendMessage("> ", false);
             input = Console.ReadLine();
             SendMessage();
@@ -28,12 +28,14 @@ namespace GameEngine.Characters
             // Look for internal commands to run
             if (InternalCommandHelper.TryRunInternalCommand(word, extraWords, engine, this))
             {
+                Console.ReadLine();
                 return;
             }
 
             // Then look for public commands to run
             if (PublicCommandHelper.TryRunPublicCommand(word, extraWords, this))
             {
+                Console.ReadLine();
                 return;
             }
 

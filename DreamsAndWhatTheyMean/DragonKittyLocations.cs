@@ -10,11 +10,13 @@ namespace DreamsAndWhatTheyMean
 {
     class DragonKittyLocations
     {
-        public Guid PlayersRoom { get; private set; }
+        public Guid JamesRoom { get; private set; }
 
-        public Guid PlayersLivingRoom { get; private set; }
+        public Guid JamesLivingRoom { get; private set; }
 
-        public Guid PlayersBackyard { get; private set; }
+        public Guid JamesBackyard { get; private set; }
+
+        public Guid JamesKitchen { get; private set; }
 
         public Guid BRStreet { get; private set; }
 
@@ -22,23 +24,18 @@ namespace DreamsAndWhatTheyMean
 
         public Guid BlackSmithShop { get; private set; }
 
-        public Guid AbandonedAlley { get; private set; }
-
         public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
         {
-            PlayersRoom = GameState.CurrentGameState.AddLocation(new Location("Your House (Your Room)", "a messy room that most would run from.",
-                "You are in your room, yet you find nothing of use here, except the paper on your table." +
-                " You feel proud of your knowlege of folding ninja-stars when you see the paper."
+            JamesRoom = GameState.CurrentGameState.AddLocation(new Location("Jame's House (Jame's Room)", "a clean tidy room that would be fun to mess up.",
+                "You find yourself in Jame's room, it is clean here, so it is fun to play in here."
                 ));
 
-            PlayersLivingRoom = GameState.CurrentGameState.AddLocation(new Location("Your House (Living Room)", "a regular room that blends in with anything.",
-               "You are in the living room of your house, you find nothing of use here, except to throw things. " +
-               "As you go explore, you find out that most of the plants here are made of plastic. "
+            JamesLivingRoom = GameState.CurrentGameState.AddLocation(new Location("Jame's House (Living Room)", "a place to eat stuff.",
+               "You are in the living room of Jame's house, it is boring here, you want food."
                ));
 
-            PlayersBackyard = GameState.CurrentGameState.AddLocation(new Location("Your House (The Backyard)", "a nice area to go to calm down when having a fight.",
-                "You stand in your backyard, the rushing air and the sound of the birds relaxes you. " +
-                "This place brings back your knowlege of what you did with your family here."
+            JamesBackyard = GameState.CurrentGameState.AddLocation(new Location("Jame's House (Backyard)", "a area that is covered in bark and bones.",
+                "You sit in the backyard of Jame's House, you see lots of bones, you are scared."
                 ));
 
             BRStreet = GameState.CurrentGameState.AddLocation(new Location("BR Street", "a dangerous area to go to during the daytime, since the cars are everywhere.",
@@ -55,29 +52,25 @@ namespace DreamsAndWhatTheyMean
                 "You stand in the Black-Smith store, you wish you had ice-cream here, because it is very hot."
                 ));
 
-            AbandonedAlley = GameState.CurrentGameState.AddLocation(new Location("Abandoned Alley", "a very creepy place.",
-                "You stand in the alley, you find many broken machine parts here and a bit of human flesh."
-                ));
-
             // PlayersLivingRoom <-> PlayersRoom
             GameState.CurrentGameState.AddPortal(
-               new PortalAlwaysOpenRule(PlayersRoom, PlayersLivingRoom, "Through a white door you see"),
+               new PortalAlwaysOpenRule(JamesRoom, JamesLivingRoom, "Through a white door you see"),
 
-               new PortalAlwaysOpenRule(PlayersLivingRoom, PlayersRoom, "Through a white door you see")
+               new PortalAlwaysOpenRule(JamesLivingRoom, JamesRoom, "Through a white door you see")
                );
 
             // PlayersLivingRoom <-> PlayersBackyard
             GameState.CurrentGameState.AddPortal(
-                new PortalAlwaysOpenRule(PlayersLivingRoom, PlayersBackyard, "Through the screen door you see"),
+                new PortalAlwaysOpenRule(JamesLivingRoom, JamesBackyard, "Through the screen door you see"),
 
-                new PortalAlwaysOpenRule(PlayersBackyard, PlayersLivingRoom, "Through the screen door you see")
+                new PortalAlwaysOpenRule(JamesBackyard, JamesLivingRoom, "Through the screen door you see")
                 );
 
             // PlayersLivingRoom <-> BRStreet
             GameState.CurrentGameState.AddPortal(
-                new PortalAlwaysOpenRule(PlayersLivingRoom, BRStreet, "Through the front door you see"),
+                new PortalAlwaysOpenRule(JamesLivingRoom, BRStreet, "Through the front door you see"),
 
-                new PortalAlwaysOpenRule(BRStreet, PlayersLivingRoom, "Through the door to your house, you see")
+                new PortalAlwaysOpenRule(BRStreet, JamesLivingRoom, "Through the door to your house, you see")
                 );
 
             // BRStreet <-> ESStreet
