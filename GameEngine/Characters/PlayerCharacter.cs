@@ -1,4 +1,5 @@
-﻿using GameEngine.Commands;
+﻿using GameEngine.Commands.Internal;
+using GameEngine.Commands.Public;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 

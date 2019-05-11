@@ -1,5 +1,6 @@
 ﻿using GameEngine.Characters;
-using GameEngine.Commands;
+using GameEngine.Commands.Internal;
+using GameEngine.Commands.Public;
 using System;
 using System.Collections.Generic;
 

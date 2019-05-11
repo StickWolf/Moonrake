@@ -1,7 +1,7 @@
 ﻿using GameEngine.Characters;
 using System.Collections.Generic;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Internal
 {
     internal interface ICommandInternal
     {

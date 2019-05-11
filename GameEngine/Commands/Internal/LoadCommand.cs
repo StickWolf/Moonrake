@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Internal
 {
     internal class LoadCommand : ICommandInternal
     {

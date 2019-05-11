@@ -3,7 +3,7 @@ using GameEngine.Locations;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
     public static class PublicCommandHelper
     {

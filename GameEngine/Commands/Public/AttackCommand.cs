@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
     internal class AttackCommand : ICommand
     {

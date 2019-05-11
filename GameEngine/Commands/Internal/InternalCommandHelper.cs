@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Internal
 {
     internal static class InternalCommandHelper
     {

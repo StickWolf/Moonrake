@@ -1,8 +1,7 @@
 ﻿using GameEngine.Characters;
-using System;
 using System.Collections.Generic;
 
-namespace GameEngine.Commands
+namespace GameEngine.Commands.Public
 {
     public interface ICommand
     {
