@@ -9,21 +9,13 @@ namespace GameEngine.Commands
     {
         public void Execute(List<string> extraWords, Character interactingCharacter)
         {
-            var interactingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(interactingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(interactingCharacterLocation.TrackingId) ?? new Dictionary<Item, int>();
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(interactingCharacter.TrackingId) ?? new Dictionary<Item, int>();
-
-            var useableLocationItems = locationItems
-                .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
-                .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Location) // Only choose items that can be used
+            var useableLocationItems = interactingCharacter.GetLocation().GetUseableItems()
                 .Select(i => new KeyValuePair<Item, string>(
                                  i.Key,
                                  i.Key.GetDescription(i.Value).UppercaseFirstChar()
                                  ));
 
-            var useableCharacterItems = characterItems
-                .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
-                .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Inventory) // Only choose items that can be used
+            var useableCharacterItems = interactingCharacter.GetUseableInventoryItems()
                 .Select(i => new KeyValuePair<Item, string>(
                                  i.Key,
                                  i.Key.GetDescription(i.Value).UppercaseFirstChar()
@@ -44,7 +36,7 @@ namespace GameEngine.Commands
             if (!allPrimaryItems.Any())
             {
                 interactingCharacter.SendMessage("There is nothing available to interact with.");
-                interactingCharacterLocation.SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter);
+                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is looking around for something.", interactingCharacter);
                 return;
             }
 

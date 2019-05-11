@@ -13,6 +13,7 @@ namespace GameEngine.Commands
             statSeekingCharacter.SendMessage("Here are your stats:");
             statSeekingCharacter.SendMessage($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
             statSeekingCharacter.SendMessage($"Your max attack is {statSeekingCharacter.MaxAttack}.");
+            statSeekingCharacter.GetLocation().SendMessage($"{statSeekingCharacter.Name} looks lost in thought.", statSeekingCharacter);
         }
 
         public bool IsActivatedBy(string word)
