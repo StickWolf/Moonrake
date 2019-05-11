@@ -24,7 +24,7 @@ namespace GameEngine.Characters
             var extraWords = new List<string>(input.Split(' '));
             var word = extraWords[0];
             extraWords.RemoveAt(0);
-
+            GameState.CurrentGameState.
             // Look for internal commands to run
             if (InternalCommandHelper.TryRunInternalCommand(word, extraWords, engine, this))
             {
