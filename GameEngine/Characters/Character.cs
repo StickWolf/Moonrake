@@ -1,4 +1,5 @@
-﻿using GameEngine.Commands;
+﻿using GameEngine.Characters.Behaviors;
+using GameEngine.Commands;
 using GameEngine.Locations;
 using Newtonsoft.Json;
 using System;
@@ -27,6 +28,9 @@ namespace GameEngine.Characters
 
         [JsonProperty]
         public int MaxHeal { get; set; }
+
+        [JsonProperty]
+        public List<string> TurnBehaviors { get; set; }
 
         private static Random rnd = new Random();
 
@@ -101,6 +105,14 @@ namespace GameEngine.Characters
         /// </summary>
         public virtual void Turn()
         {
+            if (TurnBehaviors != null)
+            {
+                foreach (var turnBehaviorName in TurnBehaviors)
+                {
+                    var behavior = GameState.CurrentGameState.GetTurnBehavior(turnBehaviorName);
+                    behavior?.Turn(this);
+                }
+            }
         }
 
         public virtual void Attack(Character attackingCharacter)
@@ -211,7 +223,7 @@ namespace GameEngine.Characters
         /// </summary>
         /// <param name="primaryItem">The primary item to have the character interact with</param>
         /// <param name="secondaryItem">The secondary item to have the character interact with</param>
-        protected void ExecuteInteractCommand(Item primaryItem, Item secondaryItem)
+        public void ExecuteInteractCommand(Item primaryItem, Item secondaryItem)
         {
             var extraWords = new List<string>();
             if (secondaryItem != null)
@@ -233,7 +245,7 @@ namespace GameEngine.Characters
         /// </summary>
         /// <param name="itemToGrab">The item to grab</param>
         /// <param name="countToGrab">The number of items the character should try to grab</param>
-        protected void ExecuteGrabCommand(Item itemToGrab, int countToGrab)
+        public void ExecuteGrabCommand(Item itemToGrab, int countToGrab)
         {
             var extraWords = new List<string>()
                 {
@@ -250,7 +262,7 @@ namespace GameEngine.Characters
         /// </summary>
         /// <param name="itemToDrop">The item to drop</param>
         /// <param name="countToDrop">The cound of items the character should try to drop</param>
-        protected void ExecuteDropCommand(Item itemToDrop, int countToDrop)
+        public void ExecuteDropCommand(Item itemToDrop, int countToDrop)
         {
             var extraWords = new List<string>()
                 {
@@ -264,7 +276,7 @@ namespace GameEngine.Characters
         /// Makes the character run the attack command on the specified character.
         /// </summary>
         /// <param name="characterToAttack">The character that this character should attack</param>
-        protected void ExecuteAttackCommand(Character characterToAttack)
+        public void ExecuteAttackCommand(Character characterToAttack)
         {
             var extraWords = new List<string>() { characterToAttack.TrackingId.ToString() };
             PublicCommandHelper.TryRunPublicCommand("attack", extraWords, this);
@@ -274,7 +286,7 @@ namespace GameEngine.Characters
         /// Makes the character run the move command
         /// </summary>
         /// <param name="locationToMoveTo">The location to attempt to move to</param>
-        protected void ExecuteMoveCommand(Location locationToMoveTo)
+        public void ExecuteMoveCommand(Location locationToMoveTo)
         {
             var extraWords = new List<string>() { locationToMoveTo.TrackingId.ToString() };
             PublicCommandHelper.TryRunPublicCommand("move", extraWords, this);
@@ -283,7 +295,7 @@ namespace GameEngine.Characters
         /// <summary>
         /// Makes the character run the look command
         /// </summary>
-        protected void ExecuteLookCommand()
+        public void ExecuteLookCommand()
         {
             PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), this);
         }
@@ -291,7 +303,7 @@ namespace GameEngine.Characters
         /// <summary>
         /// Makes the character run the stats command
         /// </summary>
-        protected void ExecuteStatsCommand()
+        public void ExecuteStatsCommand()
         {
             PublicCommandHelper.TryRunPublicCommand("stats", new List<string>(), this);
         }
@@ -299,10 +311,9 @@ namespace GameEngine.Characters
         /// <summary>
         /// Makes the character run the inventory command
         /// </summary>
-        protected void ExecuteInventoryCommand()
+        public void ExecuteInventoryCommand()
         {
             PublicCommandHelper.TryRunPublicCommand("inv", new List<string>(), this);
         }
-
     }
 }

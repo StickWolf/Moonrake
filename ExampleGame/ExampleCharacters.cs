@@ -1,4 +1,5 @@
 ﻿using ExampleGame.Characters;
+using ExampleGame.Characters.Behaviors;
 using GameEngine;
 using GameEngine.Characters;
 using System;
@@ -21,6 +22,9 @@ namespace ExampleGame
             Rat2 = GameState.CurrentGameState.AddCharacter(new Rat("Henry the rat", 8, 15) { MaxAttack = 12, CounterAttackPercent = 17 }, gameData.EgLocations.BanquetHall);
             GoldenStatue = GameState.CurrentGameState.AddCharacter(new Character("Goldie Plink", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start);
             StuffedEagle = GameState.CurrentGameState.AddCharacter(new Character("Eagle Eyes", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start);
+
+            // Custom turn behaviors
+            GameState.CurrentGameState.AddTurnBehavior(CustomTurnBehavior.Squeak, new SqueakTurnBehavior());
         }
     }
 }
