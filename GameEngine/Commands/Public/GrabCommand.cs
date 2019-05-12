@@ -46,7 +46,7 @@ namespace GameEngine.Commands.Public
                 itemToGrab = foundItems[0];
             }
             // Don't prompt NPCs who are running actions
-            else if (!grabbingCharacter.IsPlayerCharacter())
+            else if (!grabbingCharacter.HasPromptingBehaviors())
             {
                 return;
             }
@@ -72,7 +72,7 @@ namespace GameEngine.Commands.Public
                     itemAmountToGrab = foundNumbers[0];
                 }
                 // Don't prompt NPCs who are running actions
-                else if (!grabbingCharacter.IsPlayerCharacter())
+                else if (!grabbingCharacter.HasPromptingBehaviors())
                 {
                     return;
                 }

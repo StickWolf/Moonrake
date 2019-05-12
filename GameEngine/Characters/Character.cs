@@ -42,35 +42,37 @@ namespace GameEngine.Characters
             MaxHitPoints = hp;
         }
 
-        public bool IsPlayerCharacter()
-        {
-            return this is PlayerCharacter;
-        }
-
         /// <summary>
         /// Sends a message to the character that only the receiving character can see
         /// </summary>
         /// <param name="text">The text to send</param>
         public void SendMessage(string text, bool newLine = true)
         {
-            var playerCharacter = GameState.CurrentGameState?.GetPlayerCharacter();
-
-            // Only show the message if the message is for the player
-            if (playerCharacter == null || this.TrackingId == playerCharacter.TrackingId)
+            // Until we get to server/client if currentGameState is null (which will happen from the loader character)
+            // We just show the message no matter what.
+            if (GameState.CurrentGameState == null)
             {
-                if (newLine)
-                {
-                    Console.WriteLine(text); // SendMessage
-                }
-                else
-                {
-                    Console.Write(text); // SendMessage
-                }
+                // Continue
             }
             else
             {
-                // TODO: add an admin command that lets you see other characters messages
-                //Console.WriteLine($"{{MessageToCharacter}} \"{this.Name}\" : {text}"); // SendMessage
+                // Is any client focusing on this character?
+                var focusedClientTrackingId = GameState.CurrentGameState.GetCharacterFocusedClient(this.TrackingId);
+                if (focusedClientTrackingId == Guid.Empty)
+                {
+                    return;
+                }
+            }
+
+            // TODO: Later on when we have actual clients we can send the message to the focused client here.
+            // TODO: But for now, if there is a client that is tracking .. it can only be the player who is running the program
+            if (newLine)
+            {
+                Console.WriteLine(text); // SendMessage
+            }
+            else
+            {
+                Console.Write(text); // SendMessage
             }
         }
 
@@ -114,6 +116,23 @@ namespace GameEngine.Characters
                     behavior?.Turn(this);
                 }
             }
+        }
+
+        public bool HasPromptingBehaviors()
+        {
+            if (TurnBehaviors != null)
+            {
+                foreach (var turnBehaviorName in TurnBehaviors)
+                {
+                    var behavior = GameState.CurrentGameState.GetTurnBehavior(turnBehaviorName);
+                    if (behavior.HasPromps)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public virtual void Attack(Character attackingCharacter)

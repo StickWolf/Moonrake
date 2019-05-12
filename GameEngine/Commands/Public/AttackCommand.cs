@@ -11,7 +11,7 @@ namespace GameEngine.Commands.Public
         public void Execute(List<string> extraWords, Character attackingCharacter)
         {
             var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacter.TrackingId);
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(attackingCharacterLocation.TrackingId, includePlayer: true)
+            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(attackingCharacterLocation.TrackingId)
                 .Where (c => c.TrackingId != attackingCharacter.TrackingId) // don't include the character doing the attacking
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -34,7 +34,7 @@ namespace GameEngine.Commands.Public
                 defendingCharacter = foundCharacters[0];
             }
             // Don't prompt NPCs who are running actions
-            else if (!attackingCharacter.IsPlayerCharacter())
+            else if (!attackingCharacter.HasPromptingBehaviors())
             {
                 return;
             }

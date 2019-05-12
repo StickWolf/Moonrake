@@ -97,7 +97,7 @@ namespace GameEngine.Commands.Public
                 primaryItem.Interact(secondaryItem, interactingCharacter);
             }
             // Don't prompt NPCs who are running actions
-            else if (!interactingCharacter.IsPlayerCharacter())
+            else if (!interactingCharacter.HasPromptingBehaviors())
             {
                 return;
             }

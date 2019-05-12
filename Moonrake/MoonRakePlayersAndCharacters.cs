@@ -1,10 +1,8 @@
 ﻿using GameEngine;
 using GameEngine.Characters;
+using GameEngine.Characters.Behaviors;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moonrake
 {
@@ -16,8 +14,12 @@ namespace Moonrake
 
         public void NewGame(MoonrakeGameData gameData)
         {
+            Player = GameState.CurrentGameState.AddCharacter(new Character("Player", 100)
+            {
+                TurnBehaviors = new List<string>() { BuiltInTurnBehaviors.FocusedPlayer },
+            }, gameData.MoonRakeLocations.TreeHouse);
+
             Paige = GameState.CurrentGameState.AddCharacter(new Character("Paige", 100), gameData.MoonRakeLocations.TreeHouse);
-            Player = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Player", 100), gameData.MoonRakeLocations.TreeHouse);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace GameEngine.Commands.Internal
     {
         public List<string> ActivatingWords => new List<string>() { "namechange" };
 
-        public void Execute(EngineInternal engine, List<string> extraWords, Character nameChangingCharacter)
+        public void Execute(List<string> extraWords, Character nameChangingCharacter)
         {
             nameChangingCharacter.SendMessage($"What would you like your name to be?: ");
             nameChangingCharacter.Name = Console.ReadLine();

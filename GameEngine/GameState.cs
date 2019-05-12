@@ -18,15 +18,8 @@ namespace GameEngine
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class GameState
     {
-        // This data goes into save files
-        [JsonProperty]
-        private Guid PlayerTrackingId { get; set; }
-
         [JsonProperty]
         public string GameIntroductionText { get; set; }
-
-        [JsonProperty]
-        public string GameEndingText { get; set; }
 
         [JsonProperty]
         public object Custom { get; set; }
@@ -80,6 +73,10 @@ namespace GameEngine
 
         [JsonProperty]
         private Dictionary<string, ITurnBehavior> TurnBehaviors { get; set; } = new Dictionary<string, ITurnBehavior>();
+
+        // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
+        [JsonProperty]
+        private Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
 
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
@@ -548,21 +545,9 @@ namespace GameEngine
         public Guid AddCharacter(Character character, Guid locationTrackingId)
         {
             Debug.Assert(!Characters.ContainsKey(character.TrackingId), $"A character with the same tracking id '{character.TrackingId}' has already been added.");
-
-            // If this is the player character, then keep track of the tracking id
-            if (character is PlayerCharacter)
-            {
-                Debug.Assert(PlayerTrackingId == Guid.Empty, $"A player character has already been set in the gamestate.");
-                PlayerTrackingId = character.TrackingId;
-            }
             Characters.Add(character.TrackingId, character);
             CharacterLocations[character.TrackingId] = locationTrackingId;
             return character.TrackingId;
-        }
-
-        public Character GetPlayerCharacter()
-        {
-            return GetCharacter(PlayerTrackingId);
         }
 
         public Character GetCharacter(Guid characterTrackingId)
@@ -614,25 +599,13 @@ namespace GameEngine
             return characters;
         }
 
-        public List<Character> GetCharactersInLocation(Guid locationTrackingId, bool includePlayer)
+        public List<Character> GetCharactersInLocation(Guid locationTrackingId)
         {
             var characters = CharacterLocations
                 .Where(kvp => kvp.Value == locationTrackingId) // Where location is the one passed in
                 .Select(kvp => GetCharacter(kvp.Key));
 
-            // remove player if needed.
-            if (!includePlayer)
-            {
-                characters = characters
-                    .Where(c => c.TrackingId != PlayerTrackingId);
-            }
-
             return characters.ToList();
-        }
-
-        public Location GetPlayerCharacterLocation()
-        {
-            return GetCharacterLocation(PlayerTrackingId);
         }
 
         /// <summary>
@@ -785,5 +758,39 @@ namespace GameEngine
                 .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
             return command;
         }
+
+        public void SetClientFocusedCharacter(Guid clientTrackingId, Guid characterTrackingId)
+        {
+            if (ClientFocusedCharacters.ContainsValue(characterTrackingId))
+            {
+                var otherClientsTrackingThisChar = ClientFocusedCharacters.Where(c => c.Value == characterTrackingId && c.Key != clientTrackingId);
+                foreach (var other in otherClientsTrackingThisChar)
+                {
+                    ClientFocusedCharacters.Remove(other.Key);
+                }
+            }
+
+            ClientFocusedCharacters[clientTrackingId] = characterTrackingId;
+        }
+
+        public Character GetClientFocusedCharacter(Guid clientTrackingId)
+        {
+            if (!ClientFocusedCharacters.ContainsKey(clientTrackingId))
+            {
+                return null;
+            }
+            var characterTrackingId = ClientFocusedCharacters[clientTrackingId];
+            return GetCharacter(characterTrackingId);
+        }
+
+        public Guid GetCharacterFocusedClient(Guid characterTrackingId)
+        {
+            if (!ClientFocusedCharacters.ContainsValue(characterTrackingId))
+            {
+                return Guid.Empty;
+            }
+            return ClientFocusedCharacters.First(c => c.Value == characterTrackingId).Key;
+        }
+
     }
 }

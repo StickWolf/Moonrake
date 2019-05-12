@@ -7,7 +7,7 @@ namespace GameEngine.Commands.Internal
     {
         public List<string> ActivatingWords => new List<string>() { "clear" };
 
-        public void Execute(EngineInternal engine, List<string> extraWords, Character clearingCharacter)
+        public void Execute(List<string> extraWords, Character clearingCharacter)
         {
             Console.Clear();
         }
