@@ -1,0 +1,15 @@
+﻿Focused characters
+    One client that is connected to the server should be able to focus on one character at a time.
+    Many clients should be able to connect to a server, and therefore many focused characters can happen in parallel.
+    We'll have a mapping of client id to focused character tracking id that tells what character each client is focused to.
+    Characters that a client logs into only exist in the world when the client is connected.
+    NPCs exist in the world (and act though AI) as long as the server is up.
+    The messages that a client receives is dependant on what the focused character is for that client.
+
+Mercenaries
+    Through adventure the player may meet NPCs that join their party as mercenaries.
+    A NPC is cloned at the time they join the players party and the clone becomes a mercenary.
+    Mercenaries only exist when the leading player is connected with their client.
+    The leader of mercenaries can switch focus to any of their mercenaries.
+    Mercenaries will usually have default behavior(s) when they are not focused.
+    Players who do not lead mercenaries may not switch focus to them.

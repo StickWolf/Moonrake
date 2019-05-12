@@ -12,9 +12,9 @@ namespace Moonrake
 
         public void NewGame()
         {
+            MoonRakeGameVariables.NewGame(this);
             MoonRakeLocations.NewGame(this);
             MoonRakePlayers.NewGame(this);
-            MoonRakeGameVariables.NewGame(this);
             MoonRakeItems.NewGame(this);
 
             GameState.CurrentGameState.GameIntroductionText = "Once, there were three ancient instruments:" +
