@@ -1,14 +1,12 @@
-﻿using GameEngine.Characters;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GameEngine.Commands.Internal
 {
-    internal class LoadCommand : ICommandInternal
+    internal class LoadCommand : ICommandServer
     {
         public List<string> ActivatingWords => new List<string>() { "load" };
 
-        public void Execute(List<string> extraWords, Character loadingCharacter)
+        public void Execute(List<string> extraWords, Client executingClient)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("Start a new game");
@@ -19,21 +17,21 @@ namespace GameEngine.Commands.Internal
                 includeCancel = true;
             }
 
-            var slotToLoad = loadingCharacter.Choose("Load or start new game?", validSlotNames, includeCancel: includeCancel);
+            var slotToLoad = executingClient.Choose("Load or start new game?", validSlotNames, includeCancel: includeCancel);
             if (slotToLoad == null)
             {
-                loadingCharacter.SendMessage("Canceled Load");
+                executingClient.SendMessage("Canceled Load");
             }
             else if (slotToLoad.Equals("Start a new game"))
             {
-                EngineInternal.StartNewGame();
+                EngineInternal.StartNewGame(executingClient); // TODO: starting a new game should be a separate command from loading the game state
             }
             else
             {
-                loadingCharacter.SendMessage();
-                loadingCharacter.SendMessage($"Loading {slotToLoad}.");
+                executingClient.SendMessage();
+                executingClient.SendMessage($"Loading {slotToLoad}.");
                 GameState.LoadGameState(slotToLoad);
-                loadingCharacter.SendMessage("Loading complete.");
+                executingClient.SendMessage("Loading complete.");
             }
         }
     }

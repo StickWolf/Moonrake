@@ -4,30 +4,30 @@ using System.Collections.Generic;
 
 namespace GameEngine.Commands.Internal
 {
-    internal class SaveCommand : ICommandInternal
+    internal class SaveCommand : ICommandServer
     {
         public List<string> ActivatingWords => new List<string>() { "save" };
 
-        public void Execute(List<string> extraWords, Character savingCharacter)
+        public void Execute(List<string> extraWords, Client executingClient)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("New Save");
 
-            var slotToSave = savingCharacter.Choose("What slot do you want to save to?", validSlotNames, includeCancel: true);
+            var slotToSave = executingClient.Choose("What slot do you want to save to?", validSlotNames, includeCancel: true);
             if (slotToSave == null)
             {
-                savingCharacter.SendMessage("Canceled Save");
+                executingClient.SendMessage("Canceled Save");
                 return;
             }
             if (slotToSave.Equals("New Save"))
             {
-                savingCharacter.SendMessage("Slot name?");
+                executingClient.SendMessage("Slot name?");
                 slotToSave = Console.ReadLine();
             }
 
-            savingCharacter.SendMessage($"Saving {slotToSave}.");
+            executingClient.SendMessage($"Saving {slotToSave}.");
             GameState.SaveGameState(slotToSave);
-            savingCharacter.SendMessage("Saving complete.");
+            executingClient.SendMessage("Saving complete.");
         }
     }
 }
