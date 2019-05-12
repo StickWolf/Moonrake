@@ -29,7 +29,7 @@ namespace GameEngine.Commands.Public
                 location = foundLocations[0];
             }
             // Don't prompt NPCs who are running actions
-            else if (!movingCharacter.IsPlayerCharacter())
+            else if (!movingCharacter.HasPromptingBehaviors())
             {
                 return;
             }

@@ -46,7 +46,7 @@ namespace GameEngine.Commands.Public
                 itemToDrop = foundItems[0];
             }
             // Don't prompt NPCs who are running actions
-            else if (!droppingCharacter.IsPlayerCharacter())
+            else if (!droppingCharacter.HasPromptingBehaviors())
             {
                 return;
             }
@@ -72,7 +72,7 @@ namespace GameEngine.Commands.Public
                     itemAmountToDrop = foundNumbers[0];
                 }
                 // Don't prompt NPCs who are running actions
-                else if (!droppingCharacter.IsPlayerCharacter())
+                else if (!droppingCharacter.HasPromptingBehaviors())
                 {
                     return;
                 }

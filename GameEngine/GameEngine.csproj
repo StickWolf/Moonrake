@@ -46,8 +46,8 @@
   <ItemGroup>
     <Compile Include="Characters\Behaviors\BuiltInTurnBehaviors.cs" />
     <Compile Include="Characters\Behaviors\ITurnBehavior.cs" />
+    <Compile Include="Characters\Behaviors\TurnBehaviorFocusedPlayer.cs" />
     <Compile Include="Characters\Behaviors\TurnBehaviorRandom.cs" />
-    <Compile Include="Characters\PlayerCharacter.cs" />
     <Compile Include="Commands\Public\AttackCommand.cs" />
     <Compile Include="Commands\Public\DropCommand.cs" />
     <Compile Include="Commands\Internal\ICommandInternal.cs" />

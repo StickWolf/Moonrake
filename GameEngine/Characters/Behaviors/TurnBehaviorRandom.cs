@@ -7,6 +7,8 @@ namespace GameEngine.Characters.Behaviors
 {
     public class TurnBehaviorRandom : ITurnBehavior
     {
+        public bool HasPromps => false;
+
         private static Random rnd = new Random();
 
         public void Turn(Character turnTakingCharacter)
@@ -117,7 +119,7 @@ namespace GameEngine.Characters.Behaviors
 
         private Character PickRandomCharacterInRoom(Character turnTakingCharacter)
         {
-            var roomCharactersExceptRat = GameState.CurrentGameState.GetCharactersInLocation(turnTakingCharacter.GetLocation().TrackingId, includePlayer: true)
+            var roomCharactersExceptRat = GameState.CurrentGameState.GetCharactersInLocation(turnTakingCharacter.GetLocation().TrackingId)
                 .Where(c => c.TrackingId != turnTakingCharacter.TrackingId).ToList();
             if (roomCharactersExceptRat.Count == 0)
             {

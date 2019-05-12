@@ -2,10 +2,6 @@
 using GameEngine.Characters;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 {
@@ -13,18 +9,14 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
     class Wallet : Item
     {
         [JsonProperty]
-        private Guid CharacterTrackingId { get; set; }
-
-        [JsonProperty]
-        private Guid DollarItemTrackingId { get; set; }
+        private Guid WalletOwnerCharacterTrackingId { get; set; }
 
         [JsonProperty]
         private int MoneyWalletContains { get; set; }
 
-        public Wallet(Guid characterTrackingId, Guid dollarItemTrackingId, int moneyInWallet) : base($"{characterTrackingId}'s wallet")
+        public Wallet(Guid walletOwnerCharacterTrackingId, int moneyInWallet) : base($"{walletOwnerCharacterTrackingId}'s wallet")
         {
-            CharacterTrackingId = characterTrackingId;
-            DollarItemTrackingId = dollarItemTrackingId;
+            WalletOwnerCharacterTrackingId = walletOwnerCharacterTrackingId;
             MoneyWalletContains = moneyInWallet;
             IsBound = false;
             IsUnique = false;
@@ -33,26 +25,26 @@ namespace DreamsAndWhatTheyMean.DragonKittyStrangeItems
 
         public override string GetDescription(int count)
         {
-            var character = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
+            var character = GameState.CurrentGameState.GetCharacter(WalletOwnerCharacterTrackingId);
             return $"{character.Name}'s wallet";
         }
 
         public override void Grab(int count, Character grabbingCharacter)
         {
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var attackingCharacter = GameState.CurrentGameState.GetCharacter(CharacterTrackingId);
-            if (attackingCharacter.HitPoints > 0)
+            var walletOwnerCharacter = GameState.CurrentGameState.GetCharacter(WalletOwnerCharacterTrackingId);
+            if (walletOwnerCharacter.IsDead())
             {
-                grabbingCharacter.SendMessage($"You have tried to steal {attackingCharacter.Name}'s wallet, now you will suffer,");
-                playerCharacter.Attack(attackingCharacter);
-                grabbingCharacter.SendMessage($"{attackingCharacter.Name} has hit you.");
+                grabbingCharacter.SendMessage($"Since {walletOwnerCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
+
+                var gameData = (GameState.CurrentGameState.Custom as TheTaleOfTheDragonKittySourceData);
+                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, gameData.DkItems.Money, MoneyWalletContains);
+                GameState.CurrentGameState.TryAddLocationItemCount(grabbingCharacter.GetLocation().TrackingId, this.TrackingId, -1);
             }
-            if (attackingCharacter.HitPoints <= 0)
+            else
             {
-                grabbingCharacter.SendMessage($"Since {attackingCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
-                GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, DollarItemTrackingId, MoneyWalletContains);
-                var locationOfWallet = GameState.CurrentGameState.GetCharacterLocation(CharacterTrackingId);
-                GameState.CurrentGameState.TryAddLocationItemCount(locationOfWallet.TrackingId, this.TrackingId, -1);
+                grabbingCharacter.SendMessage($"You have tried to steal {walletOwnerCharacter.Name}'s wallet, now you will suffer.");
+                grabbingCharacter.Attack(walletOwnerCharacter);
+                grabbingCharacter.SendMessage($"{walletOwnerCharacter.Name} has hit you.");
             }
         }
     }

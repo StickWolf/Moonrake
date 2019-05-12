@@ -28,10 +28,9 @@ namespace GameEngine.Commands.Internal
         /// </summary>
         /// <param name="word">The command word</param>
         /// <param name="extraWords">Extra words to pass along to the command</param>
-        /// <param name="gameData">The game source data</param>
         /// <param name="executingCharacter">The character who is running the command</param>
         /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        internal static bool TryRunInternalCommand(string word, List<string> extraWords, EngineInternal engine, Character executingCharacter)
+        internal static bool TryRunInternalCommand(string word, List<string> extraWords, Character executingCharacter)
         {
             var commandToRun = AllInternalCommands
                 .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(word, StringComparison.OrdinalIgnoreCase)));
@@ -41,7 +40,7 @@ namespace GameEngine.Commands.Internal
             }
 
             // The command is a real command if we got this far
-            commandToRun.Execute(engine, extraWords, executingCharacter);
+            commandToRun.Execute(extraWords, executingCharacter);
             return true;
         }
     }

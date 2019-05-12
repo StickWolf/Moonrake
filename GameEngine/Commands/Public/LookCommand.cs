@@ -11,17 +11,15 @@ namespace GameEngine.Commands.Public
 
         public void Execute(List<string> extraWords, Character lookingCharacter)
         {
-            var lookingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(lookingCharacter.TrackingId);
-
             // Display the local description of the location
-            lookingCharacter.SendMessage(lookingCharacterLocation?.LocalDescription);
-            lookingCharacterLocation.SendMessage($"{lookingCharacter.Name} glances around.", lookingCharacter);
+            lookingCharacter.SendMessage(lookingCharacter.GetLocation()?.LocalDescription);
+            lookingCharacter.GetLocation().SendMessage($"{lookingCharacter.Name} glances around.", lookingCharacter);
 
             // Get all portals that have a rule that originates from the current location
-            var originPortals = GameState.CurrentGameState.GetPortalsInLocation(lookingCharacterLocation.TrackingId);
+            var originPortals = GameState.CurrentGameState.GetPortalsInLocation(lookingCharacter.GetLocation().TrackingId);
 
             var portalDesinations = originPortals
-                .Select(p => p.GetDestination(lookingCharacterLocation.TrackingId));
+                .Select(p => p.GetDestination(lookingCharacter.GetLocation().TrackingId));
             //.OrderBy(d => d.Destination); // TODO: Bring sorting back
 
             lookingCharacter.SendMessage();
@@ -46,7 +44,7 @@ namespace GameEngine.Commands.Public
                 }
             }
 
-            var locationItems = GameState.CurrentGameState.GetLocationItems(lookingCharacterLocation.TrackingId);
+            var locationItems = GameState.CurrentGameState.GetLocationItems(lookingCharacter.GetLocation().TrackingId);
             if (locationItems != null)
             {
                 string itemDescriptions = string.Empty;
@@ -78,7 +76,8 @@ namespace GameEngine.Commands.Public
                 }
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacterLocation.TrackingId, includePlayer: false);
+            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacter.GetLocation().TrackingId)
+                .Where(c => c.TrackingId != lookingCharacter.TrackingId).ToList();
             if(otherCharactersInLocation.Count != 0)
             {
                 string otherCharactersMessage = "";

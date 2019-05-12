@@ -8,7 +8,7 @@ namespace GameEngine.Commands.Internal
     {
         public List<string> ActivatingWords => new List<string>() { "save" };
 
-        public void Execute(EngineInternal engine, List<string> extraWords, Character savingCharacter)
+        public void Execute(List<string> extraWords, Character savingCharacter)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("New Save");

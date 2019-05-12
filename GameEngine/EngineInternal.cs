@@ -4,91 +4,75 @@ using GameEngine.Commands.Internal;
 using GameEngine.Commands.Public;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    internal class EngineInternal
+    internal static class EngineInternal
     {
         /// <summary>
         /// Indicates if the main game loop should keep running game turns
         /// </summary>
-        public bool RunGameLoop { get; set; } = true;
+        public static bool RunGameLoop { get; set; }
 
         /// <summary>
         /// If set to false, triggers the engine factory to stop generating new engines and exit.
         /// </summary>
-        public bool RunFactory { get; set; } = true;
+        public static bool RunFactory { get; set; }
 
-        public bool PlayerHasWon { get; set; } = false;
-
-        public Action NewGameFiller { get; private set; }
-
-        public EngineInternal(Action newGameFiller)
-        {
-            NewGameFiller = newGameFiller;
-        }
+        public static Action NewGameFiller { get; set; }
 
         /// <summary>
         /// Runs the game until they win, die or exit.
         /// </summary>
-        public void StartEngine()
+        public static void StartEngine()
         {
+            RunGameLoop = true;
+            RunFactory = true;
+
             // We can't get the real PlayerCharacter because the game isn't loaded yet.
             // But we can fake it out for this call
-            var playerCharacter = new PlayerCharacter("loader", 1);
-            InternalCommandHelper.TryRunInternalCommand("load", new List<string>(), this, playerCharacter);
+            var loaderCharacter = new Character("loader", 1) { TurnBehaviors = new List<string>() { BuiltInTurnBehaviors.FocusedPlayer } };
+            InternalCommandHelper.TryRunInternalCommand("load", new List<string>(), loaderCharacter);
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
             {
                 // Get all characters in the game that are still alive
                 var allLocateableCharacters = GameState.CurrentGameState.GetAllCharacters();
+                var sw = new Stopwatch();
+                sw.Start();
                 foreach (var gameCharacter in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                 {
                     // Only characters that are alive get a turn
-                    if (gameCharacter.IsDead())
-                    {
-                        continue;
-                    }
-
-                    // If this is the player character, then call a special version of "Turn"
-                    if (gameCharacter is PlayerCharacter)
-                    {
-                        (gameCharacter as PlayerCharacter).InternalTurn(this);
-                    }
-                    else
+                    if (!gameCharacter.IsDead())
                     {
                         gameCharacter.Turn();
                     }
                 }
+                sw.Stop();
+                if (sw.Elapsed.TotalSeconds < 4)
+                {
+                    Task.Delay(2000).Wait();
+                }
 
-                if (playerCharacter.IsDead())
-                {
-                    playerCharacter.SendMessage();
-                    playerCharacter.SendMessage("You have died. Please press a key.");
-                    Console.ReadKey();
-                    RunGameLoop = false;
-                }
-                // TODO: Find a way to figure out when the player has won.
-                else if (PlayerHasWon)
-                {
-                    playerCharacter.SendMessage(GameState.CurrentGameState.GameEndingText);
-                    playerCharacter.SendMessage("             |--The End--|             ");
-                    Console.ReadLine();
-                    RunGameLoop = false;
-                }
+                // TODO: Respawn rules will bring NPCs back to life, maybe even player characters too
+                // TODO: We should never let the client have the server exit, but a client should be able to disconnect
             }
         }
 
         /// <summary>
         /// Sets up everything to start a new game and shows the game introduction text
         /// </summary>
-        public void StartNewGame()
+        public static void StartNewGame()
         {
             // Create a new game
             GameState.CreateNewGameState();
 
             // Add built-in things
+            GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.FocusedPlayer, new TurnBehaviorFocusedPlayer());
             GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
             PublicCommandHelper.AddPublicCommandsToGameState();
 
@@ -96,11 +80,20 @@ namespace GameEngine
             NewGameFiller();
 
             // Show the intro and take a look around
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            PublicCommandHelper.TryRunPublicCommand("clear", new List<string>(), playerCharacter);
-            playerCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
-            playerCharacter.SendMessage();
-            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), playerCharacter);
+
+            // Until we have client/server that can have the client specify what character they want to focus on,
+            // we just pick the first character that has prompting behavior
+            var loaderCharacter = GameState.CurrentGameState.GetAllCharacters()
+                .First(c => c.HasPromptingBehaviors());
+
+            // TODO: pretent client tracking id, until we get a real one
+            Guid clientTrackingId = Guid.NewGuid();
+            GameState.CurrentGameState.SetClientFocusedCharacter(clientTrackingId, loaderCharacter.TrackingId);
+
+            PublicCommandHelper.TryRunPublicCommand("clear", new List<string>(), loaderCharacter);
+            loaderCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
+            loaderCharacter.SendMessage();
+            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), loaderCharacter);
         }
     }
 }

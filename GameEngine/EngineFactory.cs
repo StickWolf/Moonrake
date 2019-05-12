@@ -11,12 +11,12 @@ namespace GameEngine
         /// <param name="newGameFiller">A method that fills out GameState for a new game</param>
         public static void Start(Action newGameFiller)
         {
-            EngineInternal engine = new EngineInternal(newGameFiller);
+            EngineInternal.NewGameFiller = newGameFiller;
             do
             {
                 // Start the game
-                engine.StartEngine();
-            } while (engine.RunFactory);
+                EngineInternal.StartEngine();
+            } while (EngineInternal.RunFactory);
         }
     }
 }
