@@ -48,32 +48,14 @@ namespace GameEngine.Characters
         /// <param name="text">The text to send</param>
         public void SendMessage(string text, bool newLine = true)
         {
-            // Until we get to server/client if currentGameState is null (which will happen from the loader character)
-            // We just show the message no matter what.
-            if (GameState.CurrentGameState == null)
+            // Is any client focusing on this character? If not then no message is sent.
+            var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+            if (focusedClient == null)
             {
-                // Continue
-            }
-            else
-            {
-                // Is any client focusing on this character?
-                var focusedClientTrackingId = GameState.CurrentGameState.GetCharacterFocusedClient(this.TrackingId);
-                if (focusedClientTrackingId == Guid.Empty)
-                {
-                    return;
-                }
+                return;
             }
 
-            // TODO: Later on when we have actual clients we can send the message to the focused client here.
-            // TODO: But for now, if there is a client that is tracking .. it can only be the player who is running the program
-            if (newLine)
-            {
-                Console.WriteLine(text); // SendMessage
-            }
-            else
-            {
-                Console.Write(text); // SendMessage
-            }
+            focusedClient.SendMessage(text, newLine);
         }
 
         /// <summary>
@@ -86,12 +68,25 @@ namespace GameEngine.Characters
 
         public string Choose(string prompt, List<string> choices, bool includeCancel)
         {
-            return Console.Choose(prompt, choices, this, includeCancel);
+            // Is any client focusing on this character? If not then no message is sent.
+            var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+            if (focusedClient == null)
+            {
+                return null;
+            }
+            return focusedClient.Choose(prompt, choices, includeCancel);
         }
 
         public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
         {
-            return Console.Choose(prompt, choices, this, includeCancel);
+            // Is any client focusing on this character? If not then no message is sent.
+            var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+            if (focusedClient == null)
+            {
+                return default(T);
+            }
+
+            return focusedClient.Choose(prompt, choices, includeCancel);
         }
 
         /// <summary>

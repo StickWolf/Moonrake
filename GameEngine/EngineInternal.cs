@@ -13,6 +13,11 @@ namespace GameEngine
     internal static class EngineInternal
     {
         /// <summary>
+        /// serverClient is the server admin window
+        /// </summary>
+        public static Client ServerClient { get; set; }
+
+        /// <summary>
         /// Indicates if the main game loop should keep running game turns
         /// </summary>
         public static bool RunGameLoop { get; set; }
@@ -29,13 +34,14 @@ namespace GameEngine
         /// </summary>
         public static void StartEngine()
         {
+            AttachedClients.DetachAllClients();
             RunGameLoop = true;
             RunFactory = true;
 
-            // We can't get the real PlayerCharacter because the game isn't loaded yet.
-            // But we can fake it out for this call
-            var loaderCharacter = new Character("loader", 1) { TurnBehaviors = new List<string>() { BuiltInTurnBehaviors.FocusedPlayer } };
-            InternalCommandHelper.TryRunInternalCommand("load", new List<string>(), loaderCharacter);
+            // serverClient is the server admin window
+            ServerClient = new Client();
+            AttachedClients.AttachClient(ServerClient);
+            InternalCommandHelper.TryRunServerCommand("load", new List<string>(), ServerClient);
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
@@ -66,7 +72,7 @@ namespace GameEngine
         /// <summary>
         /// Sets up everything to start a new game and shows the game introduction text
         /// </summary>
-        public static void StartNewGame()
+        public static void StartNewGame(Client startingNewGameClient)
         {
             // Create a new game
             GameState.CreateNewGameState();
@@ -86,11 +92,9 @@ namespace GameEngine
             var loaderCharacter = GameState.CurrentGameState.GetAllCharacters()
                 .First(c => c.HasPromptingBehaviors());
 
-            // TODO: pretent client tracking id, until we get a real one
-            Guid clientTrackingId = Guid.NewGuid();
-            GameState.CurrentGameState.SetClientFocusedCharacter(clientTrackingId, loaderCharacter.TrackingId);
+            AttachedClients.SetClientFocusedCharacter(startingNewGameClient.TrackingId, loaderCharacter.TrackingId);
 
-            PublicCommandHelper.TryRunPublicCommand("clear", new List<string>(), loaderCharacter);
+            InternalCommandHelper.TryRunInternalCommand("clear", new List<string>(), loaderCharacter);
             loaderCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
             loaderCharacter.SendMessage();
             PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), loaderCharacter);

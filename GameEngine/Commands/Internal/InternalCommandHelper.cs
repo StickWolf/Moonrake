@@ -8,6 +8,7 @@ namespace GameEngine.Commands.Internal
     internal static class InternalCommandHelper
     {
         private static List<ICommandInternal> AllInternalCommands { get; set; }
+        private static List<ICommandServer> AllServerCommands { get; set; }
 
         static InternalCommandHelper()
         {
@@ -17,9 +18,13 @@ namespace GameEngine.Commands.Internal
             {
                 new ClearCommand(),
                 new LetPlayerChangeTheirNameCommand(),
+                new ExitCommand(),
+            };
+
+            AllServerCommands = new List<ICommandServer>()
+            {
                 new LoadCommand(),
                 new SaveCommand(),
-                new ExitCommand(),
             };
         }
 
@@ -41,6 +46,20 @@ namespace GameEngine.Commands.Internal
 
             // The command is a real command if we got this far
             commandToRun.Execute(extraWords, executingCharacter);
+            return true;
+        }
+
+        internal static bool TryRunServerCommand(string word, List<string> extraWords, Client executingClient)
+        {
+            var commandToRun = AllServerCommands
+                .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(word, StringComparison.OrdinalIgnoreCase)));
+            if (commandToRun == null)
+            {
+                return false;
+            }
+
+            // The command is a real command if we got this far
+            commandToRun.Execute(extraWords, executingClient);
             return true;
         }
     }
