@@ -8,7 +8,7 @@ namespace GameEngine.Commands.Internal
     {
         public List<string> ActivatingWords => new List<string>() { "load" };
 
-        public void Execute(EngineInternal engine, List<string> extraWords, Character loadingCharacter)
+        public void Execute(List<string> extraWords, Character loadingCharacter)
         {
             var validSlotNames = GameState.GetValidSaveSlotNames();
             validSlotNames.Add("Start a new game");
@@ -26,7 +26,7 @@ namespace GameEngine.Commands.Internal
             }
             else if (slotToLoad.Equals("Start a new game"))
             {
-                engine.StartNewGame();
+                EngineInternal.StartNewGame();
             }
             else
             {

@@ -50,7 +50,7 @@
     <Compile Include="DragonKittyGameVarables.cs" />
     <Compile Include="DragonKittyItems.cs" />
     <Compile Include="DragonKittyLocations.cs" />
-    <Compile Include="DragonKittyStrangeCharacters\HealingDrone.cs" />
+    <Compile Include="DragonKittyStrangeCharacters\StrangeBehaviors\TurnBehaviorRandomHeal.cs" />
     <Compile Include="DragonKittyStrangeItems\Apple.cs" />
     <Compile Include="DragonKittyStrangeItems\BronzeTalisman.cs" />
     <Compile Include="DragonKittyStrangeItems\RoomLight.cs" />

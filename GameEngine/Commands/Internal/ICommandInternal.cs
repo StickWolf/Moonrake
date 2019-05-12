@@ -7,6 +7,6 @@ namespace GameEngine.Commands.Internal
     {
         List<string> ActivatingWords { get; }
 
-        void Execute(EngineInternal engine, List<string> extraWords, Character executingCharacter);
+        void Execute(List<string> extraWords, Character executingCharacter);
     }
 }

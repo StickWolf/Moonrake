@@ -51,17 +51,11 @@ namespace GameEngine.Locations
         /// </param>
         public void SendMessage(string text, Character fromCharacter)
         {
-            var playerCharacter = GameState.CurrentGameState.GetPlayerCharacter();
-            var playerLocation = GameState.CurrentGameState.GetPlayerCharacterLocation();
-            if (this.TrackingId == playerLocation.TrackingId &&
-                (fromCharacter == null || fromCharacter.TrackingId != playerCharacter.TrackingId))
+            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(this.TrackingId)
+                .Where(c => fromCharacter == null || c.TrackingId != fromCharacter.TrackingId);
+            foreach (var charInLoc in charactersInLocation)
             {
-                Console.WriteLine(text); // SendMessage
-            }
-            else
-            {
-                // TODO: add an admin command that lets you see these "Inaudible" messages
-                //Console.WriteLine($"{{SendMessageToLocation}} \"{this.LocationName}\" : {text}"); // SendMessage
+                charInLoc.SendMessage(text);
             }
         }
 

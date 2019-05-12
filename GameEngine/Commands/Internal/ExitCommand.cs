@@ -8,7 +8,7 @@ namespace GameEngine.Commands.Internal
     {
         public List<string> ActivatingWords => new List<string>() { "exit" };
 
-        public void Execute(EngineInternal engine, List<string> extraWords, Character exitingCharacter)
+        public void Execute(List<string> extraWords, Character exitingCharacter)
         {
             while (true)
             {
@@ -23,16 +23,16 @@ namespace GameEngine.Commands.Internal
                 else if (answer.Equals("N", StringComparison.OrdinalIgnoreCase))
                 {
                     // Exit without saving
-                    engine.RunGameLoop = false;
-                    engine.RunFactory = false;
+                    EngineInternal.RunGameLoop = false;
+                    EngineInternal.RunFactory = false;
                     return;
                 }
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Save and then exit
-                    InternalCommandHelper.TryRunInternalCommand("save", new List<string>(), engine, exitingCharacter);
-                    engine.RunGameLoop = false;
-                    engine.RunFactory = false;
+                    InternalCommandHelper.TryRunInternalCommand("save", new List<string>(), exitingCharacter);
+                    EngineInternal.RunGameLoop = false;
+                    EngineInternal.RunFactory = false;
                     return;
                 }
                 else

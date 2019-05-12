@@ -2,7 +2,9 @@
 using ExampleGame.Characters.Behaviors;
 using GameEngine;
 using GameEngine.Characters;
+using GameEngine.Characters.Behaviors;
 using System;
+using System.Collections.Generic;
 
 namespace ExampleGame
 {
@@ -17,7 +19,13 @@ namespace ExampleGame
 
         public void NewGame(ExampleGameSourceData gameData)
         {
-            Player = GameState.CurrentGameState.AddCharacter(new PlayerCharacter("Sally", 50) { MaxAttack = 40, CounterAttackPercent = 75 }, gameData.EgLocations.Start);
+            Player = GameState.CurrentGameState.AddCharacter(new Character("Sally", 50)
+                {
+                    TurnBehaviors = new List<string>() { BuiltInTurnBehaviors.FocusedPlayer },
+                    MaxAttack = 40,
+                    CounterAttackPercent = 75
+                }, gameData.EgLocations.Start);
+
             Rat1 = GameState.CurrentGameState.AddCharacter(new Rat("Joe the rat", 7, 23) { MaxAttack = 10, CounterAttackPercent = 15 }, gameData.EgLocations.Start);
             Rat2 = GameState.CurrentGameState.AddCharacter(new Rat("Henry the rat", 8, 15) { MaxAttack = 12, CounterAttackPercent = 17 }, gameData.EgLocations.BanquetHall);
             GoldenStatue = GameState.CurrentGameState.AddCharacter(new Character("Goldie Plink", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start);

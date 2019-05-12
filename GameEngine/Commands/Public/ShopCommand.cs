@@ -29,7 +29,7 @@ namespace GameEngine.Commands.Public
                 chosenTradePost = allTradePostsInPlayersLocation[0];
             }
             // Don't prompt NPCs who are running actions
-            else if (!shoppingCharacter.IsPlayerCharacter())
+            else if (!shoppingCharacter.HasPromptingBehaviors())
             {
                 return;
             }
