@@ -11,16 +11,14 @@ namespace GameEngine.Commands.Public
 
         public void Execute(List<string> extraWords, Character shoppingCharacter)
         {
-            var shoppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(shoppingCharacter.TrackingId);
-
             //  2. Look in the game data for any tradeposts that are currently at this location
-            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingCharacterLocation.TrackingId);
+            var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingCharacter.GetLocation().TrackingId);
             
             //  3. If there are no tradeposts here then mention that and return.
             if (allTradePostsInPlayersLocation.Count == 0)
             {
                 shoppingCharacter.SendMessage("There are no availible shops in your area.");
-                shoppingCharacterLocation.SendMessage($"{shoppingCharacter.Name} wants to go shopping!", shoppingCharacter);
+                shoppingCharacter.GetLocation().SendMessage($"{shoppingCharacter.Name} wants to go shopping!", shoppingCharacter);
                 return;
             }
 
