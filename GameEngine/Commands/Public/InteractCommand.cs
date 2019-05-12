@@ -131,7 +131,7 @@ namespace GameEngine.Commands.Public
             }
 
             // Determine the secondary item to use
-            Console.Write($"Do you want use another item on the {primaryItem.DisplayName}? (Yes, No or Cancel): ");
+            interactingCharacter.SendMessage($"Do you want use another item on the {primaryItem.DisplayName}? (Yes, No or Cancel): ");
             while (true)
             {
                 string answer = Console.ReadKey().KeyChar.ToString();

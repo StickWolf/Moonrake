@@ -74,10 +74,6 @@ namespace GameEngine
         [JsonProperty]
         private Dictionary<string, ITurnBehavior> TurnBehaviors { get; set; } = new Dictionary<string, ITurnBehavior>();
 
-        // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
-        [JsonProperty]
-        private Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
-
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
         public static GameState CurrentGameState { get; private set; }
@@ -758,39 +754,5 @@ namespace GameEngine
                 .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
             return command;
         }
-
-        public void SetClientFocusedCharacter(Guid clientTrackingId, Guid characterTrackingId)
-        {
-            if (ClientFocusedCharacters.ContainsValue(characterTrackingId))
-            {
-                var otherClientsTrackingThisChar = ClientFocusedCharacters.Where(c => c.Value == characterTrackingId && c.Key != clientTrackingId);
-                foreach (var other in otherClientsTrackingThisChar)
-                {
-                    ClientFocusedCharacters.Remove(other.Key);
-                }
-            }
-
-            ClientFocusedCharacters[clientTrackingId] = characterTrackingId;
-        }
-
-        public Character GetClientFocusedCharacter(Guid clientTrackingId)
-        {
-            if (!ClientFocusedCharacters.ContainsKey(clientTrackingId))
-            {
-                return null;
-            }
-            var characterTrackingId = ClientFocusedCharacters[clientTrackingId];
-            return GetCharacter(characterTrackingId);
-        }
-
-        public Guid GetCharacterFocusedClient(Guid characterTrackingId)
-        {
-            if (!ClientFocusedCharacters.ContainsValue(characterTrackingId))
-            {
-                return Guid.Empty;
-            }
-            return ClientFocusedCharacters.First(c => c.Value == characterTrackingId).Key;
-        }
-
     }
 }
