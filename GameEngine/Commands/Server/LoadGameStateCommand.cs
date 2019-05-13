@@ -28,6 +28,10 @@ namespace GameEngine.Commands.Internal
                 GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
                 PublicCommandHelper.AddPublicCommandsToGameState();
 
+                // TODO: Remove after client/server accounts are fully functional. Until then we're creating a "Server" account
+                // TODO: that the server user will be automatically "logged" into
+                GameState.CurrentGameState.CreateAccount("ServerUser");
+
                 // Have the game fill in its game data
                 EngineInternal.NewWorldCreator();
             }
