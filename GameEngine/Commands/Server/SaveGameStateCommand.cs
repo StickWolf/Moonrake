@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 namespace GameEngine.Commands.Internal
 {
-    internal class SaveCommand : ICommandServer
+    internal class SaveGameStateCommand : ICommandServer
     {
-        public List<string> ActivatingWords => new List<string>() { "save" };
+        public List<string> ActivatingWords => new List<string>() { "savegamestate" };
+
+        // TODO: make it so the server auto-saves the current game state every minute or so
 
         public void Execute(List<string> extraWords, Client executingClient)
         {

@@ -64,10 +64,11 @@
     <Compile Include="Commands\Public\ICommand.cs" />
     <Compile Include="Commands\Internal\LetPlayerChangeTheirNameCommand.cs" />
     <Compile Include="Commands\Server\ICommandServer.cs" />
-    <Compile Include="Commands\Server\LoadCommand.cs" />
+    <Compile Include="Commands\Server\LoadGameStateCommand.cs" />
+    <Compile Include="Commands\Server\CreateNewPlayerCommand.cs" />
     <Compile Include="Commands\Public\LookCommand.cs" />
     <Compile Include="Commands\Public\MoveCommand.cs" />
-    <Compile Include="Commands\Server\SaveCommand.cs" />
+    <Compile Include="Commands\Server\SaveGameStateCommand.cs" />
     <Compile Include="Commands\Public\StatsCommand.cs" />
     <Compile Include="Console.cs" />
     <Compile Include="EqualChecker.cs" />

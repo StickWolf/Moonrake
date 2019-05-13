@@ -13,13 +13,13 @@ namespace ExampleGame
         public ExampleCharacters EgCharacters { get; private set; } = new ExampleCharacters();
         public ExampleItems EgItems { get; private set; } = new ExampleItems();
 
-        public void NewGame()
+        public void NewWorld()
         {
             // Note that the properties should be defined in this order due to how they reference each other
-            GameVariables.NewGame(this);
-            EgLocations.NewGame(this);
-            EgCharacters.NewGame(this);
-            EgItems.NewGame(this);
+            GameVariables.NewWorld(this);
+            EgLocations.NewWorld(this);
+            EgCharacters.NewWorld(this);
+            EgItems.NewWorld(this);
 
             GameState.CurrentGameState.GameIntroductionText = "There once was an example game.";
             GameState.CurrentGameState.Custom = this;

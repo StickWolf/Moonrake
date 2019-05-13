@@ -27,7 +27,9 @@ namespace GameEngine
         /// </summary>
         public static bool RunFactory { get; set; }
 
-        public static Action NewGameFiller { get; set; }
+        public static Action NewWorldCreator { get; set; }
+
+        public static Func<Character> NewPlayerCreator { get; set; }
 
         /// <summary>
         /// Runs the game until they win, die or exit.
@@ -41,7 +43,14 @@ namespace GameEngine
             // serverClient is the server admin window
             ServerClient = new Client();
             AttachedClients.AttachClient(ServerClient);
-            InternalCommandHelper.TryRunServerCommand("load", new List<string>(), ServerClient);
+
+            // TODO: make it so (by default) when the server starts up, it just loads the first available saved game state
+            // TODO: or in the case wherere there is no game state. It just creates up a new one.
+            InternalCommandHelper.TryRunServerCommand("loadgamestate", new List<string>(), ServerClient);
+
+            // TODO: For now until we have real clients, we auto-create a new player character here
+            // TODO: This simulates a client connecting to an account and adding a new character to their account.
+            InternalCommandHelper.TryRunServerCommand("createnewplayer", new List<string>(), ServerClient);
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
@@ -67,37 +76,6 @@ namespace GameEngine
                 // TODO: Respawn rules will bring NPCs back to life, maybe even player characters too
                 // TODO: We should never let the client have the server exit, but a client should be able to disconnect
             }
-        }
-
-        /// <summary>
-        /// Sets up everything to start a new game and shows the game introduction text
-        /// </summary>
-        public static void StartNewGame(Client startingNewGameClient)
-        {
-            // Create a new game
-            GameState.CreateNewGameState();
-
-            // Add built-in things
-            GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.FocusedPlayer, new TurnBehaviorFocusedPlayer());
-            GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
-            PublicCommandHelper.AddPublicCommandsToGameState();
-
-            // Have the game fill in its game data
-            NewGameFiller();
-
-            // Show the intro and take a look around
-
-            // Until we have client/server that can have the client specify what character they want to focus on,
-            // we just pick the first character that has prompting behavior
-            var loaderCharacter = GameState.CurrentGameState.GetAllCharacters()
-                .First(c => c.HasPromptingBehaviors());
-
-            AttachedClients.SetClientFocusedCharacter(startingNewGameClient.TrackingId, loaderCharacter.TrackingId);
-
-            InternalCommandHelper.TryRunInternalCommand("clear", new List<string>(), loaderCharacter);
-            loaderCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
-            loaderCharacter.SendMessage();
-            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), loaderCharacter);
         }
     }
 }

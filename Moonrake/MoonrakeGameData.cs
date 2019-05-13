@@ -10,12 +10,12 @@ namespace Moonrake
         public MoonRakeItems MoonRakeItems { get; private set; } = new MoonRakeItems();
         public MoonRakeLocations MoonRakeLocations { get; private set; } = new MoonRakeLocations();
 
-        public void NewGame()
+        public void NewWorld()
         {
-            MoonRakeGameVariables.NewGame(this);
-            MoonRakeLocations.NewGame(this);
-            MoonRakePlayers.NewGame(this);
-            MoonRakeItems.NewGame(this);
+            MoonRakeGameVariables.NewWorld(this);
+            MoonRakeLocations.NewWorld(this);
+            MoonRakePlayers.NewWorld(this);
+            MoonRakeItems.NewWorld(this);
 
             GameState.CurrentGameState.GameIntroductionText = "Once, there were three ancient instruments:" +
                 " The Harp, Piano, and the Drum." +

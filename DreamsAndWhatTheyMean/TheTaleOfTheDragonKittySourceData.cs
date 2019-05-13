@@ -9,22 +9,18 @@ namespace DreamsAndWhatTheyMean
         public DragonKittyGameVarables GameVarables { get; private set; } = new DragonKittyGameVarables();
         public DragonKittyItems DkItems { get; private set; } = new DragonKittyItems();
 
-        public void NewGame()
+        public void NewWorld()
         {
-            DkLocations.NewGame(this);
-            DkCharacters.NewGame(this);
-            GameVarables.NewGame(this);
-            DkItems.NewGame(this);
+            DkLocations.NewWorld(this);
+            DkCharacters.NewWorld(this);
+            GameVarables.NewWorld(this);
+            DkItems.NewWorld(this);
 
             GameState.CurrentGameState.GameIntroductionText = "Once, there was a group of kids." +
                 " These kids played around every day, they even had a youtube channel that they shared." +
                 " Now, in this story, you will join these kids and go on a journey with them." +
                 " Their names are: Zach, and Amaya." +
                 " Welcome to The Tale of The DragonKitty.";
-
-            #region Starter Items
-            GameState.CurrentGameState.TryAddCharacterItemCount(DkCharacters.Player, DkItems.Money, 200);
-            #endregion
 
             #region Room Items
             GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Money, 30);

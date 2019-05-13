@@ -18,6 +18,12 @@ namespace GameEngine.Characters.Behaviors
             var word = extraWords[0];
             extraWords.RemoveAt(0);
 
+            // Look for server commands to run
+            if (InternalCommandHelper.TryRunServerCommand(word, extraWords, turnTakingCharacter.GetClient()))
+            {
+                return;
+            }
+
             // Look for internal commands to run
             if (InternalCommandHelper.TryRunInternalCommand(word, extraWords, turnTakingCharacter))
             {
