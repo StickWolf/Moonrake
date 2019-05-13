@@ -12,7 +12,7 @@ namespace ExampleGame
 
         public string StartRoomLever { get; private set; }
 
-        public void NewGame(ExampleGameSourceData gameData)
+        public void NewWorld(ExampleGameSourceData gameData)
         {
             BanquetElevatorFloor = GameState.CurrentGameState.SetGameVarValue("BanquetElevatorFloor", "1");
             BanquetToSecretWarpedHallDoorOpen = GameState.CurrentGameState.SetGameVarValue("BanquetToSecretWarpedHallDoorOpen", "false");

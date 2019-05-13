@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Characters;
+using System;
 
 namespace GameEngine
 {
@@ -8,10 +9,13 @@ namespace GameEngine
         /// Starts the factory.
         /// The factory will create games and start them over and over until stopped.
         /// </summary>
-        /// <param name="newGameFiller">A method that fills out GameState for a new game</param>
-        public static void Start(Action newGameFiller)
+        /// <param name="newWorldCreator">A method that fills out GameState for a new world</param>
+        /// <param name="newPlayerCreator">A method that creates a new player character</param>
+        public static void Start(Action newWorldCreator, Func<Character> newPlayerCreator)
         {
-            EngineInternal.NewGameFiller = newGameFiller;
+            EngineInternal.NewWorldCreator = newWorldCreator;
+            EngineInternal.NewPlayerCreator = newPlayerCreator;
+
             do
             {
                 // Start the game

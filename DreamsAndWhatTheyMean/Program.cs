@@ -6,7 +6,14 @@ namespace DreamsAndWhatTheyMean
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(() => new TheTaleOfTheDragonKittySourceData().NewGame());
+            EngineFactory.Start(
+                () => new TheTaleOfTheDragonKittySourceData().NewWorld(),
+                () =>
+                {
+                    var newPlayerCreator = new NewPlayerSourceData();
+                    return newPlayerCreator.NewPlayer();
+                }
+                );
         }
     }
 }
