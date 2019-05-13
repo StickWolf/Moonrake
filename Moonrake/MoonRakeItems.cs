@@ -29,7 +29,7 @@ namespace Moonrake
 
         public Guid Rice { get; private set; }
 
-        public void NewGame(MoonrakeGameData gameData)
+        public void NewWorld(MoonrakeGameData gameData)
         {
             WaterEye = GameState.CurrentGameState.AddItem(new Item("Water Eye") { IsUnique = true });
             Money = GameState.CurrentGameState.AddItem(new Item("Money"));

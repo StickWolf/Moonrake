@@ -61,6 +61,7 @@
     <Compile Include="Items\ColoredLightSwitch.cs" />
     <Compile Include="Items\CrystalDiviner.cs" />
     <Compile Include="Items\ColoredLight.cs" />
+    <Compile Include="NewPlayerSourceData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

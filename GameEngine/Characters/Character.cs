@@ -98,6 +98,11 @@ namespace GameEngine.Characters
             return GameState.CurrentGameState.GetCharacterLocation(this.TrackingId);
         }
 
+        public Client GetClient()
+        {
+            return AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+        }
+
         /// <summary>
         /// Allows the character to take their turn.
         /// </summary>

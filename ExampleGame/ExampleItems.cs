@@ -16,7 +16,7 @@ namespace ExampleGame
         public Guid StartRoomLever { get; private set; }
         public Guid HealingPotion { get; private set; }
 
-        public void NewGame(ExampleGameSourceData gameData)
+        public void NewWorld(ExampleGameSourceData gameData)
         {
             CrystalDiviner = GameState.CurrentGameState.AddItem(new CrystalDiviner());
             {

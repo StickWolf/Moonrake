@@ -12,7 +12,7 @@ namespace GameEngine.Commands.Internal
         {
             while (true)
             {
-                exitingCharacter.SendMessage("Would you like to save your game first? (Yes, No or Cancel): ");
+                exitingCharacter.SendMessage("Would you like to save your game first? (Yes, No or Cancel): "); // TODO: the exit command should be split out into a client command that just exits without running save.
                 var answer = Console.ReadKey().KeyChar.ToString();
                 exitingCharacter.SendMessage();
                 if (answer.Equals("C", StringComparison.OrdinalIgnoreCase))
@@ -30,7 +30,7 @@ namespace GameEngine.Commands.Internal
                 else if (answer.Equals("Y", StringComparison.OrdinalIgnoreCase))
                 {
                     // Save and then exit
-                    InternalCommandHelper.TryRunInternalCommand("save", new List<string>(), exitingCharacter);
+                    InternalCommandHelper.TryRunServerCommand("savegamestate", new List<string>(), exitingCharacter.GetClient());
                     EngineInternal.RunGameLoop = false;
                     EngineInternal.RunFactory = false;
                     return;

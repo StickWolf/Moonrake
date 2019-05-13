@@ -23,8 +23,9 @@ namespace GameEngine.Commands.Internal
 
             AllServerCommands = new List<ICommandServer>()
             {
-                new LoadCommand(),
-                new SaveCommand(),
+                new CreateNewPlayerCommand(),
+                new LoadGameStateCommand(),
+                new SaveGameStateCommand(),
             };
         }
 

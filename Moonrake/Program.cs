@@ -6,7 +6,14 @@ namespace Moonrake
     {
         static void Main(string[] args)
         {
-            EngineFactory.Start(() => new MoonrakeGameData().NewGame());
+            EngineFactory.Start(
+                () => new MoonrakeGameData().NewWorld(),
+                () => 
+                {
+                    var newPlayerCreator = new NewPlayerSourceData();
+                    return newPlayerCreator.NewPlayer();
+                }
+                );
         }
     }
 }

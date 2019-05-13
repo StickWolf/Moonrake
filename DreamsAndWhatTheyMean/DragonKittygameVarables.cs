@@ -8,7 +8,7 @@ namespace DreamsAndWhatTheyMean
 {
     class DragonKittyGameVarables
     {
-        public void NewGame(TheTaleOfTheDragonKittySourceData gameData)
+        public void NewWorld(TheTaleOfTheDragonKittySourceData gameData)
         {
 
         }
