@@ -33,6 +33,10 @@ namespace ServerEngine.Characters
         [JsonProperty]
         public List<string> TurnBehaviors { get; set; }
 
+        public DateTime LastKilledTime { get; set; }
+
+        public TimeSpan RespawnTime { get; set; }
+
         private static Random rnd = new Random();
 
         public Character(string name, int hp)
@@ -40,6 +44,8 @@ namespace ServerEngine.Characters
             Name = name;
             HitPoints = hp;
             MaxHitPoints = hp;
+            RespawnTime = new TimeSpan(0, 0, 2, 30, 10);
+            LastKilledTime = DateTime.MinValue;
         }
 
         /// <summary>
@@ -191,6 +197,28 @@ namespace ServerEngine.Characters
                 hitAmount = HitPoints;
             }
             HitPoints -= hitAmount;
+
+            if (IsDead())
+            {
+                LastKilledTime = DateTime.Now;
+            }
+        }
+
+        public void Respawn()
+        {
+            if (CanRespawn())
+            {
+                HitPoints = MaxHitPoints;
+            }
+        }
+
+        public bool CanRespawn()
+        {
+            if(LastKilledTime + RespawnTime < DateTime.Now)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void Heal(int healAmount)
@@ -209,7 +237,7 @@ namespace ServerEngine.Characters
 
         public void Heal(Character healingCharacter)
         {
-            if(IsDead())
+            if(IsDead() || healingCharacter.IsDead())
             {
                 return;
             }
