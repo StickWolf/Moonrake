@@ -74,6 +74,9 @@ namespace GameEngine
         [JsonProperty]
         private Dictionary<string, ITurnBehavior> TurnBehaviors { get; set; } = new Dictionary<string, ITurnBehavior>();
 
+        [JsonProperty]
+        private Dictionary<string, Account> Accounts { get; set; } = new Dictionary<string, Account>();
+
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
         public static GameState CurrentGameState { get; private set; }
@@ -754,5 +757,32 @@ namespace GameEngine
                 .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
             return command;
         }
+
+        public Account CreateAccount(string userName)
+        {
+            var alreadyExistsAccount = GetAccount(userName);
+            if (alreadyExistsAccount != null)
+            {
+                // This account already exists.. just return it.
+                return alreadyExistsAccount;
+            }
+
+            var account = new Account()
+            {
+                UserName = userName
+            };
+            Accounts.Add(userName, account);
+            return account;
+        }
+
+        public Account GetAccount(string userName)
+        {
+            if (Accounts.ContainsKey(userName))
+            {
+                return Accounts[userName];
+            }
+            return null;
+        }
+
     }
 }
