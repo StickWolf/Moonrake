@@ -558,12 +558,6 @@ namespace ServerEngine
             return null;
         }
 
-        public List<Character> GetCharactersWithName(string characterName)
-        {
-            var characters = Characters.Values.Where(c => c.Name.Equals(characterName, StringComparison.OrdinalIgnoreCase)).ToList();
-            return characters;
-        }
-
         public Dictionary<Item, int> GetCharacterItems(Guid characterTrackingId)
         {
             if (CharactersItems.ContainsKey(characterTrackingId))
@@ -592,17 +586,20 @@ namespace ServerEngine
             }
         }
 
-        public List<Character> GetAllCharacters()
+        public List<Character> GetAllCharactersPresentInWorld()
         {
-            var characters = Characters.Values.ToList();
-            return characters;
+            var presentCharacters = Characters.Values
+                .Where(c => c.IsPresentInWorld())
+                .ToList();
+            return presentCharacters;
         }
 
         public List<Character> GetCharactersInLocation(Guid locationTrackingId)
         {
             var characters = CharacterLocations
                 .Where(kvp => kvp.Value == locationTrackingId) // Where location is the one passed in
-                .Select(kvp => GetCharacter(kvp.Key));
+                .Select(kvp => GetCharacter(kvp.Key))
+                .Where(c => c.IsPresentInWorld());
 
             return characters.ToList();
         }

@@ -6,6 +6,8 @@ namespace ServerEngine.Commands.Internal
 {
     internal class ExitCommand : ICommandInternal
     {
+        // TODO: We should never let the client have the server exit, but a client should be able to disconnect
+
         public List<string> ActivatingWords => new List<string>() { "exit" };
 
         public void Execute(List<string> extraWords, Character exitingCharacter)
