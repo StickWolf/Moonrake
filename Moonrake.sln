@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moonrake", "Moonrake\Moonrake.csproj", "{45464526-E20A-4257-9F37-A8BAE1CB3472}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoonrakeServer", "MoonrakeServer\MoonrakeServer.csproj", "{45464526-E20A-4257-9F37-A8BAE1CB3472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine", "GameEngine\GameEngine.csproj", "{C578242E-55E6-4A63-89A4-138505108342}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerEngine", "ServerEngine\ServerEngine.csproj", "{C578242E-55E6-4A63-89A4-138505108342}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundUtils", "SoundUtils\SoundUtils.csproj", "{5BB92D21-99F0-4C40-BD84-63E7F5391716}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleGame", "ExampleGame\ExampleGame.csproj", "{422C71F5-776D-40A9-9D02-D59ED19A9D68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleGameServer", "ExampleGameServer\ExampleGameServer.csproj", "{422C71F5-776D-40A9-9D02-D59ED19A9D68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheTaleOfTheDragonKitty", "DreamsAndWhatTheyMean\TheTaleOfTheDragonKitty.csproj", "{B9D23B86-F863-4610-9555-22CC36B9AB97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DragonKittyServer", "DragonKittyServer\DragonKittyServer.csproj", "{B9D23B86-F863-4610-9555-22CC36B9AB97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
