@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Client : TrackableInstance
     {
+        /// <summary>
+        /// The account that this client is currently logged into
+        /// </summary>
+        [JsonIgnore]
+        public Account AttachedAccount { get; set; }
+
         public void SendMessage(string text, bool newLine = true)
         {
             if (newLine)

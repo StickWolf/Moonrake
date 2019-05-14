@@ -40,7 +40,7 @@ namespace GameEngine
             RunGameLoop = true;
             RunFactory = true;
 
-            // serverClient is the server admin window
+            // TODO: remove this and the property after client/server split. The goal is that all commands can be run from the client itself.
             ServerClient = new Client();
             AttachedClients.AttachClient(ServerClient);
 
@@ -48,9 +48,20 @@ namespace GameEngine
             // TODO: or in the case wherere there is no game state. It just creates up a new one.
             InternalCommandHelper.TryRunServerCommand("loadgamestate", new List<string>(), ServerClient);
 
-            // TODO: For now until we have real clients, we auto-create a new player character here
+            // TODO: Remove after client/server accounts are fully functional. Until then we're creating a "Server" account
+            // TODO: that the server user will be automatically "logged" into
+            ServerClient.AttachedAccount = GameState.CurrentGameState.GetAccount("ServerUser");
+
+            // TODO: For now until we have real clients, we auto-create a new player character (if needed) here
             // TODO: This simulates a client connecting to an account and adding a new character to their account.
-            InternalCommandHelper.TryRunServerCommand("createnewplayer", new List<string>(), ServerClient);
+            if (ServerClient.AttachedAccount.Characters.Count == 0)
+            {
+                InternalCommandHelper.TryRunServerCommand("createnewplayer", new List<string>(), ServerClient);
+            }
+            else
+            {
+                AttachedClients.SetClientFocusedCharacter(ServerClient.TrackingId, ServerClient.AttachedAccount.Characters[0]);
+            }
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)
