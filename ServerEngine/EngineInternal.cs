@@ -77,6 +77,10 @@ namespace ServerEngine
                     {
                         gameCharacter.Turn();
                     }
+                    else if(gameCharacter.CanRespawn())
+                    {
+                        gameCharacter.Respawn();
+                    }
                 }
                 sw.Stop();
                 if (sw.Elapsed.TotalSeconds < 4)
