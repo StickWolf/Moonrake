@@ -19,9 +19,11 @@ namespace ServerEngine.Commands.Internal
                 return;
             }
 
-            // TODO: All characters in this accounts should first be marked somehow as no longer present/visible in the world.
-
             var newPlayerCharacter = EngineInternal.NewPlayerCreator();
+
+            // Mark all player characters as needing focus to stay in the world
+            newPlayerCharacter.NeedsFocus = true;
+
             executingClient.AttachedAccount.Characters.Add(newPlayerCharacter.TrackingId);
             AttachedClients.SetClientFocusedCharacter(executingClient.TrackingId, newPlayerCharacter.TrackingId);
 

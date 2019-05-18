@@ -1,8 +1,6 @@
-﻿using ServerEngine.Characters.Behaviors;
-using ServerEngine.Commands;
+﻿using Newtonsoft.Json;
 using ServerEngine.Commands.Public;
 using ServerEngine.Locations;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +31,25 @@ namespace ServerEngine.Characters
         [JsonProperty]
         public List<string> TurnBehaviors { get; set; }
 
+        [JsonProperty]
         public DateTime LastKilledTime { get; set; }
 
+        [JsonProperty]
         public TimeSpan RespawnTime { get; set; }
+
+        /// <summary>
+        /// Indicates if this character needs to be focused on by a client in order to stay in the world
+        /// </summary>
+        [JsonProperty]
+        public bool NeedsFocus { get; set; }
 
         private static Random rnd = new Random();
 
-        public Character(string name, int hp)
+        public Character(string name, int hitPoints)
         {
             Name = name;
-            HitPoints = hp;
-            MaxHitPoints = hp;
+            HitPoints = hitPoints;
+            MaxHitPoints = hitPoints;
             RespawnTime = new TimeSpan(0, 0, 2, 30, 10);
             LastKilledTime = DateTime.MinValue;
         }
@@ -124,6 +130,35 @@ namespace ServerEngine.Characters
             }
         }
 
+        /// <summary>
+        /// Indicates if the server should consider this character as "present in the world"
+        /// or if the character is "logged out" / "offline", etc.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPresentInWorld()
+        {
+            if (!NeedsFocus)
+            {
+                return true;
+            }
+
+            return HasClientFocus();
+        }
+
+        /// <summary>
+        /// Indicates if there is a client currently focusing on this character
+        /// </summary>
+        /// <returns>True if there is a focusing client</returns>
+        public bool HasClientFocus()
+        {
+            var client = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+            return client != null;
+        }
+
+        /// <summary>
+        /// Indicates if this character has any behavior that will prompt the player
+        /// </summary>
+        /// <returns>True if the character has a prompting behavior</returns>
         public bool HasPromptingBehaviors()
         {
             if (TurnBehaviors != null)

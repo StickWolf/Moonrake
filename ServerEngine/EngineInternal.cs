@@ -67,10 +67,10 @@ namespace ServerEngine
             while (RunGameLoop)
             {
                 // Get all characters in the game that are still alive
-                var allLocateableCharacters = GameState.CurrentGameState.GetAllCharacters();
+                var presentCharacters = GameState.CurrentGameState.GetAllCharactersPresentInWorld();
                 var sw = new Stopwatch();
                 sw.Start();
-                foreach (var gameCharacter in allLocateableCharacters) // TODO: Sort turn order by character speed, fastest should go first.
+                foreach (var gameCharacter in presentCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                 {
                     // Only characters that are alive get a turn
                     if (!gameCharacter.IsDead())
@@ -87,9 +87,6 @@ namespace ServerEngine
                 {
                     Task.Delay(2000).Wait();
                 }
-
-                // TODO: Respawn rules will bring NPCs back to life, maybe even player characters too
-                // TODO: We should never let the client have the server exit, but a client should be able to disconnect
             }
         }
     }
