@@ -16,6 +16,7 @@ namespace ServerEngine
     {
         // Clients[{ClientTrackingId}] = {AttachedClient}
         private static ConcurrentDictionary<Guid, Client> Clients { get; set; } = new ConcurrentDictionary<Guid, Client>();
+        private static readonly object addRemoveClientLock = new object();
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
         private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
@@ -52,10 +53,9 @@ namespace ServerEngine
                     {
                         trackerClient = new Client();
                         trackerClient.ClientHelper = new TcpClientHelper();
-                        trackerClient.ClientHelper.SetClient(tcpClient, $"AttachedClient({trackerClient.TrackingId.ToString()})");
-                        AttachedClients.AttachClient(trackerClient);
-                        // TODO: add an "OnClientDetached" event in the helper and hook an event here that will run the appropraiate detach so the client is removed from the list
-                        trackerClient.ClientHelper.StartMessageHandlers();
+                        trackerClient.ClientHelper.SetTcpClient(tcpClient, $"AttachedClient({trackerClient.TrackingId.ToString()})");
+                        AttachClient(trackerClient);
+                        trackerClient.ClientHelper.ShutdownActions.Add(() => DetachClient(trackerClient));
 
                         // Send the client a descriptive text message indicating they are successfully connected
                         var successMessage = new DescriptiveTextDto();
@@ -86,10 +86,8 @@ namespace ServerEngine
             }
         }
 
-        public static void DetachClient(Client client)
+        private static void DetachClient(Client client)
         {
-            client.ClientHelper?.Dispose();
-
             // Remove the client's focus on any character they are tracking if we have a current game loaded
             SetClientFocusedCharacter(client.TrackingId, Guid.Empty);
 
@@ -104,7 +102,19 @@ namespace ServerEngine
 
         public static void DetachAllClients()
         {
-            Clients.Clear();
+            lock (addRemoveClientLock)
+            {
+                while (true)
+                {
+                    var attachedClient = Clients.Values
+                        .FirstOrDefault(c => c.ClientHelper != null && c.ClientHelper.StayConnected);
+                    if (attachedClient == null)
+                    {
+                        break;
+                    }
+                    attachedClient.ClientHelper.StayConnected = false;
+                }
+            }
             ClientFocusedCharacters.Clear();
         }
 
