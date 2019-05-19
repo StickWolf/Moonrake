@@ -1,11 +1,8 @@
 ﻿using ServerEngine.Characters;
-using ServerEngine.Characters.Behaviors;
 using ServerEngine.Commands.Internal;
-using ServerEngine.Commands.Public;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ServerEngine
@@ -62,6 +59,9 @@ namespace ServerEngine
             {
                 AttachedClients.SetClientFocusedCharacter(ServerClient.TrackingId, ServerClient.AttachedAccount.Characters[0]);
             }
+
+            // After the game state is loaded is the appropriate time to start accepting connections
+            AttachedClients.StartListener();
 
             // Main game loop goes 1 loop for 1 game turn.
             while (RunGameLoop)

@@ -1,7 +1,11 @@
-﻿using ServerEngine.Characters;
+﻿using NetworkUtils;
+using ServerEngine.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace ServerEngine
 {
@@ -12,6 +16,44 @@ namespace ServerEngine
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
         private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
+
+        private static Thread ListenerThread { get; set; }
+
+        public static void StartListener()
+        {
+            ListenerThread = new Thread(ListenForClientConnections);
+            ListenerThread.Start();
+        }
+
+        public static void ListenForClientConnections()
+        {
+            var ipAddress = IPAddress.Parse("127.0.0.1"); // TODO: make these configurable
+            TcpListener listener = null;
+            try
+            {
+                listener = new TcpListener(ipAddress, 15555);
+                listener.Start();
+                while (true)
+                {
+                    using (TcpClient tcpClient = listener.AcceptTcpClient())
+                    {
+                        using (TcpClientHelper clientHelper = new TcpClientHelper())
+                        {
+                            clientHelper.SetClient(tcpClient, "Server");
+                            clientHelper.StartMessageHandlers();
+                            clientHelper.BlockUntilDisconnect();
+                        }
+                        tcpClient.Close();
+                    }
+                }
+            }
+            // TODO: catch
+            finally
+            {
+                listener?.Stop();
+            }
+
+        }
 
         public static void AttachClient(Client client)
         {
