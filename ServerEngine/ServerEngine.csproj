@@ -102,5 +102,11 @@
   <ItemGroup>
     <Content Include="Plan.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkUtils\NetworkUtils.csproj">
+      <Project>{4be93677-c3ef-4b2f-96eb-6738fa2207cf}</Project>
+      <Name>NetworkUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

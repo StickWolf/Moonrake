@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleGameServer", "Exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DragonKittyServer", "DragonKittyServer\DragonKittyServer.csproj", "{B9D23B86-F863-4610-9555-22CC36B9AB97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameClient", "GameClient\GameClient.csproj", "{E851BAE3-C06E-4A6C-BE54-97D7C14912AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtils", "NetworkUtils\NetworkUtils.csproj", "{4BE93677-C3EF-4B2F-96EB-6738FA2207CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{B9D23B86-F863-4610-9555-22CC36B9AB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9D23B86-F863-4610-9555-22CC36B9AB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9D23B86-F863-4610-9555-22CC36B9AB97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E851BAE3-C06E-4A6C-BE54-97D7C14912AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E851BAE3-C06E-4A6C-BE54-97D7C14912AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E851BAE3-C06E-4A6C-BE54-97D7C14912AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E851BAE3-C06E-4A6C-BE54-97D7C14912AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BE93677-C3EF-4B2F-96EB-6738FA2207CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE93677-C3EF-4B2F-96EB-6738FA2207CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE93677-C3EF-4B2F-96EB-6738FA2207CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE93677-C3EF-4B2F-96EB-6738FA2207CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
