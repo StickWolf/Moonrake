@@ -41,7 +41,7 @@ namespace ServerEngine
                         {
                             clientHelper.SetClient(tcpClient, "Server");
                             clientHelper.StartMessageHandlers();
-                            clientHelper.BlockUntilDisconnect();
+                            clientHelper.BlockUntilDisconnect(); // TODO: instead set the max connection limit on the listener and create multiple connected clients in parallel.
                         }
                         tcpClient.Close();
                     }
