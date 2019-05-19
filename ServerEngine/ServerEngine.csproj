@@ -103,6 +103,10 @@
     <Content Include="Plan.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BaseClientServerDtos\BaseClientServerDtos.csproj">
+      <Project>{50A99435-349F-49E0-969F-F98B1ACCED5E}</Project>
+      <Name>BaseClientServerDtos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetworkUtils\NetworkUtils.csproj">
       <Project>{4be93677-c3ef-4b2f-96eb-6738fa2207cf}</Project>
       <Name>NetworkUtils</Name>

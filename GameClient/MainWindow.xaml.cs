@@ -53,5 +53,9 @@ namespace GameClient
             return processed;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Windows.Main = this;
+        }
     }
 }

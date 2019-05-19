@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Windows.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -66,7 +70,7 @@
     <Compile Include="Commands\ClientCommandHelper.cs" />
     <Compile Include="Commands\ConnectCommand.cs" />
     <Compile Include="Commands\IClientCommand.cs" />
-    <Compile Include="GameConnection.cs" />
+    <Compile Include="ServerConnection.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -90,6 +94,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -99,6 +104,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BaseClientServerDtos\BaseClientServerDtos.csproj">
+      <Project>{50A99435-349F-49E0-969F-F98B1ACCED5E}</Project>
+      <Name>BaseClientServerDtos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetworkUtils\NetworkUtils.csproj">
       <Project>{4be93677-c3ef-4b2f-96eb-6738fa2207cf}</Project>
       <Name>NetworkUtils</Name>

@@ -1,6 +1,9 @@
-﻿using NetworkUtils;
+﻿using BaseClientServerDtos;
+using BaseClientServerDtos.ToClient;
+using NetworkUtils;
 using ServerEngine.Characters;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +15,7 @@ namespace ServerEngine
     internal static class AttachedClients
     {
         // Clients[{ClientTrackingId}] = {AttachedClient}
-        private static Dictionary<Guid, Client> Clients { get; set; } = new Dictionary<Guid, Client>();
+        private static ConcurrentDictionary<Guid, Client> Clients { get; set; } = new ConcurrentDictionary<Guid, Client>();
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
         private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
@@ -22,6 +25,7 @@ namespace ServerEngine
         public static void StartListener()
         {
             ListenerThread = new Thread(ListenForClientConnections);
+            ListenerThread.Name = "WaitForClientListener";
             ListenerThread.Start();
         }
 
@@ -35,15 +39,35 @@ namespace ServerEngine
                 listener.Start();
                 while (true)
                 {
-                    using (TcpClient tcpClient = listener.AcceptTcpClient())
+                    // TODO: configure max concurrent connections to be appropriate for the game / machine
+                    if (Clients.Count >= 3)
                     {
-                        using (TcpClientHelper clientHelper = new TcpClientHelper())
+                        Thread.Sleep(1000);
+                        continue;
+                    }
+
+                    TcpClient tcpClient = listener.AcceptTcpClient();
+                    Client trackerClient = null;
+                    try
+                    {
+                        trackerClient = new Client();
+                        trackerClient.ClientHelper = new TcpClientHelper();
+                        trackerClient.ClientHelper.SetClient(tcpClient, $"AttachedClient({trackerClient.TrackingId.ToString()})");
+                        AttachedClients.AttachClient(trackerClient);
+                        // TODO: add an "OnClientDetached" event in the helper and hook an event here that will run the appropraiate detach so the client is removed from the list
+                        trackerClient.ClientHelper.StartMessageHandlers();
+
+                        // Send the client a descriptive text message indicating they are successfully connected
+                        var successMessage = new DescriptiveTextDto();
+                        successMessage.Text = "Welcome to the server."; // TODO: change this to "Welcome to {GameName} server"
+                        trackerClient.SendMessage(JsonDtoSerializer.SerializeDto(successMessage));
+                    }
+                    catch
+                    {
+                        if (trackerClient != null)
                         {
-                            clientHelper.SetClient(tcpClient, "Server");
-                            clientHelper.StartMessageHandlers();
-                            clientHelper.BlockUntilDisconnect(); // TODO: instead set the max connection limit on the listener and create multiple connected clients in parallel.
+                            AttachedClients.DetachClient(trackerClient);
                         }
-                        tcpClient.Close();
                     }
                 }
             }
@@ -52,22 +76,29 @@ namespace ServerEngine
             {
                 listener?.Stop();
             }
-
         }
 
         public static void AttachClient(Client client)
         {
-            Clients[client.TrackingId] = client;
+            while (!Clients.TryAdd(client.TrackingId, client))
+            {
+                Thread.Sleep(1000);
+            }
         }
 
         public static void DetachClient(Client client)
         {
+            client.ClientHelper?.Dispose();
+
             // Remove the client's focus on any character they are tracking if we have a current game loaded
             SetClientFocusedCharacter(client.TrackingId, Guid.Empty);
 
             if (Clients.ContainsKey(client.TrackingId))
             {
-                Clients.Remove(client.TrackingId);
+                while (!Clients.TryRemove(client.TrackingId, out Client removed))
+                {
+                    Thread.Sleep(1000);
+                }
             }
         }
 
