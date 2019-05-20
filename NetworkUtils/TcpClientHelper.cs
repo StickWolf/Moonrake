@@ -8,52 +8,54 @@ using System.Threading;
 
 namespace NetworkUtils
 {
-    public class TcpClientHelper : IDisposable
+    public class TcpClientHelper
     {
+        public bool StayConnected { get; set; } = true;
+        public List<Action> ShutdownActions = new List<Action>();
+
         private string Name { get; set; }
         private TcpClient Client { get; set; }
         private StreamReader Reader { get; set; }
         private StreamWriter Writer { get; set; }
-        public bool StayConnected { get; set; } = true;
         private Thread ReaderThread { get; set; }
         private Thread WriterThread { get; set; }
         private ConcurrentQueue<string> OutgoingMessageQueue { get; set; } = new ConcurrentQueue<string>();
         private ConcurrentQueue<string> IncomingMessageQueue { get; set; } = new ConcurrentQueue<string>();
+        private bool HasShutdown = false;
+        private readonly object shutDownLock = new object();
 
-        public void SetClient(string hostName, int port, string name)
+        public void SetTcpClient(string hostName, int port, string name)
         {
-            var tcpClient = new TcpClient(hostName, port); // TODO: handle exceptions here, like failure to connect
-            SetClient(tcpClient, name);
+            TcpClient tcpClient;
+            try
+            {
+                tcpClient = new TcpClient(hostName, port);
+            }
+            catch (Exception ex)
+            {
+                Shutdown();
+                throw ex;
+            }
+            SetTcpClient(tcpClient, name);
         }
 
-        public void SetClient(TcpClient tcpClient, string name)
+        public void SetTcpClient(TcpClient tcpClient, string name)
         {
             Name = name;
             Client = tcpClient;
+
+            if (Client == null || Client.Connected == false)
+            {
+                Shutdown();
+                throw new Exception("Unable to start message handlers for a null or unconnected client.");
+            }
+
             Reader = new StreamReader(Client.GetStream());
-            Writer = new StreamWriter(Client.GetStream());
-        }
-
-        public void BlockUntilDisconnect()
-        {
-            while (StayConnected) // TODO: also check if the client is actually connected
-            {
-                Thread.Sleep(1000);
-            }
-        }
-
-        public void StartMessageHandlers()
-        {
-            if (Client == null || Reader == null || Writer == null || Client.Connected == false)
-            {
-                return;
-            }
-
-            // start a new thread to process inbound messages
             ReaderThread = new Thread(HandleInboundMessages);
             ReaderThread.Name = $"Read-{Name}";
             ReaderThread.Start();
 
+            Writer = new StreamWriter(Client.GetStream());
             WriterThread = new Thread(HandleOutboundMessages);
             WriterThread.Name = $"Write-{Name}";
             WriterThread.Start();
@@ -61,25 +63,36 @@ namespace NetworkUtils
 
         private void HandleOutboundMessages()
         {
-            while (StayConnected)
+            try
             {
-                // Send any messages that we have ready to the other client
-                if (OutgoingMessageQueue.Count != 0)
+                while (StayConnected)
                 {
-                    if (OutgoingMessageQueue.TryDequeue(out string messageToSend))
+                    // Send any messages that we have ready to the other client
+                    if (OutgoingMessageQueue.Count != 0)
                     {
-                        Writer.WriteLine(messageToSend);
-                        Writer.Flush();
+                        if (OutgoingMessageQueue.TryDequeue(out string messageToSend))
+                        {
+                            Writer.WriteLine(messageToSend);
+                            Writer.Flush();
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                StayConnected = false; // TODO: logging about error
+            }
+            finally
+            {
+                Shutdown();
             }
         }
 
         private void HandleInboundMessages()
         {
-            while (StayConnected)
+            try
             {
-                try
+                while (StayConnected)
                 {
                     // Look for a message from the other client
                     string inboundMessage = Reader.ReadLine();
@@ -93,10 +106,14 @@ namespace NetworkUtils
 
                     IncomingMessageQueue.Enqueue(inboundMessage);
                 }
-                catch (Exception ex)
-                {
-                    StayConnected = false; // TODO: logging about error
-                }
+            }
+            catch (Exception ex)
+            {
+                StayConnected = false; // TODO: logging about error
+            }
+            finally
+            {
+                Shutdown();
             }
         }
 
@@ -130,14 +147,29 @@ namespace NetworkUtils
             }
         }
 
-        public void Dispose()
+        private void Shutdown()
         {
-            Reader?.Close();
-            Writer?.Close();
-            Client?.Close();
-            Reader?.Dispose();
-            Writer?.Dispose();
-            Client?.Dispose();
+            lock (shutDownLock)
+            {
+                if (!HasShutdown)
+                {
+                    HasShutdown = true;
+                    Reader?.Close();
+                    Writer?.Close();
+                    Client?.Close();
+                    Reader?.Dispose();
+                    Writer?.Dispose();
+                    Client?.Dispose();
+
+                    if (ShutdownActions != null)
+                    {
+                        foreach (var shutDownAction in ShutdownActions)
+                        {
+                            shutDownAction();
+                        }
+                    }
+                }
+            }
         }
     }
 }

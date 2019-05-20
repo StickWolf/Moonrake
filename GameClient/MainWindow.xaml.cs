@@ -57,5 +57,10 @@ namespace GameClient
         {
             Windows.Main = this;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ServerConnection.Disconnect();
+        }
     }
 }

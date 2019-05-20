@@ -14,12 +14,19 @@ namespace GameClient
         public static void Connect()
         {
             Helper = new TcpClientHelper();
-            Helper.SetClient("127.0.0.1", 15555, "Client");
-            Helper.StartMessageHandlers();
+            Helper.SetTcpClient("127.0.0.1", 15555, "Client");
 
             // Start a thread to process incoming messages from the server
             IncomingMessageProcessingThread = new Thread(ProcessIncomingMessages);
             IncomingMessageProcessingThread.Start();
+        }
+
+        public static void Disconnect()
+        {
+            if (Helper != null)
+            {
+                Helper.StayConnected = false;
+            }
         }
 
         private static void ProcessIncomingMessages()
