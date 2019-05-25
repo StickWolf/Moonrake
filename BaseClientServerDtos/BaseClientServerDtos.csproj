@@ -48,6 +48,7 @@
     <Compile Include="JsonDtoSerializer.cs" />
     <Compile Include="FiniteDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToServer\CreateAccountDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
