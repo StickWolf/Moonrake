@@ -12,7 +12,8 @@ namespace GameClient.Commands
         {
             AllClientCommands = new List<IClientCommand>()
             {
-                new ConnectCommand()
+                new ConnectCommand(),
+                new CreateAccountCommand(),
             };
         }
 

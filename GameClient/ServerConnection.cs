@@ -29,6 +29,12 @@ namespace GameClient
             }
         }
 
+        public static void SendDtoMessage(FiniteDto messageDto)
+        {
+            var serialized = JsonDtoSerializer.SerializeDto(messageDto);
+            Helper.SendMessage(serialized);
+        }
+
         private static void ProcessIncomingMessages()
         {
             while (Helper.StayConnected)
