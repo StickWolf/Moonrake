@@ -1,11 +1,4 @@
-﻿using Amqp;
-using Amqp.Framing;
-using Amqp.Listener;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Amqp.Listener;
 
 namespace ServerEngine.MessageBroker
 {
@@ -17,19 +10,27 @@ namespace ServerEngine.MessageBroker
             // Sender = false
             // Receiver = true
 
+            var client = AttachedClients.GetClientFromConnection(attachContext.Link.Session.Connection);
+
             // If a Receiver link is attaching
             if (attachContext.Attach.Role)
             {
                 var endpoint = new ServerToClientLinkEndpoint(attachContext.Link);
+                client.SetServerToClientLinkEndpoint(endpoint);
+                System.Console.WriteLine($"Client receiver link attached. LinkName: {attachContext.Link.Name}");
 
                 // Completes the attach operation with success
                 attachContext.Complete(endpoint, 0);
             }
             else
             {
-                // TODO: add sender link attach logic
+                var endpoint = new ServerLinkEndpoint(attachContext.Link);
+                client.SetClientToServerLinkEndpoint(endpoint);
+                System.Console.WriteLine($"Client sender link attached. LinkName: {attachContext.Link.Name}");
+
+                // Completes the attach operation with success
+                attachContext.Complete(endpoint, 0);
             }
-            
         }
     }
 }
