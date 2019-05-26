@@ -1,5 +1,6 @@
 ﻿using ServerEngine.Characters;
 using ServerEngine.Commands.Internal;
+using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,7 +34,7 @@ namespace ServerEngine
         /// </summary>
         public static void StartEngine()
         {
-            AttachedClients.DetachAllClients();
+            AttachedClients.DetachAllClients("Server restart");
             RunGameLoop = true;
             RunFactory = true;
 
@@ -61,32 +62,39 @@ namespace ServerEngine
             }
 
             // After the game state is loaded is the appropriate time to start accepting connections
-            AttachedClients.StartListener();
-
-            // Main game loop goes 1 loop for 1 game turn.
-            while (RunGameLoop)
+            try
             {
-                // Get all characters in the game that are still alive
-                var presentCharacters = GameState.CurrentGameState.GetAllCharactersPresentInWorld();
-                var sw = new Stopwatch();
-                sw.Start();
-                foreach (var gameCharacter in presentCharacters) // TODO: Sort turn order by character speed, fastest should go first.
+                Broker.StartHost();
+
+                // Main game loop goes 1 loop for 1 game turn.
+                while (RunGameLoop)
                 {
-                    // Only characters that are alive get a turn
-                    if (!gameCharacter.IsDead())
+                    // Get all characters in the game that are still alive
+                    var presentCharacters = GameState.CurrentGameState.GetAllCharactersPresentInWorld();
+                    var sw = new Stopwatch();
+                    sw.Start();
+                    foreach (var gameCharacter in presentCharacters) // TODO: Sort turn order by character speed, fastest should go first.
                     {
-                        gameCharacter.Turn();
+                        // Only characters that are alive get a turn
+                        if (!gameCharacter.IsDead())
+                        {
+                            gameCharacter.Turn();
+                        }
+                        else if (gameCharacter.CanRespawn())
+                        {
+                            gameCharacter.Respawn();
+                        }
                     }
-                    else if(gameCharacter.CanRespawn())
+                    sw.Stop();
+                    if (sw.Elapsed.TotalSeconds < 4)
                     {
-                        gameCharacter.Respawn();
+                        Task.Delay(2000).Wait();
                     }
                 }
-                sw.Stop();
-                if (sw.Elapsed.TotalSeconds < 4)
-                {
-                    Task.Delay(2000).Wait();
-                }
+            }
+            finally
+            {
+                Broker.StopHost();
             }
         }
     }

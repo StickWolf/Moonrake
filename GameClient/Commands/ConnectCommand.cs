@@ -1,5 +1,4 @@
-﻿using NetworkUtils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GameClient.Commands
 {
