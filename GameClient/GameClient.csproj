@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Amqp.Net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=905a7b1e6458e0c3, processorArchitecture=MSIL">
+      <HintPath>..\packages\AMQPNetLite.2.1.7\lib\net45\Amqp.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -115,10 +118,6 @@
     <ProjectReference Include="..\BaseClientServerDtos\BaseClientServerDtos.csproj">
       <Project>{50A99435-349F-49E0-969F-F98B1ACCED5E}</Project>
       <Name>BaseClientServerDtos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetworkUtils\NetworkUtils.csproj">
-      <Project>{4be93677-c3ef-4b2f-96eb-6738fa2207cf}</Project>
-      <Name>NetworkUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

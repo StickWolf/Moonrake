@@ -60,7 +60,7 @@ namespace GameClient
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ServerConnection.Disconnect();
+            ServerConnection.Disconnect("Client shutdown");
         }
     }
 }

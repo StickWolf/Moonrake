@@ -1,5 +1,5 @@
-﻿using NetworkUtils;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using ServerEngine.MessageBroker;
 using System.Collections.Generic;
 
 namespace ServerEngine
@@ -14,18 +14,31 @@ namespace ServerEngine
         public Account AttachedAccount { get; set; }
 
         [JsonIgnore]
-        public TcpClientHelper ClientHelper { get; set; }
+        private ServerToClientLinkEndpoint ServerToClientLink { get; set; }
 
-        public void SendMessage(string text, bool newLine = true) // TODO: remove option for newlines
+        internal void SetServerToClientLinkEndpoint(ServerToClientLinkEndpoint link)
         {
-            if (ClientHelper != null)
+            this.ServerToClientLink = link;
+        }
+
+        public bool IsConnected()
+        {
+            return ServerToClientLink.IsConnected();
+        }
+
+        public void Disconnect(string reason)
+        {
+            ServerToClientLink.Disconnect(reason);
+        }
+
+        public void SendMessage(string text, bool newLine = true)
+        {
+            if (ServerToClientLink != null)
             {
-                ClientHelper?.SendMessage(text);
+                ServerToClientLink.SendMessage(text, "TODO");
             }
             else
             {
-                // TODO: how do we keep line returns between descriptive text paragraphs and still remove all line returns for json blobs sent?
-
                 // TODO: keeping for now until the server/client are fully separated.
                 if (newLine)
                 {
