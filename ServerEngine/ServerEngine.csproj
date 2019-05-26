@@ -94,6 +94,7 @@
     <Compile Include="Locations\Location.cs" />
     <Compile Include="MessageBroker\Broker.cs" />
     <Compile Include="MessageBroker\LinkProcessor.cs" />
+    <Compile Include="MessageBroker\ServerLinkEndpoint.cs" />
     <Compile Include="MessageBroker\ServerToClientLinkEndpoint.cs" />
     <Compile Include="MutablePair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

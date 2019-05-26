@@ -15,6 +15,7 @@ namespace GameClient
     {
         private static string amqpServerAddress = "amqps://127.0.0.1:5671";
         private static ReceiverLink receiver;
+        private static SenderLink sender;
         private static Connection connection;
         private static Session session;
         private static string replyTo;
@@ -40,6 +41,8 @@ namespace GameClient
 
             receiver = new ReceiverLink(session, "request-client-receiver", recvAttach, null);
             receiver.Start(300, OnMessageReceived);
+
+            sender = new SenderLink(session, "request-client-sender", recvAttach, null);
         }
 
         public static void Disconnect(string reason)

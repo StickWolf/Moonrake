@@ -1,4 +1,5 @@
-﻿using ServerEngine.Characters;
+﻿using Amqp;
+using ServerEngine.Characters;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,6 +16,21 @@ namespace ServerEngine
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
         private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
+
+        public static Client GetClientFromConnection(Connection connection)
+        {
+            lock (addRemoveClientLock)
+            {
+                var client = Clients.Values.FirstOrDefault(c => c.EqualsConnection(connection));
+                if (client == null)
+                {
+                    client = new Client();
+                    client.SetConnection(connection);
+                    AttachClient(client);
+                }
+                return client;
+            }
+        }
 
         public static void AttachClient(Client client)
         {
