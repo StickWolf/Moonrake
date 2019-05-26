@@ -1,70 +1,88 @@
-﻿using BaseClientServerDtos;
+﻿using Amqp;
+using Amqp.Framing;
+using Amqp.Sasl;
+using BaseClientServerDtos;
 using BaseClientServerDtos.ToClient;
-using NetworkUtils;
+using System;
+using System.Net;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 namespace GameClient
 {
     public static class ServerConnection
     {
-        private static TcpClientHelper Helper { get; set; }
-
-        private static Thread IncomingMessageProcessingThread { get; set; }
+        private static string amqpServerAddress = "amqps://127.0.0.1:5671";
+        private static ReceiverLink receiver;
+        private static Connection connection;
+        private static Session session;
+        private static string replyTo;
 
         public static void Connect()
         {
-            Helper = new TcpClientHelper();
-            Helper.SetTcpClient("127.0.0.1", 15555, "Client");
+            var factory = new ConnectionFactory();
+            factory.SASL.Profile = SaslProfile.Anonymous;
 
-            // Start a thread to process incoming messages from the server
-            IncomingMessageProcessingThread = new Thread(ProcessIncomingMessages);
-            IncomingMessageProcessingThread.Start();
-        }
+            // If using a self-signed cert in the server, uncomment this line for testing
+            factory.SSL.RemoteCertificateValidationCallback = (a, b, c, d) => true;
+            //factory.SSL.CheckCertificateRevocation = false;
 
-        public static void Disconnect()
-        {
-            if (Helper != null)
+            connection = factory.CreateAsync(new Address(amqpServerAddress)).Result;
+            session = new Session(connection);
+            replyTo = "client-" + Guid.NewGuid().ToString();
+
+            Attach recvAttach = new Attach()
             {
-                Helper.StayConnected = false;
-            }
+                Source = new Source() { Address = "request_processor" },
+                Target = new Target() { Address = replyTo }
+            };
+
+            receiver = new ReceiverLink(session, "request-client-receiver", recvAttach, null);
+            receiver.Start(300, OnMessageReceived);
         }
 
-        public static void SendDtoMessage(FiniteDto messageDto)
+        public static void Disconnect(string reason)
         {
-            var serialized = JsonDtoSerializer.SerializeDto(messageDto);
-            Helper.SendMessage(serialized);
+            var reasonError = new Error(ErrorCode.ConnectionForced);
+            reasonError.Description = reason;
+
+            receiver?.Close(TimeSpan.Zero, reasonError);
+            session?.Close(TimeSpan.Zero, reasonError);
+            connection?.Close(TimeSpan.Zero, reasonError);
         }
 
-        private static void ProcessIncomingMessages()
+        private static void OnMessageReceived(IReceiverLink receiver, Message message)
         {
-            while (Helper.StayConnected)
-            {
-                string nextMessage = Helper.ReceiveMessage();
-                if (nextMessage == null)
-                {
-                    // TODO: during a time when there are no messages, this thread will be spinning pretty fast..
-                    // TODO: maybe instead build an event that can be subscribed to or something into the Helper so we only get
-                    // TODO: get called when needed
-                    continue;
-                }
-
-                // Get the type of Dto
-                var dtoName = JsonDtoSerializer.GetDtoName(nextMessage);
-                if (string.IsNullOrWhiteSpace(dtoName))
-                {
-                    continue;
-                }
-
-                // TODO: recode this to not be a switch (instead a map)
-                switch (dtoName)
-                {
-                    case "DescriptiveTextDto":
-                        var dto = JsonDtoSerializer.DeserializeAs<DescriptiveTextDto>(nextMessage);
-                        Windows.Main.txtGameText.Dispatcher.Invoke(() => Windows.Main.txtGameText.Text = dto.Text);
-                        break;
-                }
-
-            }
+            receiver.Accept(message);
+            Windows.Main.txtGameText.Dispatcher.Invoke(() => Windows.Main.txtGameText.Text += message.Body.ToString());
         }
+
+
+
+        // TODO:
+        //public static void SendDtoMessage(FiniteDto messageDto)
+        //{
+        //    var serialized = JsonDtoSerializer.SerializeDto(messageDto);
+        //    Helper.SendMessage(serialized);
+        //}
+
+
+                //// Get the type of Dto
+                //var dtoName = JsonDtoSerializer.GetDtoName(nextMessage);
+                //if (string.IsNullOrWhiteSpace(dtoName))
+                //{
+                //    continue;
+                //}
+
+                //// TODO: recode this to not be a switch (instead a map)
+                //switch (dtoName)
+                //{
+                //    case "DescriptiveTextDto":
+                //        var dto = JsonDtoSerializer.DeserializeAs<DescriptiveTextDto>(nextMessage);
+                //        Windows.Main.txtGameText.Dispatcher.Invoke(() => Windows.Main.txtGameText.Text = dto.Text);
+                //        break;
+                //}
+
     }
 }
