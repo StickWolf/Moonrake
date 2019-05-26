@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Amqp;
+using Newtonsoft.Json;
 using ServerEngine.MessageBroker;
+using System;
 using System.Collections.Generic;
 
 namespace ServerEngine
@@ -14,28 +16,82 @@ namespace ServerEngine
         public Account AttachedAccount { get; set; }
 
         [JsonIgnore]
-        private ServerToClientLinkEndpoint ServerToClientLink { get; set; }
+        private ServerToClientLinkEndpoint ServerToClientEndpoint { get; set; }
 
-        internal void SetServerToClientLinkEndpoint(ServerToClientLinkEndpoint link)
+        [JsonIgnore]
+        private ServerLinkEndpoint ClientToServerEndpoint { get; set; }
+
+        [JsonIgnore]
+        private Connection ClientConnection { get; set; }
+
+        internal void SetConnection(Connection connection)
         {
-            this.ServerToClientLink = link;
+            this.ClientConnection = connection;
+            this.ClientConnection.Closed += ClientConnection_Closed;
+            System.Console.WriteLine($"Client connection discovered. Client Tracking Id: {this.TrackingId}");
+        }
+
+        public bool EqualsConnection(Connection connection)
+        {
+            if (connection == null || this.ClientConnection == null)
+            {
+                return false;
+            }
+            return ClientConnection.Equals(connection);
+        }
+
+        private void ClientConnection_Closed(IAmqpObject sender, Amqp.Framing.Error error)
+        {
+            System.Console.WriteLine($"Client connection closed. Client Tracking Id: {this.TrackingId}");
+            AttachedClients.DetachClient(this);
+        }
+
+        internal void SetServerToClientLinkEndpoint(ServerToClientLinkEndpoint endpoint)
+        {
+            this.ServerToClientEndpoint = endpoint;
+            endpoint.Link.Closed += StcLink_Closed;
+        }
+
+        internal void SetClientToServerLinkEndpoint(ServerLinkEndpoint endpoint)
+        {
+            this.ClientToServerEndpoint = endpoint;
+            endpoint.Link.Closed += CtsLink_Closed;
+        }
+
+        private void StcLink_Closed(IAmqpObject sender, Amqp.Framing.Error error)
+        {
+            System.Console.WriteLine($"STC link closed. LinkName: {ServerToClientEndpoint.Link.Name}");
+        }
+
+        private void CtsLink_Closed(IAmqpObject sender, Amqp.Framing.Error error)
+        {
+            System.Console.WriteLine($"CTS link closed. LinkName: {ServerToClientEndpoint.Link.Name}");
         }
 
         public bool IsConnected()
         {
-            return ServerToClientLink.IsConnected();
+            if (
+                ServerToClientEndpoint.Link != null && !ServerToClientEndpoint.Link.IsClosed &&
+                ClientToServerEndpoint.Link != null && !ClientToServerEndpoint.Link.IsClosed
+                )
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public void Disconnect(string reason)
         {
-            ServerToClientLink.Disconnect(reason);
+            ServerToClientEndpoint.Disconnect(reason);
+            ClientToServerEndpoint.Disconnect(reason);
         }
 
         public void SendMessage(string text, bool newLine = true)
         {
-            if (ServerToClientLink != null)
+            if (ServerToClientEndpoint != null)
             {
-                ServerToClientLink.SendMessage(text, "TODO");
+                ServerToClientEndpoint.SendMessage(text, "TODO");
             }
             else
             {
