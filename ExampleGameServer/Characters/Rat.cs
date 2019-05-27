@@ -28,7 +28,7 @@ namespace ExampleGameServer.Characters
         public override void Attack(Character attackingCharacter)
         {
             WhiskerCount--;
-            attackingCharacter.SendMessage($"{Name}'s whisker count is now {WhiskerCount}");
+            attackingCharacter.SendDescriptiveTextDtoMessage($"{Name}'s whisker count is now {WhiskerCount}");
         }
     }
 }

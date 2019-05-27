@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\GenericServerCommand.cs" />
     <Compile Include="Commands\CreateAccountCommand.cs" />
     <Compile Include="CreateAccountDialog.xaml.cs">
       <DependentUpon>CreateAccountDialog.xaml</DependentUpon>
@@ -78,9 +79,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\ClientCommandHelper.cs" />
+    <Compile Include="Commands\CommandHelper.cs" />
     <Compile Include="Commands\ConnectCommand.cs" />
-    <Compile Include="Commands\IClientCommand.cs" />
+    <Compile Include="Commands\ICommand.cs" />
     <Compile Include="ServerConnection.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

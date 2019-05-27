@@ -2,7 +2,7 @@
 
 namespace GameClient.Commands
 {
-    public class ConnectCommand : IClientCommand
+    public class ConnectCommand : ICommand
     {
         public List<string> ActivatingWords => new List<string>() { "connect" };
 

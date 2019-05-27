@@ -18,7 +18,7 @@ namespace GameClient
         private static SenderLink sender;
         private static Connection connection;
         private static Session session;
-        private static string replyTo;
+        private static string clientAddressName;
 
         public static void Connect()
         {
@@ -31,18 +31,18 @@ namespace GameClient
 
             connection = factory.CreateAsync(new Address(amqpServerAddress)).Result;
             session = new Session(connection);
-            replyTo = "client-" + Guid.NewGuid().ToString();
+            clientAddressName = "client-" + Guid.NewGuid().ToString();
 
             Attach recvAttach = new Attach()
             {
-                Source = new Source() { Address = "request_processor" },
-                Target = new Target() { Address = replyTo }
+                Source = new Source() { Address = "Server" },
+                Target = new Target() { Address = clientAddressName }
             };
 
-            receiver = new ReceiverLink(session, "request-client-receiver", recvAttach, null);
+            receiver = new ReceiverLink(session, "Link-STC", recvAttach, null);
             receiver.Start(300, OnMessageReceived);
 
-            sender = new SenderLink(session, "request-client-sender", recvAttach, null);
+            sender = new SenderLink(session, "Link-CTS", clientAddressName);
         }
 
         public static void Disconnect(string reason)
@@ -57,35 +57,49 @@ namespace GameClient
 
         private static void OnMessageReceived(IReceiverLink receiver, Message message)
         {
+            // Ack that we got the message.
             receiver.Accept(message);
-            Windows.Main.txtGameText.Dispatcher.Invoke(() => Windows.Main.txtGameText.Text += message.Body.ToString());
+
+            // Ignore messages that don't have a body
+            if (message.Body == null)
+            {
+                return;
+            }
+
+            // Ignore messages that are not a serialized FiniteDto
+            var dtoName = JsonDtoSerializer.GetDtoName(message.Body.ToString());
+            if (string.IsNullOrWhiteSpace(dtoName))
+            {
+                return;
+            }
+
+            // TODO: recode this to not be a switch (instead a map)
+            switch (dtoName)
+            {
+                case "DescriptiveTextDto":
+                    var dto = JsonDtoSerializer.DeserializeAs<DescriptiveTextDto>(message.Body.ToString());
+                    Windows.Main.txtGameText.Dispatcher.Invoke(() => {
+                        var textbox = Windows.Main.txtGameText;
+                        textbox.AppendText($"\r\n{dto.Text}");
+                        textbox.CaretIndex = textbox.Text.Length;
+                        textbox.ScrollToEnd();
+                    });
+                    break;
+            }
         }
 
-
-
-        // TODO:
-        //public static void SendDtoMessage(FiniteDto messageDto)
-        //{
-        //    var serialized = JsonDtoSerializer.SerializeDto(messageDto);
-        //    Helper.SendMessage(serialized);
-        //}
-
-
-                //// Get the type of Dto
-                //var dtoName = JsonDtoSerializer.GetDtoName(nextMessage);
-                //if (string.IsNullOrWhiteSpace(dtoName))
-                //{
-                //    continue;
-                //}
-
-                //// TODO: recode this to not be a switch (instead a map)
-                //switch (dtoName)
-                //{
-                //    case "DescriptiveTextDto":
-                //        var dto = JsonDtoSerializer.DeserializeAs<DescriptiveTextDto>(nextMessage);
-                //        Windows.Main.txtGameText.Dispatcher.Invoke(() => Windows.Main.txtGameText.Text = dto.Text);
-                //        break;
-                //}
-
+        public static void SendDtoMessage(FiniteDto messageDto)
+        {
+            var serialized = JsonDtoSerializer.SerializeDto(messageDto);
+            var message = new Message(serialized);
+            try
+            {
+                sender.SendAsync(message);
+            }
+            catch
+            {
+                // TODO: 
+            }
+        }
     }
 }

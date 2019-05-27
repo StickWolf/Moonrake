@@ -1,6 +1,7 @@
 ﻿using ServerEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using BaseClientServerDtos.ToClient;
 
 namespace ServerEngine
 {
@@ -77,8 +78,8 @@ namespace ServerEngine
         /// <param name="interactingCharacter">The character that is initiating the interaction</param>
         public virtual void Interact(Item otherItem, Character interactingCharacter)
         {
-            interactingCharacter.SendMessage("You find nothing special.");
-            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} examines {GetDescription(1)}.", interactingCharacter);
+            interactingCharacter.SendDescriptiveTextDtoMessage("You find nothing special.");
+            interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} examines {GetDescription(1)}.", interactingCharacter);
         }
 
         /// <summary>
@@ -96,13 +97,13 @@ namespace ServerEngine
             if (removeLocationResult)
             {
                 GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, this.TrackingId, count);
-                grabbingCharacter.SendMessage($"You grabbed {description}.");
-                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} grabbed {description}.", grabbingCharacter);
+                grabbingCharacter.SendDescriptiveTextDtoMessage($"You grabbed {description}.");
+                grabbingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{grabbingCharacter.Name} grabbed {description}.", grabbingCharacter);
             }
             else
             {
-                grabbingCharacter.SendMessage($"Something prevented you from grabbing {description}.");
-                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} tried to grab {description}, but failed!", grabbingCharacter);
+                grabbingCharacter.SendDescriptiveTextDtoMessage($"Something prevented you from grabbing {description}.");
+                grabbingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{grabbingCharacter.Name} tried to grab {description}, but failed!", grabbingCharacter);
             }
         }
 
@@ -123,13 +124,14 @@ namespace ServerEngine
             if (removeCharResult)
             {
                 GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, count);
-                droppingCharacter.SendMessage($"You dropped {description}.");
-                droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} dropped {description}.", droppingCharacter);
+
+                droppingCharacter.SendDescriptiveTextDtoMessage($"You dropped {description}.");
+                droppingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{droppingCharacter.Name} dropped {description}.", droppingCharacter);
             }
             else
             {
-                droppingCharacter.SendMessage($"Something prevented you from dropping {description}.");
-                droppingCharacter.GetLocation().SendMessage($"{droppingCharacter.Name} tried to drop {description}, but failed!", droppingCharacter);
+                droppingCharacter.SendDescriptiveTextDtoMessage($"Something prevented you from dropping {description}.");
+                droppingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{droppingCharacter.Name} tried to drop {description}, but failed!", droppingCharacter);
             }
         }
     }

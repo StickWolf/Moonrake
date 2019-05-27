@@ -39,22 +39,22 @@ namespace ExampleGameServer.Items
         {
             if (otherItem == null)
             {
-                interactingCharacter.SendMessage("The keyhole looks like it needs a key.");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is examining the keyhole.", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage("The keyhole looks like it needs a key.");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} is examining the keyhole.", interactingCharacter);
                 return;
             }
 
             if (otherItem.TrackingId == RequiredKeyItemTrackingId)
             {
-                interactingCharacter.SendMessage("The door unlocks and swings open!");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} has unlocked the door!", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage("The door unlocks and swings open!");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} has unlocked the door!", interactingCharacter);
                 GameState.CurrentGameState.SetGameVarValue(GameVarDoorIsOpen, "true");
                 IsVisible = false;
                 return;
             }
 
-            interactingCharacter.SendMessage("This item doesn't seem to work with the keyhole.");
-            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is examining the keyhole.", interactingCharacter);
+            interactingCharacter.SendDescriptiveTextDtoMessage("This item doesn't seem to work with the keyhole.");
+            interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} is examining the keyhole.", interactingCharacter);
         }
     }
 }

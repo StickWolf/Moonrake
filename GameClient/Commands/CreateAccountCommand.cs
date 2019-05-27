@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameClient.Commands
 {
-    public class CreateAccountCommand : IClientCommand
+    public class CreateAccountCommand : ICommand
     {
         public List<string> ActivatingWords => new List<string>() { "createaccount" };
 

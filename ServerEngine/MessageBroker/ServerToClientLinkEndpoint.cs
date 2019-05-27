@@ -13,21 +13,17 @@ namespace ServerEngine.MessageBroker
         {
         }
 
-        public void SendMessage(object body, string subject)
+        public void SendMessage(string body)
         {
             if (Interlocked.Decrement(ref this.credit) >= 0)
             {
                 var message = new Message(body);
-                message.Properties = new Properties()
-                {
-                    Subject = subject
-                };
 
                 try
                 {
                     this.Link.SendMessage(message);
                 }
-                catch (Exception ex)
+                catch
                 {
                     // TODO: log details
                 }

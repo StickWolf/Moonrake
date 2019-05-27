@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BaseClientServerDtos;
+using BaseClientServerDtos.ToClient;
 
 namespace ServerEngine.Locations
 {
@@ -49,14 +51,20 @@ namespace ServerEngine.Locations
         /// Otherwise use Guid.Empty
         /// This will assure that the sender does not also get the message
         /// </param>
-        public void SendMessage(string text, Character fromCharacter)
+        public void Send_TODO_DtoMessage(FiniteDto dto, Character fromCharacter)
         {
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(this.TrackingId)
                 .Where(c => fromCharacter == null || c.TrackingId != fromCharacter.TrackingId);
             foreach (var charInLoc in charactersInLocation)
             {
-                charInLoc.SendMessage(text);
+                charInLoc.Send_TODO_DtoMessage(dto);
             }
+        }
+
+        public void SendDescriptiveTextDtoMessage(string text, Character fromCharacter)
+        {
+            var dto = new DescriptiveTextDto(text);
+            Send_TODO_DtoMessage(dto, fromCharacter);
         }
 
         /// <summary>

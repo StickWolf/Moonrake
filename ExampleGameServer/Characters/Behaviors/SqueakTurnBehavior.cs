@@ -9,7 +9,7 @@ namespace ExampleGameServer.Characters.Behaviors
 
         public void Turn(Character turnTakingCharacter)
         {
-            turnTakingCharacter.GetLocation().SendMessage($"{turnTakingCharacter.Name} squeaks.", turnTakingCharacter);
+            turnTakingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{turnTakingCharacter.Name} squeaks.", turnTakingCharacter);
         }
     }
 }

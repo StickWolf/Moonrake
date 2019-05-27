@@ -36,14 +36,14 @@ namespace ExampleGameServer.Items
         {
             if (Charges == 0)
             {
-                interactingCharacter.SendMessage($"The potion bottle is empty!");
+                interactingCharacter.SendDescriptiveTextDtoMessage($"The potion bottle is empty!");
                 return;
             }
 
             bool removeResult = GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1);
             if (!removeResult)
             {
-                interactingCharacter.SendMessage($"You don't appear to be holding a potion.");
+                interactingCharacter.SendDescriptiveTextDtoMessage($"You don't appear to be holding a potion.");
                 return;
 
             }
@@ -52,8 +52,8 @@ namespace ExampleGameServer.Items
 
             interactingCharacter.Heal(HealPerCharge);
             Charges--;
-            interactingCharacter.SendMessage($"You feel refreshed. The potion has {Charges} uses left.");
-            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} takes a swig of a healing potion and looks refreshed.", interactingCharacter);
+            interactingCharacter.SendDescriptiveTextDtoMessage($"You feel refreshed. The potion has {Charges} uses left.");
+            interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} takes a swig of a healing potion and looks refreshed.", interactingCharacter);
 
             GameState.CurrentGameState.DedupeItems();
         }
