@@ -10,8 +10,8 @@ namespace ExampleGameServer.Commands
 
         public void Execute(List<string> extraWords, Character grabbingCharacter)
         {
-            grabbingCharacter.SendMessage("You dance around looking silly.");
-            grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} is dancing around.", grabbingCharacter);
+            grabbingCharacter.SendDescriptiveTextDtoMessage("You dance around looking silly.");
+            grabbingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{grabbingCharacter.Name} is dancing around.", grabbingCharacter);
         }
     }
 }

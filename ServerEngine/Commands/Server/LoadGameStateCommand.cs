@@ -1,6 +1,7 @@
-﻿using ServerEngine.Characters.Behaviors;
-using ServerEngine.Commands.Public;
+﻿using BaseClientServerDtos.ToClient;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ServerEngine.Commands.Internal
 {
@@ -8,39 +9,39 @@ namespace ServerEngine.Commands.Internal
     {
         public List<string> ActivatingWords => new List<string>() { "loadgamestate" };
 
+        // Slot to load must be passed in extraWords
         public void Execute(List<string> extraWords, Client executingClient)
         {
-            var validSlotNames = GameState.GetValidSaveSlotNames();
-            validSlotNames.Add("Start a new game state");
-
-            var slotToLoad = executingClient.Choose("Please choose a game state to load", validSlotNames, includeCancel: true);
-            if (slotToLoad == null)
+            if (extraWords == null || extraWords.Count != 1)
             {
-                executingClient.SendMessage("Canceled game state load");
+                var errorMsgDto = new DescriptiveTextDto("Wrong number of parameters passed.");
+                executingClient?.SendDtoMessage(errorMsgDto);
+                return;
             }
-            else if (slotToLoad.Equals("Start a new game state"))
+
+            try
             {
-                // Create a new game
-                GameState.CreateNewGameState();
+                var validSlotNames = GameState.GetValidSaveSlotNames();
+                var slotToLoad = validSlotNames.FirstOrDefault(s => s.Equals(extraWords[0], StringComparison.OrdinalIgnoreCase));
+                if (slotToLoad == null)
+                {
+                    var errorMsgDto = new DescriptiveTextDto("Invalid slot name.");
+                    executingClient?.SendDtoMessage(errorMsgDto);
+                    return;
+                }
 
-                // Add built-in things
-                GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.FocusedPlayer, new TurnBehaviorFocusedPlayer());
-                GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
-                PublicCommandHelper.AddPublicCommandsToGameState();
-
-                // TODO: Remove after client/server accounts are fully functional. Until then we're creating a "Server" account
-                // TODO: that the server user will be automatically "logged" into
-                GameState.CurrentGameState.CreateAccount("ServerUser");
-
-                // Have the game fill in its game data
-                EngineInternal.NewWorldCreator();
-            }
-            else
-            {
-                executingClient.SendMessage();
-                executingClient.SendMessage($"Loading game state {slotToLoad}.");
                 GameState.LoadGameState(slotToLoad);
-                executingClient.SendMessage("Loading game state complete.");
+                var successMsgDto = new DescriptiveTextDto($"Loaded game state {slotToLoad}.");
+                executingClient?.SendDtoMessage(successMsgDto);
+            }
+            catch (Exception ex)
+            {
+                // Show error in server console
+                System.Console.WriteLine(ex.ToString());
+
+                // Send error message to client
+                var errorMsgDto = new DescriptiveTextDto("An error occurred while loading the game state.");
+                executingClient?.SendDtoMessage(errorMsgDto);
             }
         }
     }

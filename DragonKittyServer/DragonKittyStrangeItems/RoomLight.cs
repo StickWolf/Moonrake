@@ -46,12 +46,12 @@ namespace DragonKittyServer.DragonKittyStrangeItems
             if(IsOn)
             {
                 IsOn = false;
-                interactingCharacter.SendMessage("You turned the light off.");
+                interactingCharacter.SendDescriptiveTextDtoMessage("You turned the light off.");
             }
             else if (!IsOn)
             {
                 IsOn = true;
-                interactingCharacter.SendMessage("You turned the light on.");
+                interactingCharacter.SendDescriptiveTextDtoMessage("You turned the light on.");
             }
         }
     }

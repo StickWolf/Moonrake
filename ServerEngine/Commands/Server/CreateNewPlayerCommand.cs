@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BaseClientServerDtos.ToClient;
+using System.Collections.Generic;
 
 namespace ServerEngine.Commands.Internal
 {
@@ -15,7 +16,8 @@ namespace ServerEngine.Commands.Internal
 
             if (GameState.CurrentGameState == null || executingClient.AttachedAccount == null)
             {
-                executingClient.SendMessage("The create new player command is currently unavailable.");
+                var errorMsgDto = new DescriptiveTextDto("The create new player command is currently unavailable.");
+                executingClient.SendDtoMessage(errorMsgDto);
                 return;
             }
 
@@ -23,14 +25,7 @@ namespace ServerEngine.Commands.Internal
 
             // Mark all player characters as needing focus to stay in the world
             newPlayerCharacter.NeedsFocus = true;
-
             executingClient.AttachedAccount.Characters.Add(newPlayerCharacter.TrackingId);
-            AttachedClients.SetClientFocusedCharacter(executingClient.TrackingId, newPlayerCharacter.TrackingId);
-
-            InternalCommandHelper.TryRunInternalCommand("clear", new List<string>(), newPlayerCharacter);
-            newPlayerCharacter.SendMessage(GameState.CurrentGameState.GameIntroductionText);
-            newPlayerCharacter.SendMessage();
-            newPlayerCharacter.ExecuteLookCommand();
         }
     }
 }

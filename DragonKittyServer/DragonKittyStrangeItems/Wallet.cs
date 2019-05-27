@@ -34,7 +34,7 @@ namespace DragonKittyServer.DragonKittyStrangeItems
             var walletOwnerCharacter = GameState.CurrentGameState.GetCharacter(WalletOwnerCharacterTrackingId);
             if (walletOwnerCharacter.IsDead())
             {
-                grabbingCharacter.SendMessage($"Since {walletOwnerCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
+                grabbingCharacter.SendDescriptiveTextDtoMessage($"Since {walletOwnerCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
 
                 var gameData = (GameState.CurrentGameState.Custom as DragonKittySourceData);
                 GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, gameData.DkItems.Money, MoneyWalletContains);
@@ -42,9 +42,9 @@ namespace DragonKittyServer.DragonKittyStrangeItems
             }
             else
             {
-                grabbingCharacter.SendMessage($"You have tried to steal {walletOwnerCharacter.Name}'s wallet, now you will suffer.");
+                grabbingCharacter.SendDescriptiveTextDtoMessage($"You have tried to steal {walletOwnerCharacter.Name}'s wallet, now you will suffer.");
                 grabbingCharacter.Attack(walletOwnerCharacter);
-                grabbingCharacter.SendMessage($"{walletOwnerCharacter.Name} has hit you.");
+                grabbingCharacter.SendDescriptiveTextDtoMessage($"{walletOwnerCharacter.Name} has hit you.");
             }
         }
     }

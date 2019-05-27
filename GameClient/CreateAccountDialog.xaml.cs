@@ -35,8 +35,9 @@ namespace GameClient
 
             var dto = new CreateAccountDto();
             dto.UserName = txtUserName.Text;
-            dto.Password = txtPassword.Text; // TODO: hash/encrypt
-            // ServerConnection.SendDtoMessage(dto); // TODO:
+            // TODO: encryption n stuff
+         //   dto.Password = txtPassword.Text;
+           // ServerConnection.SendDtoMessage(dto);
         }
     }
 }

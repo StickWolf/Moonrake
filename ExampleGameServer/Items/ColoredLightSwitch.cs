@@ -30,8 +30,8 @@ namespace ExampleGameServer.Items
             string lightColor = GameState.CurrentGameState.GetGameVarValue(GameVariableColor);
             if (lightColor == null)
             {
-                interactingCharacter.SendMessage($"You flip the light switch, but nothing appears to happen.");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage($"You flip the light switch, but nothing appears to happen.");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
             }
             else
             {
@@ -52,8 +52,8 @@ namespace ExampleGameServer.Items
                         break;
                 }
                 GameState.CurrentGameState.SetGameVarValue(GameVariableColor, newColor);
-                interactingCharacter.SendMessage($"You flip the light switch and the {lightColor} light now begins to glow {newColor}.");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage($"You flip the light switch and the {lightColor} light now begins to glow {newColor}.");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
             }
         }
     }

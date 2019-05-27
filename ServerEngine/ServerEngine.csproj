@@ -62,12 +62,13 @@
     <Compile Include="Commands\Public\InventoryCommand.cs" />
     <Compile Include="Commands\Internal\InternalCommandHelper.cs" />
     <Compile Include="Commands\Public\ShopCommand.cs" />
-    <Compile Include="Commands\Internal\ClearCommand.cs" />
     <Compile Include="Commands\Public\PublicCommandHelper.cs" />
     <Compile Include="Commands\Internal\ExitCommand.cs" />
     <Compile Include="Commands\Public\ICommand.cs" />
     <Compile Include="Commands\Internal\LetPlayerChangeTheirNameCommand.cs" />
+    <Compile Include="Commands\Server\CreateNewGameStateCommand.cs" />
     <Compile Include="Commands\Server\ICommandServer.cs" />
+    <Compile Include="Commands\Server\AutoLoadBestGameStateCommand.cs" />
     <Compile Include="Commands\Server\LoadGameStateCommand.cs" />
     <Compile Include="Commands\Server\CreateNewPlayerCommand.cs" />
     <Compile Include="Commands\Public\LookCommand.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="MessageBroker\Broker.cs" />
     <Compile Include="MessageBroker\LinkProcessor.cs" />
     <Compile Include="MessageBroker\ServerLinkEndpoint.cs" />
+    <Compile Include="MessageBroker\ClientToServerLinkEndpoint.cs" />
     <Compile Include="MessageBroker\ServerToClientLinkEndpoint.cs" />
     <Compile Include="MutablePair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

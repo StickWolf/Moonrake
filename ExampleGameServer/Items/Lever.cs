@@ -30,8 +30,8 @@ namespace ExampleGameServer.Items
             string leverPosition = GameState.CurrentGameState.GetGameVarValue(GameVariableToggle);
             if (leverPosition == null)
             {
-                interactingCharacter.SendMessage($"The lever appears to be broken and cannot be moved.");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is examining the broken lever.", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage($"The lever appears to be broken and cannot be moved.");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} is examining the broken lever.", interactingCharacter);
             }
             else
             {
@@ -44,8 +44,8 @@ namespace ExampleGameServer.Items
             if (fromPosition.Equals("off"))
             {
                 var gameData = ExampleGameSourceData.Current();
-                interactingCharacter.SendMessage($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} moves the lever and a key falls out of the wall!.", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} moves the lever and a key falls out of the wall!.", interactingCharacter);
                 GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
 
                 // TODO: try to move away from game variables and just use properties of items/locations/etc directly
@@ -53,8 +53,8 @@ namespace ExampleGameServer.Items
             }
             else
             {
-                interactingCharacter.SendMessage($"The lever is jammed and won't budge.");
-                interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} is trying to move the lever, but it won't budge.", interactingCharacter);
+                interactingCharacter.SendDescriptiveTextDtoMessage($"The lever is jammed and won't budge.");
+                interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} is trying to move the lever, but it won't budge.", interactingCharacter);
             }
         }
     }

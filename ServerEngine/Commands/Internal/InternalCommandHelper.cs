@@ -16,7 +16,6 @@ namespace ServerEngine.Commands.Internal
             // The intention is that internal commands are only available to the player
             AllInternalCommands = new List<ICommandInternal>()
             {
-                new ClearCommand(),
                 new LetPlayerChangeTheirNameCommand(),
                 new ExitCommand(),
             };
@@ -24,8 +23,10 @@ namespace ServerEngine.Commands.Internal
             AllServerCommands = new List<ICommandServer>()
             {
                 new CreateNewPlayerCommand(),
+                new CreateNewGameStateCommand(),
                 new LoadGameStateCommand(),
                 new SaveGameStateCommand(),
+                new AutoLoadBestGameStateCommand(),
             };
         }
 

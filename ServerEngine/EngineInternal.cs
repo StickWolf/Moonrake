@@ -11,11 +11,6 @@ namespace ServerEngine
     internal static class EngineInternal
     {
         /// <summary>
-        /// serverClient is the server admin window
-        /// </summary>
-        public static Client ServerClient { get; set; }
-
-        /// <summary>
         /// Indicates if the main game loop should keep running game turns
         /// </summary>
         public static bool RunGameLoop { get; set; }
@@ -38,28 +33,7 @@ namespace ServerEngine
             RunGameLoop = true;
             RunFactory = true;
 
-            // TODO: remove this and the property after client/server split. The goal is that all commands can be run from the client itself.
-            ServerClient = new Client();
-            AttachedClients.AttachClient(ServerClient);
-
-            // TODO: make it so (by default) when the server starts up, it just loads the first available saved game state
-            // TODO: or in the case wherere there is no game state. It just creates up a new one.
-            InternalCommandHelper.TryRunServerCommand("loadgamestate", new List<string>(), ServerClient);
-
-            // TODO: Remove after client/server accounts are fully functional. Until then we're creating a "Server" account
-            // TODO: that the server user will be automatically "logged" into
-            ServerClient.AttachedAccount = GameState.CurrentGameState.GetAccount("ServerUser");
-
-            // TODO: For now until we have real clients, we auto-create a new player character (if needed) here
-            // TODO: This simulates a client connecting to an account and adding a new character to their account.
-            if (ServerClient.AttachedAccount.Characters.Count == 0)
-            {
-                InternalCommandHelper.TryRunServerCommand("createnewplayer", new List<string>(), ServerClient);
-            }
-            else
-            {
-                AttachedClients.SetClientFocusedCharacter(ServerClient.TrackingId, ServerClient.AttachedAccount.Characters[0]);
-            }
+            InternalCommandHelper.TryRunServerCommand("autoloadbestgamestate", new List<string>(), null);
 
             // After the game state is loaded is the appropriate time to start accepting connections
             try
@@ -88,7 +62,7 @@ namespace ServerEngine
                     sw.Stop();
                     if (sw.Elapsed.TotalSeconds < 4)
                     {
-                        Task.Delay(2000).Wait();
+                        Task.Delay(60000).Wait();
                     }
                 }
             }

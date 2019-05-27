@@ -12,24 +12,26 @@ namespace ServerEngine.Commands.Internal
 
         public void Execute(List<string> extraWords, Client executingClient)
         {
-            var validSlotNames = GameState.GetValidSaveSlotNames();
-            validSlotNames.Add("New Save");
+            // TODO: rewrite to be client server based
 
-            var slotToSave = executingClient.Choose("What slot do you want to save to?", validSlotNames, includeCancel: true);
-            if (slotToSave == null)
-            {
-                executingClient.SendMessage("Canceled Save");
-                return;
-            }
-            if (slotToSave.Equals("New Save"))
-            {
-                executingClient.SendMessage("Slot name?");
-                slotToSave = Console.ReadLine();
-            }
+            //var validSlotNames = GameState.GetValidSaveSlotNames();
+            //validSlotNames.Add("New Save");
 
-            executingClient.SendMessage($"Saving {slotToSave}.");
-            GameState.SaveGameState(slotToSave);
-            executingClient.SendMessage("Saving complete.");
+            //var slotToSave = executingClient.Choose("What slot do you want to save to?", validSlotNames, includeCancel: true);
+            //if (slotToSave == null)
+            //{
+            //    executingClient.SendMessage("Canceled Save");
+            //    return;
+            //}
+            //if (slotToSave.Equals("New Save"))
+            //{
+            //    executingClient.SendMessage("Slot name?");
+            //    slotToSave = Console.ReadLine();
+            //}
+
+            //executingClient.SendMessage($"Saving {slotToSave}.");
+            //GameState.SaveGameState(slotToSave);
+            //executingClient.SendMessage("Saving complete.");
         }
     }
 }

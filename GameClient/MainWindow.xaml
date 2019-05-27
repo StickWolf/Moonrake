@@ -6,23 +6,23 @@
         xmlns:local="clr-namespace:GameClient"
         mc:Ignorable="d"
         Title="Game Client" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
-    <Grid>
+    <Grid Background="Black">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="650" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="145" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="5" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" x:Name="txtGameText" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" />
+            <TextBox Grid.Row="0" x:Name="txtGameText" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" Background="Black" Foreground="White" FontFamily="Consolas" FontSize="14" />
             <GridSplitter Grid.Row="1" ResizeDirection="Rows" Width="Auto" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <TextBox Grid.Row="2" x:Name="txtUserInput" TextWrapping="Wrap" KeyUp="TxtUserInput_KeyUp" />
+            <TextBox Grid.Row="2" x:Name="txtUserInput" TextWrapping="Wrap" KeyUp="TxtUserInput_KeyUp" Background="Black" Foreground="White" />
         </Grid>
-        <GridSplitter Grid.Column="1" ResizeDirection="Columns" Width="5" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <GridSplitter Grid.Column="1" ResizeDirection="Columns" Width="5" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
         <!-- TODO: Plan is to have things like items, locations, characters listed in the right section -->
     </Grid>
 </Window>

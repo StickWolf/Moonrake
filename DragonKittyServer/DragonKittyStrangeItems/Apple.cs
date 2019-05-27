@@ -18,7 +18,7 @@ namespace DragonKittyServer.DragonKittyStrangeItems
         {
             if (interactingCharacter.HitPoints == interactingCharacter.MaxHitPoints)
             {
-                interactingCharacter.SendMessage("You can't eat the apple, you are at full health.");
+                interactingCharacter.SendDescriptiveTextDtoMessage("You can't eat the apple, you are at full health.");
                 return;
             }
             int healAmount = 20;
@@ -28,8 +28,8 @@ namespace DragonKittyServer.DragonKittyStrangeItems
             }
 
             interactingCharacter.HitPoints += healAmount;
-            interactingCharacter.SendMessage("You eat an apple, and you feel some of your health come back.");
-            interactingCharacter.GetLocation().SendMessage($"{interactingCharacter.Name} eats a delicious looking apple.", interactingCharacter);
+            interactingCharacter.SendDescriptiveTextDtoMessage("You eat an apple, and you feel some of your health come back.");
+            interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} eats a delicious looking apple.", interactingCharacter);
             GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1);
         }
     }
