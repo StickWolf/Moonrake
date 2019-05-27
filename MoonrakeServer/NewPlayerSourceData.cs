@@ -11,10 +11,7 @@ namespace Moonrake
         {
             var gameData = GameState.CurrentGameState.Custom as MoonrakeGameData;
 
-            var playerCharacter = new Character("Player", 100)
-            {
-                TurnBehaviors = new List<string>() { BuiltInTurnBehaviors.FocusedPlayer },
-            };
+            var playerCharacter = new Character("Player", 100);
 
             GameState.CurrentGameState.AddCharacter(playerCharacter, gameData.MoonRakeLocations.TreeHouse);
 

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerEngine.Commands.Public
+namespace ServerEngine.Commands.GameCommands
 {
-    public class AttackCommand : ICommand
+    public class AttackCommand : IGameCommand
     {
         public List<string> ActivatingWords => new List<string>() { "attack", "hit", "fight", "injure" };
+
+        public string PermissionNeeded => null;
 
         public void Execute(List<string> extraWords, Character attackingCharacter)
         {

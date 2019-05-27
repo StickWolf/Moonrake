@@ -3,15 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerEngine.Commands.Internal
+namespace ServerEngine.Commands.AccountCommands
 {
-    internal class LoadGameStateCommand : ICommandServer
+    internal class LoadGameStateCommand : IAccountCommand
     {
         public List<string> ActivatingWords => new List<string>() { "loadgamestate" };
 
+        public string PermissionNeeded => "Sysop";
+
         // Slot to load must be passed in extraWords
-        public void Execute(List<string> extraWords, Client executingClient)
+        public void Execute(List<string> extraWords, Account executingAccount)
         {
+            Client executingClient = null; // TODO: try to set if possible
+
             if (extraWords == null || extraWords.Count != 1)
             {
                 var errorMsgDto = new DescriptiveTextDto("Wrong number of parameters passed.");

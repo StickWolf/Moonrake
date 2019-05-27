@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace ServerEngine.Commands.Internal
+namespace ServerEngine.Commands.GameCommands
 {
-    internal class LetPlayerChangeTheirNameCommand : ICommandInternal
+    internal class ChangePlayerNameCommand : IGameCommand
     {
-        public List<string> ActivatingWords => new List<string>() { "namechange" };
+        public List<string> ActivatingWords => new List<string>() { "changeplayername" };
+
+        public string PermissionNeeded => null;
 
         public void Execute(List<string> extraWords, Character nameChangingCharacter)
         {

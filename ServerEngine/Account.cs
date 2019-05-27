@@ -11,6 +11,9 @@ namespace ServerEngine
         public string UserName { get; set; }
 
         [JsonProperty]
+        public List<string> Permissions { get; set; }
+
+        [JsonProperty]
         public List<Guid> Characters { get; set; } = new List<Guid>();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ServerEngine.Characters;
-using ServerEngine.Commands.Internal;
+using ServerEngine.Commands;
 using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,11 @@ namespace ServerEngine
             RunGameLoop = true;
             RunFactory = true;
 
-            InternalCommandHelper.TryRunServerCommand("autoloadbestgamestate", new List<string>(), null);
+            var engineStartingAccount = new Account()
+            {
+                Permissions = new List<string>() { "Sysop" }
+            };
+            CommandRunner.TryRunCommandFromAccount("autoloadbestgamestate", new List<string>(), engineStartingAccount);
 
             // After the game state is loaded is the appropriate time to start accepting connections
             try

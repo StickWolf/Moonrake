@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace ServerEngine.Commands.Public
+namespace ServerEngine.Commands.GameCommands
 {
-    public class StatsCommand : ICommand
+    public class StatsCommand : IGameCommand
     {
         public List<string> ActivatingWords => new List<string>() { "stats" };
+
+        public string PermissionNeeded => null;
 
         public void Execute(List<string> extraWords, Character statSeekingCharacter)
         {
