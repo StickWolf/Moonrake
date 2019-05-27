@@ -7,8 +7,6 @@ namespace DragonKittyServer.DragonKittyStrangeCharacters.StrangeBehaviors
 {
     public class TurnBehaviorRandomHeal : ITurnBehavior
     {
-        public bool HasPromps => false;
-
         private static Random rnd = new Random();
 
         public void Turn(Character turnTakingCharacter)

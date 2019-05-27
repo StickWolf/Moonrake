@@ -29,20 +29,32 @@ namespace GameClient
             factory.SSL.RemoteCertificateValidationCallback = (a, b, c, d) => true;
             //factory.SSL.CheckCertificateRevocation = false;
 
-            connection = factory.CreateAsync(new Address(amqpServerAddress)).Result;
-            session = new Session(connection);
-            clientAddressName = "client-" + Guid.NewGuid().ToString();
-
-            Attach recvAttach = new Attach()
+            try
             {
-                Source = new Source() { Address = "Server" },
-                Target = new Target() { Address = clientAddressName }
-            };
+                connection = factory.CreateAsync(new Address(amqpServerAddress)).Result;
+                session = new Session(connection);
+                clientAddressName = "client-" + Guid.NewGuid().ToString();
 
-            receiver = new ReceiverLink(session, "Link-STC", recvAttach, null);
-            receiver.Start(300, OnMessageReceived);
+                Attach recvAttach = new Attach()
+                {
+                    Source = new Source() { Address = "Server" },
+                    Target = new Target() { Address = clientAddressName }
+                };
 
-            sender = new SenderLink(session, "Link-CTS", clientAddressName);
+                receiver = new ReceiverLink(session, "Link-STC", recvAttach, null);
+                receiver.Start(300, OnMessageReceived);
+
+                sender = new SenderLink(session, "Link-CTS", clientAddressName);
+            }
+            catch (Exception ex)
+            {
+                Windows.Main.txtGameText.Dispatcher.Invoke(() => {
+                    var textbox = Windows.Main.txtGameText;
+                    textbox.AppendText(ex.ToString());
+                    textbox.CaretIndex = textbox.Text.Length;
+                    textbox.ScrollToEnd();
+                });
+            }
         }
 
         public static void Disconnect(string reason)

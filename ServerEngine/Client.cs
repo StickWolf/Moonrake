@@ -2,10 +2,10 @@
 using Amqp.Framing;
 using Amqp.Listener;
 using BaseClientServerDtos;
+using BaseClientServerDtos.ToClient;
 using BaseClientServerDtos.ToServer;
 using Newtonsoft.Json;
-using ServerEngine.Commands.Internal;
-using ServerEngine.Commands.Public;
+using ServerEngine.Commands;
 using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace ServerEngine
             // TODO: This simulates a client connecting to an account and adding a new character to their account.
             if (AttachedAccount.Characters.Count == 0)
             {
-                InternalCommandHelper.TryRunServerCommand("createnewplayer", new List<string>(), this); // TODO: pass player name as the first parameter in order to name your player
+                CommandRunner.TryRunCommandFromAccount("createnewplayer", new List<string>(), AttachedAccount); // TODO: pass player name as the first parameter in order to name your player
             }
             AttachedClients.SetClientFocusedCharacter(TrackingId, AttachedAccount.Characters[0]);
 
@@ -112,16 +112,16 @@ namespace ServerEngine
             // TODO: recode this to not be a switch (instead a map)
             switch (dtoName)
             {
+                // This Dto takes care of running all server commands if the client is
+                // in the right context and has the right permissions
+                // TODO: maybe rename from generic
                 case "GenericServerCommandDto":
                     var dto = JsonDtoSerializer.DeserializeAs<GenericServerCommandDto>(jsonBody);
-
-                    // TODO: what about the ability to run internal commands ? what validates which users can run which commands?
-
-                    var thisPlayer = AttachedClients.GetClientFocusedCharacter(this.TrackingId);
-                    if (thisPlayer != null)
+                    if (!CommandRunner.TryRunCommandFromClient(dto.Command, dto.ExtraWords, this))
                     {
-                        PublicCommandHelper.TryRunPublicCommand(dto.Command, dto.ExtraWords, thisPlayer);
+                        SendDescriptiveTextDtoMessage($"Unknown command");
                     }
+
                     break;
             }
         }
@@ -161,6 +161,12 @@ namespace ServerEngine
         {
             ServerToClientEndpoint.Disconnect(reason);
             ClientToServerEndpoint.Disconnect(reason);
+        }
+
+        private void SendDescriptiveTextDtoMessage(string text)
+        {
+            var textMsgDto = new DescriptiveTextDto(text);
+            SendDtoMessage(textMsgDto);
         }
 
         public void SendDtoMessage(FiniteDto dto)

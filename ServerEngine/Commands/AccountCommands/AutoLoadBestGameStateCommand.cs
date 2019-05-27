@@ -1,31 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerEngine.Commands.Internal
+namespace ServerEngine.Commands.AccountCommands
 {
-    internal class AutoLoadBestGameStateCommand : ICommandServer
+    internal class AutoLoadBestGameStateCommand : IAccountCommand
     {
         public List<string> ActivatingWords => new List<string>() { "autoloadbestgamestate" };
 
-        public void Execute(List<string> extraWords, Client executingClient)
+        public string PermissionNeeded => "Sysop";
+
+        public void Execute(List<string> extraWords, Account executingAccount)
         {
             try
             {
                 var validSlotNames = GameState.GetValidSaveSlotNames(); // TODO: make it so the most recent saved game comes out as the first item in this list
                 if (validSlotNames.Count == 0)
                 {
-                    InternalCommandHelper.TryRunServerCommand("createnewgamestate", new List<string>(), executingClient);
+                    CommandRunner.TryRunCommandFromAccount("createnewgamestate", new List<string>(), executingAccount);
                 }
                 else
                 {
                     var slotToLoad = validSlotNames.First();
-                    InternalCommandHelper.TryRunServerCommand("loadgamestate", new List<string>() { slotToLoad }, executingClient);
+                    CommandRunner.TryRunCommandFromAccount("loadgamestate", new List<string>() { slotToLoad }, executingAccount);
                 }
             }
             catch
             {
                 // TODO: make sure this doesn't start overwriting the older game states.
-                InternalCommandHelper.TryRunServerCommand("createnewgamestate", new List<string>(), executingClient);
+                CommandRunner.TryRunCommandFromAccount("createnewgamestate", new List<string>(), executingAccount);
             }
         }
     }
