@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using BaseClientServerDtos;
+using BaseClientServerDtos.ToClient;
+using Newtonsoft.Json;
 using ServerEngine.Commands.Public;
 using ServerEngine.Locations;
 using System;
@@ -58,7 +60,7 @@ namespace ServerEngine.Characters
         /// Sends a message to the character that only the receiving character can see
         /// </summary>
         /// <param name="text">The text to send</param>
-        public void SendMessage(string text, bool newLine = true)
+        public void Send_TODO_DtoMessage(FiniteDto dto)
         {
             // Is any client focusing on this character? If not then no message is sent.
             var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
@@ -67,39 +69,38 @@ namespace ServerEngine.Characters
                 return;
             }
 
-            focusedClient.SendMessage(text, newLine);
+            focusedClient.SendDtoMessage(dto);
         }
 
-        /// <summary>
-        /// Sends a blank line to the character
-        /// </summary>
-        public void SendMessage()
+        public void SendDescriptiveTextDtoMessage(string text)
         {
-            SendMessage(string.Empty);
+            var dto = new DescriptiveTextDto(text);
+            Send_TODO_DtoMessage(dto);
         }
 
-        public string Choose(string prompt, List<string> choices, bool includeCancel)
-        {
-            // Is any client focusing on this character? If not then no message is sent.
-            var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
-            if (focusedClient == null)
-            {
-                return null;
-            }
-            return focusedClient.Choose(prompt, choices, includeCancel);
-        }
+        // TODO: rewrite these to be client/server based
+        //public string Choose(string prompt, List<string> choices, bool includeCancel)
+        //{
+        //    // Is any client focusing on this character? If not then no message is sent.
+        //    var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+        //    if (focusedClient == null)
+        //    {
+        //        return null;
+        //    }
+        //    return focusedClient.Choose(prompt, choices, includeCancel);
+        //}
 
-        public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
-        {
-            // Is any client focusing on this character? If not then no message is sent.
-            var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
-            if (focusedClient == null)
-            {
-                return default(T);
-            }
+        //public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
+        //{
+        //    // Is any client focusing on this character? If not then no message is sent.
+        //    var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
+        //    if (focusedClient == null)
+        //    {
+        //        return default(T);
+        //    }
 
-            return focusedClient.Choose(prompt, choices, includeCancel);
-        }
+        //    return focusedClient.Choose(prompt, choices, includeCancel);
+        //}
 
         /// <summary>
         /// Gets the current location of the character
@@ -180,11 +181,10 @@ namespace ServerEngine.Characters
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
             Hit(attackDamage);
-            var attackMessage = $"{attackingCharacter.Name} hits {this.Name} for {attackDamage} damage!";
-            this.GetLocation().SendMessage(attackMessage, null);
+            this.GetLocation().SendDescriptiveTextDtoMessage($"{attackingCharacter.Name} hits {this.Name} for {attackDamage} damage!", null);
             if (IsDead())
             {
-                this.GetLocation().SendMessage($"{Name} has been killed.", null);
+                this.GetLocation().SendDescriptiveTextDtoMessage($"{Name} has been killed.", null);
                 return;
             }
 
@@ -194,12 +194,12 @@ namespace ServerEngine.Characters
                 var maxAttackDamage = MaxAttack / 2;
                 var counterAttackDamage = GetAttackDamage(maxAttackDamage);
                 attackingCharacter.Hit(counterAttackDamage);
-                var counterAttackMessage = $"{this.Name} counter attacks and hits {attackingCharacter.Name} for {counterAttackDamage} damage!";
-                this.GetLocation().SendMessage(counterAttackMessage, null);
+
+                this.GetLocation().SendDescriptiveTextDtoMessage($"{this.Name} counter attacks and hits {attackingCharacter.Name} for {counterAttackDamage} damage!", null);
 
                 if (attackingCharacter.IsDead())
                 {
-                    this.GetLocation().SendMessage($"{attackingCharacter.Name} has been killed.", null);
+                    this.GetLocation().SendDescriptiveTextDtoMessage($"{attackingCharacter.Name} has been killed.", null);
                     return;
                 }
             }
@@ -278,7 +278,8 @@ namespace ServerEngine.Characters
             }
             var healAmount = GetHealAmount(MaxHeal);
             Heal(healAmount);
-            this.GetLocation().SendMessage($"{Name} has been healed for {healAmount}.", this);
+
+            this.GetLocation().SendDescriptiveTextDtoMessage($"{Name} has been healed for {healAmount}.", null);
         }
 
         private int GetHealAmount(int maxHeal)

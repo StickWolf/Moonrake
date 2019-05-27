@@ -10,10 +10,12 @@ namespace ServerEngine.Commands.Internal
 
         public void Execute(List<string> extraWords, Character nameChangingCharacter)
         {
-            nameChangingCharacter.SendMessage($"Your name is currently: {nameChangingCharacter.Name}.");
-            nameChangingCharacter.SendMessage($"What would you like your name to be?: ");
-            nameChangingCharacter.Name = Console.ReadLine();
-            nameChangingCharacter.SendMessage($"Your new name is {nameChangingCharacter.Name}.");
+            // TODO: rewrite as server/client
+
+            //nameChangingCharacter.SendMessage($"Your name is currently: {nameChangingCharacter.Name}.");
+            //nameChangingCharacter.SendMessage($"What would you like your name to be?: ");
+            //nameChangingCharacter.Name = Console.ReadLine();
+            //nameChangingCharacter.SendMessage($"Your new name is {nameChangingCharacter.Name}.");
         }
     }
 }

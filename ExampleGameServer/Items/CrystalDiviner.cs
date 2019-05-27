@@ -30,8 +30,8 @@ namespace ExampleGameServer.Items
             }
             else
             {
-                grabbingCharacter.SendMessage("You attempt to grab the crystal device, but your hands pass through it as though it is just a projection.");
-                grabbingCharacter.GetLocation().SendMessage($"{grabbingCharacter.Name} tries to grab the crystal device, but their hands pass right through it!", grabbingCharacter);
+                grabbingCharacter.SendDescriptiveTextDtoMessage("You attempt to grab the crystal device, but your hands pass through it as though it is just a projection.");
+                grabbingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{grabbingCharacter.Name} tries to grab the crystal device, but their hands pass right through it!", grabbingCharacter);
             }
         }
     }

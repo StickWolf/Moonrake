@@ -2,7 +2,7 @@
 
 namespace GameClient.Commands
 {
-    public interface IClientCommand
+    public interface ICommand
     {
         List<string> ActivatingWords { get; }
 

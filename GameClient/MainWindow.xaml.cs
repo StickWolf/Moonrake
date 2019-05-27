@@ -38,24 +38,22 @@ namespace GameClient
             ProcessUserInput(typedText);
         }
 
-        private bool ProcessUserInput(string input)
+        private void ProcessUserInput(string input)
         {
-            bool processed = false;
             if (input.StartsWith("/"))
             {
                 var extraWords = new List<string>(input.Split(' '));
                 var word = extraWords[0];
                 word = word.Substring(1);
                 extraWords.RemoveAt(0);
-                processed = ClientCommandHelper.TryRunClientCommand(word, extraWords);
+                CommandHelper.TryRunCommand(word, extraWords);
             }
-
-            return processed;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Windows.Main = this;
+            CommandHelper.TryRunCommand("connect", new List<string>());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

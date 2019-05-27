@@ -27,9 +27,9 @@ namespace BaseClientServerDtos
                 FiniteDto dto = JsonConvert.DeserializeObject<FiniteDto>(serializedDto);
                 return dto.DtoName;
             }
-            catch (Exception ex)
+            catch
             {
-                // ignore
+                // TODO: maybe track why we got an empty named or invalid dto here.
             }
             return null;
         }
