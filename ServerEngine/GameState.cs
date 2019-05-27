@@ -1,8 +1,8 @@
-﻿using ServerEngine.Characters;
+﻿using Newtonsoft.Json;
+using ServerEngine.Characters;
 using ServerEngine.Characters.Behaviors;
-using ServerEngine.Commands.Public;
+using ServerEngine.Commands.GameCommands;
 using ServerEngine.Locations;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,7 +25,7 @@ namespace ServerEngine
         public object Custom { get; set; }
 
         [JsonProperty]
-        private List<ICommand> PublicCommands { get; set; } = new List<ICommand>();
+        private List<IGameCommand> GameCommands { get; set; } = new List<IGameCommand>();
 
         // Characters[{CharacterTrackingId}] = {Character}
         [JsonProperty]
@@ -739,19 +739,22 @@ namespace ServerEngine
             return null;
         }
 
-        public void AddPublicCommand(ICommand command)
+        public void AddGameCommand(IGameCommand command)
         {
-            PublicCommands.Add(command);
+            GameCommands.Add(command);
         }
 
-        public ICommand GetPublicCommand(string commandName)
+        public IGameCommand GetGameCommand(string commandName, List<string> accountPermissions)
         {
-            if (commandName == null)
+            if (string.IsNullOrWhiteSpace(commandName))
             {
                 return null;
             }
-            var command = PublicCommands
-                .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
+
+            var command = GameCommands
+                .Where(c => c.ActivatingWords.Any(w => w.Equals(commandName, StringComparison.OrdinalIgnoreCase)))
+                .FirstOrDefault(c => c.PermissionNeeded == null || accountPermissions.Contains(c.PermissionNeeded, StringComparer.OrdinalIgnoreCase));
+
             return command;
         }
 
@@ -766,7 +769,8 @@ namespace ServerEngine
 
             var account = new Account()
             {
-                UserName = userName
+                UserName = userName,
+                Permissions = new List<string>() { "Player" }
             };
             Accounts.Add(userName, account);
             return account;

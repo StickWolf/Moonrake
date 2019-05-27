@@ -52,29 +52,28 @@
     <Compile Include="Client.cs" />
     <Compile Include="Characters\Behaviors\BuiltInTurnBehaviors.cs" />
     <Compile Include="Characters\Behaviors\ITurnBehavior.cs" />
-    <Compile Include="Characters\Behaviors\TurnBehaviorFocusedPlayer.cs" />
     <Compile Include="Characters\Behaviors\TurnBehaviorRandom.cs" />
-    <Compile Include="Commands\Public\AttackCommand.cs" />
-    <Compile Include="Commands\Public\DropCommand.cs" />
-    <Compile Include="Commands\Internal\ICommandInternal.cs" />
-    <Compile Include="Commands\Public\InteractCommand.cs" />
-    <Compile Include="Commands\Public\GrabCommand.cs" />
-    <Compile Include="Commands\Public\InventoryCommand.cs" />
-    <Compile Include="Commands\Internal\InternalCommandHelper.cs" />
-    <Compile Include="Commands\Public\ShopCommand.cs" />
-    <Compile Include="Commands\Public\PublicCommandHelper.cs" />
-    <Compile Include="Commands\Internal\ExitCommand.cs" />
-    <Compile Include="Commands\Public\ICommand.cs" />
-    <Compile Include="Commands\Internal\LetPlayerChangeTheirNameCommand.cs" />
-    <Compile Include="Commands\Server\CreateNewGameStateCommand.cs" />
-    <Compile Include="Commands\Server\ICommandServer.cs" />
-    <Compile Include="Commands\Server\AutoLoadBestGameStateCommand.cs" />
-    <Compile Include="Commands\Server\LoadGameStateCommand.cs" />
-    <Compile Include="Commands\Server\CreateNewPlayerCommand.cs" />
-    <Compile Include="Commands\Public\LookCommand.cs" />
-    <Compile Include="Commands\Public\MoveCommand.cs" />
-    <Compile Include="Commands\Server\SaveGameStateCommand.cs" />
-    <Compile Include="Commands\Public\StatsCommand.cs" />
+    <Compile Include="Commands\CommandRunner.cs" />
+    <Compile Include="Commands\GameCommands\AttackCommand.cs" />
+    <Compile Include="Commands\GameCommands\DropCommand.cs" />
+    <Compile Include="Commands\AccountCommands\IAccountCommand.cs" />
+    <Compile Include="Commands\GameCommands\InteractCommand.cs" />
+    <Compile Include="Commands\GameCommands\GrabCommand.cs" />
+    <Compile Include="Commands\GameCommands\InventoryCommand.cs" />
+    <Compile Include="Commands\GameCommands\ShopCommand.cs" />
+    <Compile Include="Commands\WordTranslator.cs" />
+    <Compile Include="Commands\AccountCommands\UnloadGameStateCommand.cs" />
+    <Compile Include="Commands\GameCommands\IGameCommand.cs" />
+    <Compile Include="Commands\GameCommands\ChangePlayerNameCommand.cs" />
+    <Compile Include="Commands\AccountCommands\CreateNewGameStateCommand.cs" />
+    <Compile Include="Commands\AnonymousCommands\IAnonymousCommand.cs" />
+    <Compile Include="Commands\AccountCommands\AutoLoadBestGameStateCommand.cs" />
+    <Compile Include="Commands\AccountCommands\LoadGameStateCommand.cs" />
+    <Compile Include="Commands\AccountCommands\CreateNewPlayerCommand.cs" />
+    <Compile Include="Commands\GameCommands\LookCommand.cs" />
+    <Compile Include="Commands\GameCommands\MoveCommand.cs" />
+    <Compile Include="Commands\AccountCommands\SaveGameStateCommand.cs" />
+    <Compile Include="Commands\GameCommands\StatsCommand.cs" />
     <Compile Include="Console.cs" />
     <Compile Include="EqualChecker.cs" />
     <Compile Include="Item.cs" />
@@ -117,5 +116,6 @@
       <Name>BaseClientServerDtos</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

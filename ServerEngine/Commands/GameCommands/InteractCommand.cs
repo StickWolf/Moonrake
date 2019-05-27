@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerEngine.Commands.Public
+namespace ServerEngine.Commands.GameCommands
 {
-    public class InteractCommand : ICommand
+    public class InteractCommand : IGameCommand
     {
         public List<string> ActivatingWords => new List<string>() { "use", "interact" };
+
+        public string PermissionNeeded => null;
 
         public void Execute(List<string> extraWords, Character interactingCharacter)
         {

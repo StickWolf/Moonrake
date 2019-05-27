@@ -3,49 +3,15 @@ using ServerEngine.Locations;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerEngine.Commands.Public
+namespace ServerEngine.Commands
 {
-    public static class PublicCommandHelper
+    public static class WordTranslator
     {
         /// <summary>
         /// If we see these words when parsing a sentence, we'll just skip over them instead of trying
         /// to match them to something.
         /// </summary>
         private static List<string> SkipWords { get; set; } = new List<string>() { "the", "on", "with", "in" };
-
-        public static void AddPublicCommandsToGameState()
-        {
-            GameState.CurrentGameState.AddPublicCommand(new MoveCommand());
-            GameState.CurrentGameState.AddPublicCommand(new LookCommand());
-            GameState.CurrentGameState.AddPublicCommand(new InventoryCommand());
-            GameState.CurrentGameState.AddPublicCommand(new GrabCommand());
-            GameState.CurrentGameState.AddPublicCommand(new DropCommand());
-            GameState.CurrentGameState.AddPublicCommand(new AttackCommand());
-            GameState.CurrentGameState.AddPublicCommand(new StatsCommand());
-            GameState.CurrentGameState.AddPublicCommand(new InteractCommand());
-            GameState.CurrentGameState.AddPublicCommand(new ShopCommand());
-        }
-
-        /// <summary>
-        /// Runs a public command
-        /// </summary>
-        /// <param name="word">The command word</param>
-        /// <param name="extraWords">Extra words to pass along to the command</param>
-        /// <param name="gameData">The game source data</param>
-        /// <param name="executingCharacter">The character who is running the command</param>
-        /// <returns>True if the command was found and ran, false if the command was not found</returns>
-        public static bool TryRunPublicCommand(string word, List<string> extraWords, Character executingCharacter)
-        {
-            var commandToRun = GameState.CurrentGameState.GetPublicCommand(word);
-            if (commandToRun == null)
-            {
-                return false;
-            }
-
-            // The command is a real command if we got this far
-            commandToRun.Execute(extraWords, executingCharacter);
-            return true;
-        }
 
         /// <summary>
         /// Attempts to create a list of words into a list of items.
@@ -76,7 +42,7 @@ namespace ServerEngine.Commands.Public
 
                     // Get a set of items that match this word
                     var wordItemMatches = availableItems
-                        .Where(i => 
+                        .Where(i =>
                             i.TrackingId.ToString() == wiMapping.Key || // NPCs may write guids instead of normal words
                             i.DisplayName.ToLower().Contains(wiMapping.Key)
                             )
@@ -147,7 +113,7 @@ namespace ServerEngine.Commands.Public
 
                     // Get a set of locations that match this word
                     var wordLocationMatches = availableLocations
-                        .Where(i => 
+                        .Where(i =>
                             i.TrackingId.ToString() == wlMapping.Key || // NPCs may write guids instead of normal words
                             i.LocationName.ToLower().Contains(wlMapping.Key)
                             )
@@ -196,7 +162,7 @@ namespace ServerEngine.Commands.Public
 
                     // Get a set of characters that match this word
                     var wordCharacterMatches = availableCharacters
-                        .Where(c => 
+                        .Where(c =>
                             c.TrackingId.ToString() == wcMapping.Key ||  // NPCs may write guids instead of normal words
                             c.Name.ToLower().Contains(wcMapping.Key)
                             )

@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ServerEngine.Commands.Public
+namespace ServerEngine.Commands.GameCommands
 {
-    public class LookCommand : ICommand
+    public class LookCommand : IGameCommand
     {
         public List<string> ActivatingWords => new List<string>() { "look" };
+
+        public string PermissionNeeded => "Player";
 
         public void Execute(List<string> extraWords, Character lookingCharacter)
         {

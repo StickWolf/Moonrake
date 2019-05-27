@@ -13,7 +13,6 @@ namespace DragonKittyServer
 
             var playerCharacter = new Character("James", 50)
             {
-                TurnBehaviors = new List<string>() { BuiltInTurnBehaviors.FocusedPlayer },
                 MaxAttack = 10,
                 CounterAttackPercent = 50
             };

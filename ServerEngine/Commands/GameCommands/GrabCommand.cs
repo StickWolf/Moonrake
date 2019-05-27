@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerEngine.Commands.Public
+namespace ServerEngine.Commands.GameCommands
 {
-    public class GrabCommand : ICommand
+    public class GrabCommand : IGameCommand
     {
         public List<string> ActivatingWords => new List<string>() { "grab", "take" };
+
+        public string PermissionNeeded => null;
 
         public void Execute(List<string> extraWords, Character grabbingCharacter)
         {

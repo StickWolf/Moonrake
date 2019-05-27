@@ -1,7 +1,7 @@
 ﻿using BaseClientServerDtos;
 using BaseClientServerDtos.ToClient;
 using Newtonsoft.Json;
-using ServerEngine.Commands.Public;
+using ServerEngine.Commands;
 using ServerEngine.Locations;
 using System;
 using System.Collections.Generic;
@@ -156,27 +156,6 @@ namespace ServerEngine.Characters
             return client != null;
         }
 
-        /// <summary>
-        /// Indicates if this character has any behavior that will prompt the player
-        /// </summary>
-        /// <returns>True if the character has a prompting behavior</returns>
-        public bool HasPromptingBehaviors()
-        {
-            if (TurnBehaviors != null)
-            {
-                foreach (var turnBehaviorName in TurnBehaviors)
-                {
-                    var behavior = GameState.CurrentGameState.GetTurnBehavior(turnBehaviorName);
-                    if (behavior.HasPromps)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
         public virtual void Attack(Character attackingCharacter)
         {
             var attackDamage = GetAttackDamage(attackingCharacter.MaxAttack);
@@ -319,7 +298,7 @@ namespace ServerEngine.Characters
                 extraWords.Add(primaryItem.TrackingId.ToString());
             }
 
-            PublicCommandHelper.TryRunPublicCommand("use", extraWords, this);
+            CommandRunner.TryRunCommandFromCharacter("use", extraWords, this);
         }
 
         /// <summary>
@@ -336,7 +315,7 @@ namespace ServerEngine.Characters
                     countToGrab.ToString(),
                     itemToGrab.TrackingId.ToString(),
                 };
-            PublicCommandHelper.TryRunPublicCommand("grab", extraWords, this);
+            CommandRunner.TryRunCommandFromCharacter("grab", extraWords, this);
         }
 
         /// <summary>
@@ -353,7 +332,7 @@ namespace ServerEngine.Characters
                     countToDrop.ToString(),
                     itemToDrop.TrackingId.ToString(),
                 };
-            PublicCommandHelper.TryRunPublicCommand("drop", extraWords, this);
+            CommandRunner.TryRunCommandFromCharacter("drop", extraWords, this);
         }
 
         /// <summary>
@@ -363,7 +342,7 @@ namespace ServerEngine.Characters
         public void ExecuteAttackCommand(Character characterToAttack)
         {
             var extraWords = new List<string>() { characterToAttack.TrackingId.ToString() };
-            PublicCommandHelper.TryRunPublicCommand("attack", extraWords, this);
+            CommandRunner.TryRunCommandFromCharacter("attack", extraWords, this);
         }
 
         /// <summary>
@@ -373,7 +352,7 @@ namespace ServerEngine.Characters
         public void ExecuteMoveCommand(Location locationToMoveTo)
         {
             var extraWords = new List<string>() { locationToMoveTo.TrackingId.ToString() };
-            PublicCommandHelper.TryRunPublicCommand("move", extraWords, this);
+            CommandRunner.TryRunCommandFromCharacter("move", extraWords, this);
         }
 
         /// <summary>
@@ -381,7 +360,7 @@ namespace ServerEngine.Characters
         /// </summary>
         public void ExecuteLookCommand()
         {
-            PublicCommandHelper.TryRunPublicCommand("look", new List<string>(), this);
+            CommandRunner.TryRunCommandFromCharacter("look", new List<string>(), this);
         }
 
         /// <summary>
@@ -389,7 +368,7 @@ namespace ServerEngine.Characters
         /// </summary>
         public void ExecuteStatsCommand()
         {
-            PublicCommandHelper.TryRunPublicCommand("stats", new List<string>(), this);
+            CommandRunner.TryRunCommandFromCharacter("stats", new List<string>(), this);
         }
 
         /// <summary>
@@ -397,7 +376,7 @@ namespace ServerEngine.Characters
         /// </summary>
         public void ExecuteInventoryCommand()
         {
-            PublicCommandHelper.TryRunPublicCommand("inv", new List<string>(), this);
+            CommandRunner.TryRunCommandFromCharacter("inv", new List<string>(), this);
         }
     }
 }

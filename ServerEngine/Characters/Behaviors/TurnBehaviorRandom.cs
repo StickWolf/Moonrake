@@ -7,8 +7,6 @@ namespace ServerEngine.Characters.Behaviors
 {
     public class TurnBehaviorRandom : ITurnBehavior
     {
-        public bool HasPromps => false;
-
         private static Random rnd = new Random();
 
         public void Turn(Character turnTakingCharacter)
