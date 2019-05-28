@@ -12,12 +12,13 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character nameChangingCharacter)
         {
-            // TODO: rewrite as server/client
+            if (extraWords.Count != 1)
+            {
+                return;
+            }
 
-            //nameChangingCharacter.SendMessage($"Your name is currently: {nameChangingCharacter.Name}.");
-            //nameChangingCharacter.SendMessage($"What would you like your name to be?: ");
-            //nameChangingCharacter.Name = Console.ReadLine();
-            //nameChangingCharacter.SendMessage($"Your new name is {nameChangingCharacter.Name}.");
+            nameChangingCharacter.Name = extraWords[0];
+            nameChangingCharacter.SendDescriptiveTextDtoMessage($"Your new name is {nameChangingCharacter.Name}.");
         }
     }
 }

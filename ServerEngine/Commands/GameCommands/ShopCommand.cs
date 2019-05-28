@@ -13,11 +13,11 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character shoppingCharacter)
         {
-            // TODO: rewrite as server/client
+            // TODO: rewrite as server/client,  // TODO: this command needs to be redesigned into smaller commands like entershop, listshopitem, buyshopitem, etc
 
             ////  2. Look in the game data for any tradeposts that are currently at this location
             //var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingCharacter.GetLocation().TrackingId);
-            
+
             ////  3. If there are no tradeposts here then mention that and return.
             //if (allTradePostsInPlayersLocation.Count == 0)
             //{
