@@ -34,15 +34,15 @@ namespace ServerEngine.Commands
             BuiltInGameCommands = new List<IGameCommand>()
             {
                 new LookCommand(),
-                new MoveCommand()
-                //new InventoryCommand()
-                //new GrabCommand()
-                //new DropCommand()
-                //new AttackCommand()
-                //new StatsCommand()
-                //new InteractCommand()
-                //new ShopCommand()
-                //new ChangePlayerNameCommand()
+                new MoveCommand(),
+                new InventoryCommand(),
+                new GrabCommand(),
+                new DropCommand(),
+                new AttackCommand(),
+                new StatsCommand(),
+                new InteractCommand(),
+                //new ShopCommand(), // TODO: this command needs to be redesigned into smaller commands like entershop, listshopitem, buyshopitem, etc
+                new ChangePlayerNameCommand(),
             };
         }
 

@@ -1,6 +1,7 @@
 ﻿using ServerEngine.Characters;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ServerEngine.Commands.GameCommands
 {
@@ -12,29 +13,31 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character inventorySeekingCharacter)
         {
-            // TODO: rewrite as server/client
+            var characterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
+            if (characterItems == null || !characterItems.Any())
+            {
+                inventorySeekingCharacter.SendDescriptiveTextDtoMessage("You have no items.");
+                inventorySeekingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{inventorySeekingCharacter.Name} is looking at their inventory.", inventorySeekingCharacter);
+                return;
+            }
 
-            //var characterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
-            //if(characterItems == null || !characterItems.Any())
-            //{
-            //    inventorySeekingCharacter.SendMessage("You have no items.");
-            //    inventorySeekingCharacter.GetLocation().SendMessage($"{inventorySeekingCharacter.Name} is looking at their inventory.", inventorySeekingCharacter);
-            //    return;
-            //}
+            StringBuilder inventoryBuilder = new StringBuilder();
+            inventoryBuilder.AppendLine("You are currently holding:");
+            foreach (var characterItem in characterItems)
+            {
+                var item = characterItem.Key;
+                // Don't show invisible items
+                if (!item.IsVisible)
+                {
+                    continue;
+                }
 
-            //inventorySeekingCharacter.SendMessage("You are currently holding:");
-            //foreach (var characterItem in characterItems)
-            //{
-            //    var item = characterItem.Key;
-            //    // Don't show invisible items
-            //    if (!item.IsVisible)
-            //    {
-            //        continue;
-            //    }
+                var description = item.GetDescription(characterItem.Value).UppercaseFirstChar();
+                inventoryBuilder.AppendLine(description);
+            }
 
-            //    var description = item.GetDescription(characterItem.Value).UppercaseFirstChar();
-            //    inventorySeekingCharacter.SendMessage(description);
-            //}
+            inventorySeekingCharacter.SendDescriptiveTextDtoMessage(inventoryBuilder.ToString());
+            inventorySeekingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{inventorySeekingCharacter.Name} is looking at their inventory.", inventorySeekingCharacter);
         }
     }
 }
