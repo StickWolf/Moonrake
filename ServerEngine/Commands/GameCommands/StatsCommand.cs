@@ -1,6 +1,7 @@
 ﻿using ServerEngine.Characters;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ServerEngine.Commands.GameCommands
 {
@@ -12,14 +13,16 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character statSeekingCharacter)
         {
-            // TODO: rewrite as server/client
+            var statSeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(statSeekingCharacter.TrackingId);
 
-            //var statSeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(statSeekingCharacter.TrackingId);
+            StringBuilder statsBuilder = new StringBuilder();
 
-            //statSeekingCharacter.SendMessage("Here are your stats:");
-            //statSeekingCharacter.SendMessage($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
-            //statSeekingCharacter.SendMessage($"Your max attack is {statSeekingCharacter.MaxAttack}.");
-            //statSeekingCharacter.GetLocation().SendMessage($"{statSeekingCharacter.Name} looks lost in thought.", statSeekingCharacter);
+            statsBuilder.AppendLine("Here are your stats:");
+            statsBuilder.AppendLine($"You have {statSeekingCharacter.HitPoints}/{statSeekingCharacter.MaxHitPoints} HP");
+            statsBuilder.AppendLine($"Your max attack is {statSeekingCharacter.MaxAttack}.");
+
+            statSeekingCharacter.SendDescriptiveTextDtoMessage(statsBuilder.ToString());
+            statSeekingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{statSeekingCharacter.Name} looks lost in thought.", statSeekingCharacter);
         }
     }
 }
