@@ -17,8 +17,10 @@ namespace ServerEngine.Commands.GameCommands
                 return;
             }
 
+            string oldName = nameChangingCharacter.Name;
             nameChangingCharacter.Name = extraWords[0];
             nameChangingCharacter.SendDescriptiveTextDtoMessage($"Your new name is {nameChangingCharacter.Name}.");
+            nameChangingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{oldName} is now known as {nameChangingCharacter.Name}", nameChangingCharacter);
         }
     }
 }
