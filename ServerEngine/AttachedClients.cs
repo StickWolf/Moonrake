@@ -10,14 +10,15 @@ namespace ServerEngine
 {
     internal static class AttachedClients
     {
-        // Clients[{ClientTrackingId}] = {AttachedClient}
-        private static ConcurrentDictionary<Guid, Client> Clients { get; set; } = new ConcurrentDictionary<Guid, Client>();
         private static readonly object addRemoveClientLock = new object();
+
+        // Clients[{ClientTrackingId}] = {AttachedClient}
+        private static Dictionary<Guid, Client> Clients { get; set; } = new Dictionary<Guid, Client>();
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
         private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
 
-        public static Client GetClientFromConnection(Connection connection)
+        internal static Client GetClientFromConnection(Connection connection)
         {
             lock (addRemoveClientLock)
             {
@@ -32,103 +33,123 @@ namespace ServerEngine
             }
         }
 
-        public static void AttachClient(Client client)
-        {
-            while (!Clients.TryAdd(client.TrackingId, client))
-            {
-                Thread.Sleep(1000);
-            }
-        }
-
-        public static void DetachClient(Client client)
-        {
-            // Remove the client's focus on any character they are tracking if we have a current game loaded
-            SetClientFocusedCharacter(client.TrackingId, Guid.Empty);
-
-            if (Clients.ContainsKey(client.TrackingId))
-            {
-                while (!Clients.TryRemove(client.TrackingId, out Client removed))
-                {
-                    Thread.Sleep(1000);
-                }
-            }
-        }
-
-        public static void DetachAllClients(string reason)
+        internal static void AttachClient(Client client)
         {
             lock (addRemoveClientLock)
             {
-                while (true)
+                if (!Clients.ContainsKey(client.TrackingId))
                 {
-                    var attachedClient = Clients.Values
-                        .FirstOrDefault(c => c.IsConnected());
-                    if (attachedClient == null)
-                    {
-                        break;
-                    }
-                    attachedClient.Disconnect(reason);
+                    Clients.Add(client.TrackingId, client);
                 }
             }
-            ClientFocusedCharacters.Clear();
         }
 
-        public static Client GetClient(Guid clientTrackingId)
+        internal static void DetachClient(Client client, string reason)
         {
-            if (Clients.ContainsKey(clientTrackingId))
+            if (client == null)
             {
-                return Clients[clientTrackingId];
+                return;
             }
-            return null;
-        }
 
-        public static void SetClientFocusedCharacter(Guid clientTrackingId, Guid characterTrackingId)
-        {
-            // Remove any other client focus on this character first
-            if (ClientFocusedCharacters.ContainsValue(characterTrackingId))
+            lock (addRemoveClientLock)
             {
-                var otherClientsTrackingThisChar = ClientFocusedCharacters.Where(c => c.Value == characterTrackingId && c.Key != clientTrackingId);
-                foreach (var other in otherClientsTrackingThisChar)
+                if (client.IsConnected())
                 {
-                    ClientFocusedCharacters.Remove(other.Key);
+                    client.Disconnect(reason);
+                }
+
+                // Remove the client
+                if (Clients.ContainsKey(client.TrackingId))
+                {
+                    Clients.Remove(client.TrackingId);
+                }
+
+                // Remove the client's focus on the character they may be tracking
+                if (ClientFocusedCharacters.ContainsKey(client.TrackingId))
+                {
+                    ClientFocusedCharacters.Remove(client.TrackingId);
                 }
             }
+        }
 
-            // If the character focus should be removed
-            if (characterTrackingId == Guid.Empty)
+        internal static void DetachAllClients(string reason)
+        {
+            lock (addRemoveClientLock)
+            {
+                while (Clients.Count > 0)
+                {
+                    var attachedClient = Clients.Values.FirstOrDefault();
+                    DetachClient(attachedClient, reason);
+                }
+            }
+        }
+
+        internal static Client GetClient(Guid clientTrackingId)
+        {
+            lock (addRemoveClientLock)
+            {
+                if (Clients.ContainsKey(clientTrackingId))
+                {
+                    return Clients[clientTrackingId];
+                }
+                return null;
+            }
+        }
+
+        internal static void RemoveClientFocusOnCharacter(Guid clientTrackingId)
+        {
+            lock (addRemoveClientLock)
             {
                 if (ClientFocusedCharacters.ContainsKey(clientTrackingId))
                 {
                     ClientFocusedCharacters.Remove(clientTrackingId);
                 }
             }
-            else
+        }
+
+        internal static void SetClientFocusedCharacter(Guid clientTrackingId, Guid characterTrackingId)
+        {
+            lock (addRemoveClientLock)
             {
+                // Remove all clients focus on this character
+                do
+                {
+                    var otherClientTrackingThisChar = ClientFocusedCharacters.FirstOrDefault(c => c.Value == characterTrackingId);
+                    if (otherClientTrackingThisChar.Key != Guid.Empty)
+                    {
+                        ClientFocusedCharacters.Remove(otherClientTrackingThisChar.Key);
+                    }
+
+                } while (ClientFocusedCharacters.Where(c => c.Value == characterTrackingId).Count() > 0) ;
+
                 ClientFocusedCharacters[clientTrackingId] = characterTrackingId;
             }
         }
 
         public static Character GetClientFocusedCharacter(Guid clientTrackingId)
         {
-            if (!ClientFocusedCharacters.ContainsKey(clientTrackingId))
+            lock (addRemoveClientLock)
             {
-                return null;
+                if (!ClientFocusedCharacters.ContainsKey(clientTrackingId))
+                {
+                    return null;
+                }
+                var characterTrackingId = ClientFocusedCharacters[clientTrackingId];
+                return GameState.CurrentGameState?.GetCharacter(characterTrackingId);
             }
-            var characterTrackingId = ClientFocusedCharacters[clientTrackingId];
-            if (GameState.CurrentGameState != null)
-            {
-                return GameState.CurrentGameState.GetCharacter(characterTrackingId);
-            }
-            return null;
         }
 
         public static Client GetCharacterFocusedClient(Guid characterTrackingId)
         {
-            if (!ClientFocusedCharacters.ContainsValue(characterTrackingId))
+            lock (addRemoveClientLock)
             {
-                return null;
+                if (!ClientFocusedCharacters.ContainsValue(characterTrackingId))
+                {
+                    return null;
+                }
+                var clientTrackingId = ClientFocusedCharacters.First(c => c.Value == characterTrackingId).Key;
+                return GetClient(clientTrackingId);
             }
-            var clientTrackingId = ClientFocusedCharacters.First(c => c.Value == characterTrackingId).Key;
-            return GetClient(clientTrackingId);
         }
     }
 }

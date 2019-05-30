@@ -10,7 +10,7 @@ namespace ServerEngine.Commands.GameCommands
     {
         public List<string> ActivatingWords => new List<string>() { "look" };
 
-        public string PermissionNeeded => "Player";
+        public string PermissionNeeded => null;
 
         public void Execute(List<string> extraWords, Character lookingCharacter)
         {
