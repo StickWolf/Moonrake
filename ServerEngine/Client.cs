@@ -93,7 +93,6 @@ namespace ServerEngine
             }
         }
 
-
         public bool EqualsConnection(Connection connection)
         {
             if (connection == null || this.ClientConnection == null)

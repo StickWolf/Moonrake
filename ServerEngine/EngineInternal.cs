@@ -4,6 +4,7 @@ using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerEngine
@@ -48,25 +49,25 @@ namespace ServerEngine
                 while (RunGameLoop)
                 {
                     // Get all characters in the game that are still alive
-                    var presentCharacters = GameState.CurrentGameState.GetAllCharactersPresentInWorld();
-                    var sw = new Stopwatch();
-                    sw.Start();
-                    foreach (var gameCharacter in presentCharacters) // TODO: Sort turn order by character speed, fastest should go first.
+                    var turningNPC = GameState.CurrentGameState.GetNextTurnNPC();
+
+                    if (turningNPC == null)
+                    {
+                        Task.Delay(200).Wait();
+                        continue;
+                    }
+                    else
                     {
                         // Only characters that are alive get a turn
-                        if (!gameCharacter.IsDead())
+                        if (!turningNPC.IsDead())
                         {
-                            gameCharacter.Turn();
+                            turningNPC.Turn();
+                            turningNPC.TurnComplete();
                         }
-                        else if (gameCharacter.CanRespawn())
+                        else if (turningNPC.CanRespawn())
                         {
-                            gameCharacter.Respawn();
+                            turningNPC.Respawn();
                         }
-                    }
-                    sw.Stop();
-                    if (sw.Elapsed.TotalSeconds < 4)
-                    {
-                        Task.Delay(60000).Wait();
                     }
                 }
             }

@@ -10,7 +10,6 @@ namespace ServerEngine.MessageBroker
         public ClientToServerLinkEndpoint(ListenerLink link)
             : base(link)
         {
-            //Link.SetCredit(50, false, true);
         }
 
         public override void OnMessage(MessageContext messageContext)

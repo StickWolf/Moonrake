@@ -39,6 +39,12 @@ namespace ServerEngine.Characters
         [JsonProperty]
         public TimeSpan RespawnTime { get; set; }
 
+        [JsonProperty]
+        public TimeSpan TurnCooldown { get; set; }
+
+        [JsonProperty]
+        public DateTime LastTurnTakenTime { get; set; }
+
         /// <summary>
         /// Indicates if this character needs to be focused on by a client in order to stay in the world
         /// </summary>
@@ -52,8 +58,12 @@ namespace ServerEngine.Characters
             Name = name;
             HitPoints = hitPoints;
             MaxHitPoints = hitPoints;
-            RespawnTime = new TimeSpan(0, 0, 2, 30, 10);
+            RespawnTime = TimeSpan.FromMinutes(3);
             LastKilledTime = DateTime.MinValue;
+
+            // Default NPC cooldown is somewhere between 15 and 25 seconds
+            TurnCooldown = TimeSpan.FromSeconds(rnd.Next(15, 26));
+            LastTurnTakenTime = DateTime.MinValue;
         }
 
         /// <summary>
@@ -92,6 +102,17 @@ namespace ServerEngine.Characters
             return AttachedClients.GetCharacterFocusedClient(this.TrackingId);
         }
 
+        public bool CanTakeTurn()
+        {
+            return (DateTime.Now > LastTurnTakenTime + TurnCooldown);
+        }
+
+        public int GetSecondsTillNextTurn()
+        {
+            var timeTill = (LastTurnTakenTime + TurnCooldown) - DateTime.Now;
+            return Convert.ToInt32(timeTill.TotalSeconds);
+        }
+
         /// <summary>
         /// Allows the character to take their turn.
         /// </summary>
@@ -105,6 +126,11 @@ namespace ServerEngine.Characters
                     behavior?.Turn(this);
                 }
             }
+        }
+
+        public void TurnComplete()
+        {
+            LastTurnTakenTime = DateTime.Now;
         }
 
         /// <summary>

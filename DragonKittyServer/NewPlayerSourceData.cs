@@ -1,7 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
-using ServerEngine.Characters.Behaviors;
-using System.Collections.Generic;
+using System;
 
 namespace DragonKittyServer
 {
@@ -14,7 +13,8 @@ namespace DragonKittyServer
             var playerCharacter = new Character("James", 50)
             {
                 MaxAttack = 10,
-                CounterAttackPercent = 50
+                CounterAttackPercent = 50,
+                TurnCooldown = TimeSpan.FromSeconds(5)
             };
 
             GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, gameData.DkItems.Money, 200);
