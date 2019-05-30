@@ -62,12 +62,12 @@ namespace ServerEngine
                         if (!turningNPC.IsDead())
                         {
                             turningNPC.Turn();
-                            turningNPC.TurnComplete();
                         }
                         else if (turningNPC.CanRespawn())
                         {
                             turningNPC.Respawn();
                         }
+                        turningNPC.TurnComplete();
                     }
                 }
             }
