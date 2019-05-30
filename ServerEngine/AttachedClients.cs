@@ -15,7 +15,7 @@ namespace ServerEngine
         private static readonly object addRemoveClientLock = new object();
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
-        private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>(); // TODO: convert to concurrent
+        private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
 
         public static Client GetClientFromConnection(Connection connection)
         {

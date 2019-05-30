@@ -60,7 +60,7 @@ namespace ServerEngine.Characters
         /// Sends a message to the character that only the receiving character can see
         /// </summary>
         /// <param name="text">The text to send</param>
-        public void Send_TODO_DtoMessage(FiniteDto dto)
+        public void SendDtoMessage(FiniteDto dto)
         {
             // Is any client focusing on this character? If not then no message is sent.
             var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
@@ -75,32 +75,8 @@ namespace ServerEngine.Characters
         public void SendDescriptiveTextDtoMessage(string text)
         {
             var dto = new DescriptiveTextDto(text);
-            Send_TODO_DtoMessage(dto);
+            SendDtoMessage(dto);
         }
-
-        // TODO: rewrite these to be client/server based
-        //public string Choose(string prompt, List<string> choices, bool includeCancel)
-        //{
-        //    // Is any client focusing on this character? If not then no message is sent.
-        //    var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
-        //    if (focusedClient == null)
-        //    {
-        //        return null;
-        //    }
-        //    return focusedClient.Choose(prompt, choices, includeCancel);
-        //}
-
-        //public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
-        //{
-        //    // Is any client focusing on this character? If not then no message is sent.
-        //    var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
-        //    if (focusedClient == null)
-        //    {
-        //        return default(T);
-        //    }
-
-        //    return focusedClient.Choose(prompt, choices, includeCancel);
-        //}
 
         /// <summary>
         /// Gets the current location of the character

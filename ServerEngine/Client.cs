@@ -114,9 +114,8 @@ namespace ServerEngine
             {
                 // This Dto takes care of running all server commands if the client is
                 // in the right context and has the right permissions
-                // TODO: maybe rename from generic
-                case "GenericServerCommandDto":
-                    var dto = JsonDtoSerializer.DeserializeAs<GenericServerCommandDto>(jsonBody);
+                case nameof(ServerCommandDto):
+                    var dto = JsonDtoSerializer.DeserializeAs<ServerCommandDto>(jsonBody);
                     if (!CommandRunner.TryRunCommandFromClient(dto.Command, dto.ExtraWords, this))
                     {
                         SendDescriptiveTextDtoMessage($"Unknown command");
@@ -182,67 +181,5 @@ namespace ServerEngine
                 System.Console.WriteLine(serialized);
             }
         }
-
-        // TODO: rewrite
-        ///// <summary>
-        ///// Writes out a list of items and lets the user choose 1 of them.
-        ///// </summary>
-        ///// <param name="choices">All the available choices</param>
-        ///// <param name="prompt">The text to display above the choices</param>
-        ///// <param name="includeCancel">Include the cancel option</param>
-        ///// <returns>The chosen item</returns>
-        //public string Choose(string prompt, List<string> choices, bool includeCancel)
-        //{
-        //    Dictionary<string, string> choicesDictionary = new Dictionary<string, string>();
-        //    foreach (var choice in choices)
-        //    {
-        //        choicesDictionary.Add(choice, choice);
-        //    }
-        //    return Choose(prompt, choicesDictionary, includeCancel);
-        //}
-
-        ///// <summary>
-        ///// Writes out a list of items and lets the user choose 1 of them.
-        ///// </summary>
-        ///// <param name="choices">All the available choices</param>
-        ///// <param name="prompt">The text to display above the choices</param>
-        ///// <returns>The chosen key or default(T) if cancelled</returns>
-        //public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
-        //{
-        //    SendMessage(prompt);
-
-        //    Dictionary<int, T> numberedKeys = new Dictionary<int, T>();
-        //    int itemIndex = 1;
-        //    foreach (var choice in choices)
-        //    {
-        //        SendMessage(string.Empty);
-        //        SendMessage($"{itemIndex}. {choice.Value}");
-        //        numberedKeys.Add(itemIndex++, choice.Key);
-        //    }
-        //    if (includeCancel)
-        //    {
-        //        SendMessage(string.Empty);
-        //        SendMessage($"{itemIndex}. Cancel");
-        //    }
-
-        //    SendMessage("-----------------------------------------");
-
-        //    while (true)
-        //    {
-        //        SendMessage("> ", false);
-        //        if (int.TryParse(Console.ReadLine(), out int userChoiceIndex)) // TODO: The choose functionality needs to be re-written as a client ability
-        //        {
-        //            if (userChoiceIndex >= 1 && userChoiceIndex < itemIndex)
-        //            {
-        //                return numberedKeys[userChoiceIndex];
-        //            }
-        //            else if (userChoiceIndex == itemIndex)
-        //            {
-        //                return default(T);
-        //            }
-        //        }
-        //        SendMessage("Please pick one of the numbers above.");
-        //    }
-        //}
     }
 }

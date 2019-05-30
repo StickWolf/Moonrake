@@ -51,20 +51,20 @@ namespace ServerEngine.Locations
         /// Otherwise use Guid.Empty
         /// This will assure that the sender does not also get the message
         /// </param>
-        public void Send_TODO_DtoMessage(FiniteDto dto, Character fromCharacter)
+        public void SendDtoMessage(FiniteDto dto, Character fromCharacter)
         {
             var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(this.TrackingId)
                 .Where(c => fromCharacter == null || c.TrackingId != fromCharacter.TrackingId);
             foreach (var charInLoc in charactersInLocation)
             {
-                charInLoc.Send_TODO_DtoMessage(dto);
+                charInLoc.SendDtoMessage(dto);
             }
         }
 
         public void SendDescriptiveTextDtoMessage(string text, Character fromCharacter)
         {
             var dto = new DescriptiveTextDto(text);
-            Send_TODO_DtoMessage(dto, fromCharacter);
+            SendDtoMessage(dto, fromCharacter);
         }
 
         /// <summary>
