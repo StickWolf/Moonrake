@@ -17,9 +17,6 @@ namespace ServerEngine.Commands.AccountCommands
             // Add built-in things
             GameState.CurrentGameState.AddTurnBehavior(BuiltInTurnBehaviors.Random, new TurnBehaviorRandom());
 
-            // TODO: remove hack after this can be done from the client proper
-            GameState.CurrentGameState.CreateAccount("ServerUser");
-
             // Have the game fill in its game data
             EngineInternal.NewWorldCreator();
         }
