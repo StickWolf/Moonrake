@@ -77,7 +77,18 @@ namespace ServerEngine.Commands
                 return false;
             }
 
-            return TryRunCommandFromCharacter(word, extraWords, playerCharacter, executingClient.AttachedAccount.Permissions);
+            if (!playerCharacter.CanTakeTurn())
+            {
+                var secondsLeft = playerCharacter.GetSecondsTillNextTurn();
+                playerCharacter.SendDescriptiveTextDtoMessage($"You cannot take your next turn yet. ({secondsLeft} seconds left).");
+                return true;
+            }
+            else
+            {
+                bool commandResult = TryRunCommandFromCharacter(word, extraWords, playerCharacter, executingClient.AttachedAccount.Permissions);
+                playerCharacter.TurnComplete();
+                return commandResult;
+            }
         }
 
         internal static bool TryRunCommandFromAccount(string word, List<string> extraWords, Account executingAccount)

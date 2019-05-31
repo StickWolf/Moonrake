@@ -23,6 +23,7 @@ namespace ExampleGameServer.Characters
                 CustomTurnBehavior.Squeak,
                 BuiltInTurnBehaviors.Random
             };
+            TurnCooldown = TimeSpan.FromMinutes(1);
         }
 
         public override void Attack(Character attackingCharacter)

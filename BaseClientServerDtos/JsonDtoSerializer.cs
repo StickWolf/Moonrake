@@ -20,7 +20,7 @@ namespace BaseClientServerDtos
             return serialized;
         }
 
-        public static string GetDtoName(string serializedDto) // TODO: merge with server class that does this same thing
+        public static string GetDtoName(string serializedDto)
         {
             try
             {

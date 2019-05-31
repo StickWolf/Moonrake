@@ -2,7 +2,7 @@
 
 namespace BaseClientServerDtos.ToServer
 {
-    public class GenericServerCommandDto : FiniteDto
+    public class ServerCommandDto : FiniteDto
     {
         public string Command { get; set; }
 

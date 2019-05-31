@@ -680,14 +680,13 @@ namespace ServerEngine
             }
         }
 
-        public List<Character> GetAllCharactersPresentInWorld()
+        public Character GetNextTurnNPC()
         {
             lock (characterLock)
             {
-                var presentCharacters = Characters.Values
-                    .Where(c => c.IsPresentInWorld())
-                    .ToList();
-                return presentCharacters;
+                var nextCharacter = Characters.Values
+                    .FirstOrDefault(c => !c.NeedsFocus && c.CanTakeTurn() && c.IsPresentInWorld());
+                return nextCharacter;
             }
         }
 

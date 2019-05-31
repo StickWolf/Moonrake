@@ -15,7 +15,7 @@ namespace GameClient.Commands
                 return;
             }
 
-            var genericCommand = new GenericServerCommandDto();
+            var genericCommand = new ServerCommandDto();
             genericCommand.Command = extraWords.First();
             genericCommand.ExtraWords = extraWords.Skip(1).ToList();
             ServerConnection.SendDtoMessage(genericCommand);
