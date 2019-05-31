@@ -39,6 +39,12 @@ namespace ServerEngine.Characters
         [JsonProperty]
         public TimeSpan RespawnTime { get; set; }
 
+        [JsonProperty]
+        public TimeSpan TurnCooldown { get; set; }
+
+        [JsonProperty]
+        public DateTime LastTurnTakenTime { get; set; }
+
         /// <summary>
         /// Indicates if this character needs to be focused on by a client in order to stay in the world
         /// </summary>
@@ -52,15 +58,19 @@ namespace ServerEngine.Characters
             Name = name;
             HitPoints = hitPoints;
             MaxHitPoints = hitPoints;
-            RespawnTime = new TimeSpan(0, 0, 2, 30, 10);
+            RespawnTime = TimeSpan.FromMinutes(3);
             LastKilledTime = DateTime.MinValue;
+
+            // Default NPC cooldown is somewhere between 15 and 25 seconds
+            TurnCooldown = TimeSpan.FromSeconds(rnd.Next(15, 26));
+            LastTurnTakenTime = DateTime.MinValue;
         }
 
         /// <summary>
         /// Sends a message to the character that only the receiving character can see
         /// </summary>
         /// <param name="text">The text to send</param>
-        public void Send_TODO_DtoMessage(FiniteDto dto)
+        public void SendDtoMessage(FiniteDto dto)
         {
             // Is any client focusing on this character? If not then no message is sent.
             var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
@@ -75,32 +85,8 @@ namespace ServerEngine.Characters
         public void SendDescriptiveTextDtoMessage(string text)
         {
             var dto = new DescriptiveTextDto(text);
-            Send_TODO_DtoMessage(dto);
+            SendDtoMessage(dto);
         }
-
-        // TODO: rewrite these to be client/server based
-        //public string Choose(string prompt, List<string> choices, bool includeCancel)
-        //{
-        //    // Is any client focusing on this character? If not then no message is sent.
-        //    var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
-        //    if (focusedClient == null)
-        //    {
-        //        return null;
-        //    }
-        //    return focusedClient.Choose(prompt, choices, includeCancel);
-        //}
-
-        //public T Choose<T>(string prompt, Dictionary<T, string> choices, bool includeCancel)
-        //{
-        //    // Is any client focusing on this character? If not then no message is sent.
-        //    var focusedClient = AttachedClients.GetCharacterFocusedClient(this.TrackingId);
-        //    if (focusedClient == null)
-        //    {
-        //        return default(T);
-        //    }
-
-        //    return focusedClient.Choose(prompt, choices, includeCancel);
-        //}
 
         /// <summary>
         /// Gets the current location of the character
@@ -116,6 +102,17 @@ namespace ServerEngine.Characters
             return AttachedClients.GetCharacterFocusedClient(this.TrackingId);
         }
 
+        public bool CanTakeTurn()
+        {
+            return (DateTime.Now > LastTurnTakenTime + TurnCooldown);
+        }
+
+        public int GetSecondsTillNextTurn()
+        {
+            var timeTill = (LastTurnTakenTime + TurnCooldown) - DateTime.Now;
+            return Convert.ToInt32(timeTill.TotalSeconds);
+        }
+
         /// <summary>
         /// Allows the character to take their turn.
         /// </summary>
@@ -129,6 +126,11 @@ namespace ServerEngine.Characters
                     behavior?.Turn(this);
                 }
             }
+        }
+
+        public void TurnComplete()
+        {
+            LastTurnTakenTime = DateTime.Now;
         }
 
         /// <summary>

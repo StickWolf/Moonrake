@@ -1,7 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
-using ServerEngine.Characters.Behaviors;
-using System.Collections.Generic;
+using System;
 
 namespace ExampleGameServer
 {
@@ -14,7 +13,8 @@ namespace ExampleGameServer
             var playerCharacter = new Character("Sally", 50)
             {
                 MaxAttack = 40,
-                CounterAttackPercent = 75
+                CounterAttackPercent = 75,
+                TurnCooldown = TimeSpan.FromSeconds(5)
             };
 
             GameState.CurrentGameState.AddCharacter(playerCharacter, gameData.EgLocations.Start);

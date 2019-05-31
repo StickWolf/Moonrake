@@ -1,7 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
-using ServerEngine.Characters.Behaviors;
-using System.Collections.Generic;
+using System;
 
 namespace Moonrake
 {
@@ -11,7 +10,10 @@ namespace Moonrake
         {
             var gameData = GameState.CurrentGameState.Custom as MoonrakeGameData;
 
-            var playerCharacter = new Character("Player", 100);
+            var playerCharacter = new Character("Player", 100)
+            {
+                TurnCooldown = TimeSpan.FromSeconds(5)
+            };
 
             GameState.CurrentGameState.AddCharacter(playerCharacter, gameData.MoonRakeLocations.TreeHouse);
 

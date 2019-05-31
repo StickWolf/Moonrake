@@ -49,7 +49,7 @@
     <Compile Include="FiniteDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToServer\CreateAccountDto.cs" />
-    <Compile Include="ToServer\GenericServerCommandDto.cs" />
+    <Compile Include="ToServer\ServerCommandDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
