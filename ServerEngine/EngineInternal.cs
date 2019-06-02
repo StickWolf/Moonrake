@@ -25,6 +25,9 @@ namespace ServerEngine
 
         public static Func<Character> NewPlayerCreator { get; set; }
 
+        private static bool shutdownStarted;
+        private static object shutdownLock = new object();
+
         /// <summary>
         /// Runs the game until they win, die or exit.
         /// </summary>
@@ -33,6 +36,7 @@ namespace ServerEngine
             AttachedClients.DetachAllClients("Server restart");
             RunGameLoop = true;
             RunFactory = true;
+            shutdownStarted = false;
 
             var engineStartingAccount = new Account()
             {
@@ -48,6 +52,8 @@ namespace ServerEngine
                 // Main game loop goes 1 loop for 1 game turn.
                 while (RunGameLoop)
                 {
+                    GameState.AutoSaveIfNeeded(forceSave: false);
+
                     // Get all characters in the game that are still alive
                     var turningNPC = GameState.CurrentGameState.GetNextTurnNPC();
 
@@ -73,7 +79,20 @@ namespace ServerEngine
             }
             finally
             {
-                Broker.StopHost();
+                EngineShutdown(null, null);
+            }
+        }
+
+        private static void EngineShutdown(object sender, EventArgs e)
+        {
+            lock (shutdownLock)
+            {
+                if (!shutdownStarted)
+                {
+                    shutdownStarted = true;
+                    GameState.AutoSaveIfNeeded(forceSave: true);
+                    Broker.StopHost();
+                }
             }
         }
     }

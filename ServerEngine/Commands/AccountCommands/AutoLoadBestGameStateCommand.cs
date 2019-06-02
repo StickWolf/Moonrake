@@ -13,7 +13,7 @@ namespace ServerEngine.Commands.AccountCommands
         {
             try
             {
-                var validSlotNames = GameState.GetValidSaveSlotNames(); // TODO: make it so the most recent saved game comes out as the first item in this list
+                var validSlotNames = GameState.GetValidSaveSlotNames();
                 if (validSlotNames.Count == 0)
                 {
                     CommandRunner.TryRunCommandFromAccount("createnewgamestate", new List<string>(), executingAccount);
