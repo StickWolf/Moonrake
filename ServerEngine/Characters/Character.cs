@@ -46,6 +46,12 @@ namespace ServerEngine.Characters
         public DateTime LastTurnTakenTime { get; set; }
 
         /// <summary>
+        /// Indicates if a player character has ever entered the world before
+        /// </summary>
+        [JsonProperty]
+        public bool IsNew { get; set; } = true;
+
+        /// <summary>
         /// Indicates if this character needs to be focused on by a client in order to stay in the world
         /// </summary>
         [JsonProperty]
@@ -97,7 +103,7 @@ namespace ServerEngine.Characters
             return GameState.CurrentGameState.GetCharacterLocation(this.TrackingId);
         }
 
-        public Client GetClient()
+        public AttachedClient GetClient()
         {
             return AttachedClients.GetCharacterFocusedClient(this.TrackingId);
         }

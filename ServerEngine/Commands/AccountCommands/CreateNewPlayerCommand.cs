@@ -1,4 +1,5 @@
 ﻿using BaseClientServerDtos.ToClient;
+using System;
 using System.Collections.Generic;
 
 namespace ServerEngine.Commands.AccountCommands
@@ -11,25 +12,38 @@ namespace ServerEngine.Commands.AccountCommands
 
         public void Execute(List<string> extraWords, Account executingAccount)
         {
-            Client executingClient = null; // TODO: Get this, maybe pass it in as an optional parameter for account commands
-
-            if (executingAccount == null)
-            {
-                return;
-            }
-
-            if (GameState.CurrentGameState == null)
+            AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
+            if (executingAccount == null || executingClient == null || GameState.CurrentGameState == null || !executingAccount.CanCreateNewPlayer())
             {
                 var errorMsgDto = new DescriptiveTextDto("The create new player command is currently unavailable.");
                 executingClient?.SendDtoMessage(errorMsgDto);
                 return;
             }
 
+            if (extraWords.Count != 1)
+            {
+                var errorMsgDto = new DescriptiveTextDto("Wrong number of parameters.");
+                executingClient?.SendDtoMessage(errorMsgDto);
+                return;
+            }
+
+            if (GameState.CurrentGameState.IsPlayerCharacterNameInUse(extraWords[0]))
+            {
+                var errorMsgDto = new DescriptiveTextDto("This character name is already taken.");
+                executingClient?.SendDtoMessage(errorMsgDto);
+                return;
+            }
+
+            executingAccount.LastPlayerCreationTime = DateTime.Now;
             var newPlayerCharacter = EngineInternal.NewPlayerCreator();
+            newPlayerCharacter.Name = extraWords[0];
 
             // Mark all player characters as needing focus to stay in the world
             newPlayerCharacter.NeedsFocus = true;
-            executingAccount.Characters.Add(newPlayerCharacter.TrackingId);
+            executingAccount.AddCharacter(newPlayerCharacter.TrackingId);
+
+            var successMsgDto = new DescriptiveTextDto("New player created.");
+            executingClient?.SendDtoMessage(successMsgDto);
         }
     }
 }

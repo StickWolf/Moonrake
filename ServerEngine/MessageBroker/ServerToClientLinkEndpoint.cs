@@ -23,9 +23,9 @@ namespace ServerEngine.MessageBroker
                 {
                     this.Link.SendMessage(message);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // TODO: log details
+                    Console.WriteLine(ex.ToString());
                 }
             }
             else

@@ -84,6 +84,15 @@ namespace ServerEngine
         private Dictionary<string, Account> Accounts { get; set; } = new Dictionary<string, Account>();
         private object accountLock = new object();
 
+        // LastAccountCreationTime[{IpAddress}] = {LastAccountCreationDateTime}
+        [JsonProperty]
+        private DateTime LastAccountCreationTime { get; set; } = DateTime.MinValue;
+
+        // Only 1 account can be created per 10 minutes
+        // TODO: Temp limiters for testing, either expose as an option to be set by gamedata or come up with something better
+        [JsonProperty]
+        private TimeSpan LastAccountCreationTimeSpanCooldown = TimeSpan.FromMinutes(10);
+
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
         public static GameState CurrentGameState { get; private set; }
@@ -614,6 +623,16 @@ namespace ServerEngine
             }
         }
 
+        public bool IsPlayerCharacterNameInUse(string characterName)
+        {
+            // TODO: playernamechange needs to also use this lock.. really all name creates/changes need to be locked
+
+            lock (characterLock)
+            {
+                return Characters.Values.Any(c => c.NeedsFocus && c.Name.Equals(characterName, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
         public Guid AddCharacter(Character character, Guid locationTrackingId)
         {
             lock (characterLock)
@@ -914,15 +933,23 @@ namespace ServerEngine
             return command;
         }
 
-        public Account CreateAccount(string userName)
+        public Account CreateAccount(string userName, string password)
         {
             lock (accountLock)
             {
+                // An account can only be created so often
+                if ((LastAccountCreationTime + LastAccountCreationTimeSpanCooldown) > DateTime.Now)
+                {
+                    return null;
+                }
+                LastAccountCreationTime = DateTime.Now;
+
                 var alreadyExistsAccount = GetAccount(userName);
                 if (alreadyExistsAccount != null)
                 {
-                    // This account already exists.. just return it.
-                    return alreadyExistsAccount;
+                    // This account already exists.
+                    // Only direct GetAccount calls will return an account like this.
+                    return null;
                 }
 
                 var account = new Account()
@@ -930,6 +957,7 @@ namespace ServerEngine
                     UserName = userName,
                     Permissions = new List<string>()
                 };
+                account.SetPassword(password);
                 Accounts.Add(userName, account);
                 return account;
             }

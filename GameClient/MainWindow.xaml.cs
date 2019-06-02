@@ -53,7 +53,16 @@ namespace GameClient
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Windows.Main = this;
-            CommandHelper.TryRunCommand("connect", new List<string>());
+            Windows.WriteMainWindowDescriptiveText(
+                "TODO: Write UI elements to represent these commands.\r\n" +
+                "For now follow this CLI syntax to start.\r\n" +
+                "Keep in mind each new account and player will need a different name.\r\n\r\n" +
+                "/connect\r\n" +
+                "/createnewaccount sysop abc123\r\n" +
+                "/login sysop abc123\r\n" +
+                "/createnewplayer Jack-o-Lantern\r\n" +
+                "/useplayer Jack-o-Lantern\r\n\r\n"
+                );
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
