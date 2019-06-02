@@ -96,7 +96,27 @@ namespace ServerEngine
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
         public static GameState CurrentGameState { get; private set; }
-        private static string SaveFileName { get; set; } = "GameSaves.json";
+        private static string SavesFolder { get; set; } = "GameSaves";
+        private static DateTime LastSaveGameStateTime = DateTime.MinValue;
+        private static TimeSpan AutoSaveInterval = TimeSpan.FromMinutes(15);
+
+        private static DirectoryInfo GetSavesFolder()
+        {
+            var di = new DirectoryInfo(SavesFolder);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
+            return di;
+        }
+
+        public static void AutoSaveIfNeeded(bool forceSave)
+        {
+            if (forceSave || LastSaveGameStateTime + AutoSaveInterval < DateTime.Now)
+            {
+                SaveGameState();
+            }
+        }
 
         public static List<string> GetValidSaveSlotNames()
         {
@@ -115,6 +135,10 @@ namespace ServerEngine
 
         public static void LoadGameState(string slotName)
         {
+            // We mark this as now because the interval is meant to capture changes
+            // but if we just loaded a file, there won't be any changes for a bit.
+            LastSaveGameStateTime = DateTime.Now;
+
             var savedGamesDictionary = GetGameStates();
             // get the specified value out of the dictionary using slotName as the key
             CurrentGameState = savedGamesDictionary[slotName];
@@ -130,38 +154,39 @@ namespace ServerEngine
             return serializerSettings;
         }
 
-        public static void SaveGameState(string slotName)
+        public static void SaveGameState()
         {
-            var savedGamesDictionary = GetGameStates();
+            LastSaveGameStateTime = DateTime.Now;
 
-            // add (or update) the gamestate that was passed in into the dictionary we now have using slotName as the key
-            savedGamesDictionary[slotName] = CurrentGameState;
+            string serializedGameState = JsonConvert.SerializeObject(CurrentGameState, Formatting.Indented, GetJsonSerializerSettings());
 
-            // serialize the dictionary to a string
-            string serializedDictionary = JsonConvert.SerializeObject(savedGamesDictionary, Formatting.Indented, GetJsonSerializerSettings());
+            string filename = $"GameState_{DateTime.Now.ToString("yyyyMMddhhmmss")}.json";
+            string filepath = Path.Combine(GetSavesFolder().FullName, filename);
 
-            // save that serialized string to the game saves file
-            File.WriteAllText(SaveFileName, serializedDictionary);
+            File.WriteAllText(filepath, serializedGameState);
         }
 
         private static Dictionary<string, GameState> GetGameStates()
         {
-            Dictionary<string, GameState> savedGamesDictionary;
-            var saveFile = new FileInfo(SaveFileName);
+            Dictionary<string, GameState> savedGamesDictionary = new Dictionary<string, GameState>();
 
-            // If there is an existing saves file
-            if (saveFile.Exists)
+            var savesFolder = GetSavesFolder();
+
+            var allSaveFiles = savesFolder.GetFiles().OrderByDescending(f => f.Name);
+
+            foreach (var saveFile in allSaveFiles)
             {
-                // read the save file to a string
                 string fileContents = File.ReadAllText(saveFile.FullName);
 
-                // deserialize the string into a dictionary<string, gamestate>
-                savedGamesDictionary = JsonConvert.DeserializeObject<Dictionary<string, GameState>>(fileContents, GetJsonSerializerSettings());
-            }
-            else
-            {
-                // create a new dictionary<string, gameState>
-                savedGamesDictionary = new Dictionary<string, GameState>();
+                try
+                {
+                    var savedGameState = JsonConvert.DeserializeObject<GameState>(fileContents, GetJsonSerializerSettings());
+                    savedGamesDictionary.Add(saveFile.Name, savedGameState);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
 
             return savedGamesDictionary;
@@ -959,6 +984,12 @@ namespace ServerEngine
                 };
                 account.SetPassword(password);
                 Accounts.Add(userName, account);
+
+                // Force autosave after every new account is created
+                // This is because currently the way to add permissions to an account is by directly editing 
+                // the latest gamesave json file.
+                AutoSaveIfNeeded(forceSave: true);
+
                 return account;
             }
         }
