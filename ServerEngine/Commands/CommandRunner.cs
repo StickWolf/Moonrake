@@ -29,7 +29,7 @@ namespace ServerEngine.Commands
                 new LoadGameStateCommand(),
                 new CreateNewPlayerCommand(),
                 new UsePlayerCommand(),
-                //new SaveGameStateCommand(),
+                new SaveGameStateCommand(),
                 //new UnloadGameStateCommand()
             };
 

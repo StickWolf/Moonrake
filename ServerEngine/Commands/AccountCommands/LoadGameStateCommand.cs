@@ -15,7 +15,7 @@ namespace ServerEngine.Commands.AccountCommands
         public void Execute(List<string> extraWords, Account executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
-            if (executingAccount == null || executingClient == null || GameState.CurrentGameState != null)
+            if (executingAccount == null || GameState.CurrentGameState != null)
             {
                 var errorMsgDto = new DescriptiveTextDto("The load game state command is currently unavailable.");
                 executingClient?.SendDtoMessage(errorMsgDto);

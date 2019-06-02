@@ -19,6 +19,9 @@ namespace ServerEngine.Commands.AccountCommands
 
             // Have the game fill in its game data
             EngineInternal.NewWorldCreator();
+
+            // Save the newly created state
+            GameState.SaveGameState();
         }
     }
 }
