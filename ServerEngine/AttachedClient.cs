@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace ServerEngine
 {
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    public class Client : TrackableInstance
+    public class AttachedClient : TrackableInstance
     {
         /// <summary>
         /// The account that this client is currently logged into
@@ -30,68 +30,13 @@ namespace ServerEngine
         [JsonIgnore]
         private Connection ClientConnection { get; set; }
 
-        private object autoattachDevSysopLock = new object();
-
         internal void SetConnection(Connection connection)
         {
             this.ClientConnection = connection;
             this.ClientConnection.Closed += ClientConnection_Closed;
             System.Console.WriteLine($"Client connection discovered.\r\n   Client Tracking Id: {this.TrackingId}");
-
-            // TODO: remove hack after this can be done from the client proper
-            AutoAttachDevSysopClient();
-
-            // TODO: these messages won't be sent because the links are not established yet
-            // TODO: when a newly created character logs into the game for the first time, these actions should be run
-            //if (newPlayerCreated)
-            //{
-            //    var currentPlayerCharacter = AttachedClients.GetClientFocusedCharacter(this.TrackingId);
-            //    currentPlayerCharacter.SendDescriptiveTextDtoMessage(GameState.CurrentGameState.GameIntroductionText);
-            //    currentPlayerCharacter.ExecuteLookCommand();
-            //}
         }
 
-        /// <summary>
-        /// Auto creates accounts with 1 player each every time a new client logs in concurrently
-        /// Previously created accounts are reused if clients disconnect and reconnect
-        /// </summary>
-        private void AutoAttachDevSysopClient()
-        {
-            lock (autoattachDevSysopLock)
-            {
-                int attemptId = 0;
-                while (attemptId < 10)
-                {
-                    attemptId++;
-
-                    // TODO: Remove after client/server accounts are fully functional.
-                    // TODO: For localhost testing only!
-                    // TODO: The attached account should be assigned only after proper auth
-                    var accountName = $"ServerUser{attemptId}";
-                    var potentialAccount = GameState.CurrentGameState.GetAccount(accountName);
-                    if (potentialAccount == null)
-                    {
-                        potentialAccount = GameState.CurrentGameState.CreateAccount(accountName);
-                    }
-
-                    // TODO: For now until we have real clients, we auto-create a new player character (if needed) here
-                    // TODO: This simulates a client connecting to an account and adding a new character to their account.
-                    if (potentialAccount.Characters.Count == 0)
-                    {
-                        CommandRunner.TryRunCommandFromAccount("createnewplayer", new List<string>(), potentialAccount); // TODO: pass player name as the first parameter in order to name your player
-                    }
-
-                    var firstCharacter = potentialAccount.Characters[0];
-                    var existingClient = AttachedClients.GetCharacterFocusedClient(firstCharacter);
-                    if (existingClient == null)
-                    {
-                        AttachedAccount = potentialAccount;
-                        AttachedClients.SetClientFocusedCharacter(TrackingId, firstCharacter);
-                        break;
-                    }
-                }
-            }
-        }
 
         public bool EqualsConnection(Connection connection)
         {

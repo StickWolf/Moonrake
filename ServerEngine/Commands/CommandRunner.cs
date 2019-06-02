@@ -18,7 +18,8 @@ namespace ServerEngine.Commands
         {
             BuildInAnonymousCommands = new List<IAnonymousCommand>()
             {
-                // TODO: LoginToAccount command would go here
+                new CreateNewAccountCommand(),
+                new LoginCommand()
             };
 
             BuildInAccountCommands = new List<IAccountCommand>()
@@ -27,6 +28,7 @@ namespace ServerEngine.Commands
                 new CreateNewGameStateCommand(),
                 new LoadGameStateCommand(),
                 new CreateNewPlayerCommand(),
+                new UsePlayerCommand(),
                 //new SaveGameStateCommand(),
                 //new UnloadGameStateCommand()
             };
@@ -46,7 +48,7 @@ namespace ServerEngine.Commands
             };
         }
 
-        internal static bool TryRunCommandFromClient(string word, List<string> extraWords, Client executingClient)
+        internal static bool TryRunCommandFromClient(string word, List<string> extraWords, AttachedClient executingClient)
         {
             // Built in anonymous commands
             var anonCommandToRun = BuildInAnonymousCommands

@@ -10,6 +10,6 @@ namespace ServerEngine.Commands.AnonymousCommands
     {
         List<string> ActivatingWords { get; }
 
-        void Execute(List<string> extraWords, Client executingClient);
+        void Execute(List<string> extraWords, AttachedClient executingClient);
     }
 }

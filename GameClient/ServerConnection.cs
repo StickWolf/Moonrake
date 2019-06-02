@@ -45,15 +45,11 @@ namespace GameClient
                 receiver.Start(300, OnMessageReceived);
 
                 sender = new SenderLink(session, "Link-CTS", clientAddressName);
+                Windows.WriteMainWindowDescriptiveText("Connected.");
             }
             catch (Exception ex)
             {
-                Windows.Main.txtGameText.Dispatcher.Invoke(() => {
-                    var textbox = Windows.Main.txtGameText;
-                    textbox.AppendText(ex.ToString());
-                    textbox.CaretIndex = textbox.Text.Length;
-                    textbox.ScrollToEnd();
-                });
+                Windows.WriteMainWindowDescriptiveText(ex.ToString());
             }
         }
 
@@ -90,12 +86,7 @@ namespace GameClient
             {
                 case "DescriptiveTextDto":
                     var dto = JsonDtoSerializer.DeserializeAs<DescriptiveTextDto>(message.Body.ToString());
-                    Windows.Main.txtGameText.Dispatcher.Invoke(() => {
-                        var textbox = Windows.Main.txtGameText;
-                        textbox.AppendText($"\r\n{dto.Text}");
-                        textbox.CaretIndex = textbox.Text.Length;
-                        textbox.ScrollToEnd();
-                    });
+                    Windows.WriteMainWindowDescriptiveText($"\r\n{dto.Text}");
                     break;
             }
         }
@@ -108,9 +99,9 @@ namespace GameClient
             {
                 sender.SendAsync(message);
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO: 
+                Windows.WriteMainWindowDescriptiveText(ex.ToString());
             }
         }
     }

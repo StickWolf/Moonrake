@@ -1,10 +1,8 @@
 ﻿using Amqp;
 using ServerEngine.Characters;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace ServerEngine
 {
@@ -13,19 +11,19 @@ namespace ServerEngine
         private static readonly object addRemoveClientLock = new object();
 
         // Clients[{ClientTrackingId}] = {AttachedClient}
-        private static Dictionary<Guid, Client> Clients { get; set; } = new Dictionary<Guid, Client>();
+        private static Dictionary<Guid, AttachedClient> Clients { get; set; } = new Dictionary<Guid, AttachedClient>();
 
         // ClientFocusedCharacters[{ClientTrackingId}] = {CurrentlyFocusedCharacterTrackingId}
         private static Dictionary<Guid, Guid> ClientFocusedCharacters { get; set; } = new Dictionary<Guid, Guid>();
 
-        internal static Client GetClientFromConnection(Connection connection)
+        internal static AttachedClient GetClientFromConnection(Connection connection)
         {
             lock (addRemoveClientLock)
             {
                 var client = Clients.Values.FirstOrDefault(c => c.EqualsConnection(connection));
                 if (client == null)
                 {
-                    client = new Client();
+                    client = new AttachedClient();
                     client.SetConnection(connection);
                     AttachClient(client);
                 }
@@ -33,7 +31,7 @@ namespace ServerEngine
             }
         }
 
-        internal static void AttachClient(Client client)
+        internal static void AttachClient(AttachedClient client)
         {
             lock (addRemoveClientLock)
             {
@@ -44,7 +42,7 @@ namespace ServerEngine
             }
         }
 
-        internal static void DetachClient(Client client, string reason)
+        internal static void DetachClient(AttachedClient client, string reason)
         {
             if (client == null)
             {
@@ -84,7 +82,7 @@ namespace ServerEngine
             }
         }
 
-        internal static Client GetClient(Guid clientTrackingId)
+        internal static AttachedClient GetClient(Guid clientTrackingId)
         {
             lock (addRemoveClientLock)
             {
@@ -139,7 +137,7 @@ namespace ServerEngine
             }
         }
 
-        public static Client GetCharacterFocusedClient(Guid characterTrackingId)
+        public static AttachedClient GetCharacterFocusedClient(Guid characterTrackingId)
         {
             lock (addRemoveClientLock)
             {
@@ -149,6 +147,23 @@ namespace ServerEngine
                 }
                 var clientTrackingId = ClientFocusedCharacters.First(c => c.Value == characterTrackingId).Key;
                 return GetClient(clientTrackingId);
+            }
+        }
+
+        public static AttachedClient GetAccountFocusedClient(Account account)
+        {
+            lock (addRemoveClientLock)
+            {
+                var client = Clients.Values.FirstOrDefault(c => c.AttachedAccount != null && c.AttachedAccount.Equals(account));
+                return client;
+            }
+        }
+
+        public static bool IsAccountLoggedIn(string accountName)
+        {
+            lock (addRemoveClientLock)
+            {
+                return Clients.Values.Any(c => c.AttachedAccount != null && c.AttachedAccount.UserName.Equals(accountName));
             }
         }
     }
