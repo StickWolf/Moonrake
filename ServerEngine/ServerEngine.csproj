@@ -34,11 +34,21 @@
     <Reference Include="Amqp.Net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=905a7b1e6458e0c3, processorArchitecture=MSIL">
       <HintPath>..\packages\AMQPNetLite.2.1.7\lib\net45\Amqp.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Konscious.Security.Cryptography.Argon2, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Konscious.Security.Cryptography.Argon2.1.2.1\lib\net46\Konscious.Security.Cryptography.Argon2.dll</HintPath>
+    </Reference>
+    <Reference Include="Konscious.Security.Cryptography.Blake2, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Konscious.Security.Cryptography.Blake2.1.0.9\lib\net46\Konscious.Security.Cryptography.Blake2.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,10 +59,13 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AttachedClients.cs" />
-    <Compile Include="Client.cs" />
+    <Compile Include="AttachedClient.cs" />
     <Compile Include="Characters\Behaviors\BuiltInTurnBehaviors.cs" />
     <Compile Include="Characters\Behaviors\ITurnBehavior.cs" />
     <Compile Include="Characters\Behaviors\TurnBehaviorRandom.cs" />
+    <Compile Include="Commands\AccountCommands\UsePlayerCommand.cs" />
+    <Compile Include="Commands\AnonymousCommands\LoginCommand.cs" />
+    <Compile Include="Commands\AnonymousCommands\CreateNewAccountCommand.cs" />
     <Compile Include="Commands\CommandRunner.cs" />
     <Compile Include="Commands\GameCommands\AttackCommand.cs" />
     <Compile Include="Commands\GameCommands\DropCommand.cs" />

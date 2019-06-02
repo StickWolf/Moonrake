@@ -14,7 +14,13 @@ namespace ServerEngine.Commands.AccountCommands
         // Slot to load must be passed in extraWords
         public void Execute(List<string> extraWords, Account executingAccount)
         {
-            Client executingClient = null; // TODO: try to set if possible
+            AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
+            if (executingAccount == null || executingClient == null || GameState.CurrentGameState != null)
+            {
+                var errorMsgDto = new DescriptiveTextDto("The load game state command is currently unavailable.");
+                executingClient?.SendDtoMessage(errorMsgDto);
+                return;
+            }
 
             if (extraWords == null || extraWords.Count != 1)
             {
