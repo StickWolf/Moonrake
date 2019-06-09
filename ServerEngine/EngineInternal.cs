@@ -1,11 +1,13 @@
 ﻿using ServerEngine.Characters;
 using ServerEngine.Commands;
+using ServerEngine.GrainSiloAndClient;
 using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using ServerEngine.GrainInterfaces;
 
 namespace ServerEngine
 {
@@ -34,6 +36,8 @@ namespace ServerEngine
         public static void StartEngine()
         {
             AttachedClients.DetachAllClients("Server restart");
+            GrainSiloHost.StopAsync().Wait();
+            GrainClusterClient.StopAsync().Wait();
             RunGameLoop = true;
             RunFactory = true;
             shutdownStarted = false;
@@ -47,6 +51,18 @@ namespace ServerEngine
             // After the game state is loaded is the appropriate time to start accepting connections
             try
             {
+                GrainSiloHost.StartAsync().Wait();
+                Task.Delay(5000).Wait();
+                GrainClusterClient.StartAsync().Wait();
+
+                // TODO: This would need to be in the createnewgamestate command instead of here
+                Guid testGuid = Guid.NewGuid();
+                var item = GrainClusterClient.ClusterClient.GetGrain<IItemGrain>(testGuid);
+                item.SetDisplayName("Test thing").Wait();
+
+                var item2 = GrainClusterClient.ClusterClient.GetGrain<IItemGrain>(testGuid);
+                var desc = item2.GetDescription(2).Result;
+
                 Broker.StartHost();
 
                 // Main game loop goes 1 loop for 1 game turn.
