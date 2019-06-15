@@ -10,18 +10,6 @@ namespace ServerEngine.Grains
 {
     public class GameUniverseGrain : Grain<GameUniverseState>, IGameUniverseGrain
     {
-        //private string id;
-
-        //public override async Task OnActivateAsync()
-        //{
-        //    await base.OnActivateAsync();
-        //    id = this.GetPrimaryKeyString();
-        //    if (State.Initialize())
-        //    {
-        //        await this.WriteStateAsync();
-        //    }
-        //}
-
         public Task<string> GetStats()
         {
             StringBuilder sb = new StringBuilder();
