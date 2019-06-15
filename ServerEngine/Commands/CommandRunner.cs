@@ -2,6 +2,7 @@
 using ServerEngine.Commands.AccountCommands;
 using ServerEngine.Commands.AnonymousCommands;
 using ServerEngine.Commands.GameCommands;
+using ServerEngine.GrainInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +62,7 @@ namespace ServerEngine.Commands
             }
 
             // Anything further requires an account attached to the client
-            if (executingClient?.AttachedAccount?.Permissions == null)
+            if (executingClient?.AttachedAccount == null)
             {
                 return false;
             }
@@ -87,25 +88,37 @@ namespace ServerEngine.Commands
             }
             else
             {
-                bool commandResult = TryRunCommandFromCharacter(word, extraWords, playerCharacter, executingClient.AttachedAccount.Permissions);
+                bool commandResult = TryRunCommandFromCharacter(word, extraWords, playerCharacter, executingClient.AttachedAccount.GetPermissions().Result);
                 playerCharacter.TurnComplete();
                 return commandResult;
             }
         }
 
-        internal static bool TryRunCommandFromAccount(string word, List<string> extraWords, Account executingAccount)
+        internal static bool TryRunCommandFromAccount(string word, List<string> extraWords, IAccountGrain executingAccount)
         {
             // Built in account commands
             var accountCommandToRun = BuildInAccountCommands
-                .Where(c => c.ActivatingWords.Any(w => w.Equals(word, StringComparison.OrdinalIgnoreCase)))
-                .FirstOrDefault(c => c.PermissionNeeded == null || executingAccount.Permissions.Contains(c.PermissionNeeded, StringComparer.OrdinalIgnoreCase));
-            if (accountCommandToRun != null)
+                .FirstOrDefault(c => c.ActivatingWords.Any(w => w.Equals(word, StringComparison.OrdinalIgnoreCase)));
+
+            // If the command was not found
+            if (accountCommandToRun == null)
             {
-                accountCommandToRun.Execute(extraWords, executingAccount);
-                return true;
+                return false;
             }
 
-            return false;
+            // If the command requires a certain permission to run
+            if (accountCommandToRun.PermissionNeeded != null)
+            {
+                var hasPermission = executingAccount.HasPermission(accountCommandToRun.PermissionNeeded).Result;
+                if (!hasPermission)
+                {
+                    return false;
+                }
+            }
+
+            // All checks passed, run the command
+            accountCommandToRun.Execute(extraWords, executingAccount);
+            return true;
         }
 
         public static bool TryRunCommandFromCharacter(string word, List<string> extraWords, Character executingCharacter)
@@ -114,9 +127,9 @@ namespace ServerEngine.Commands
             // then continue with default permissions
             var permissionsToUse = new List<string>();
             var client = AttachedClients.GetCharacterFocusedClient(executingCharacter.TrackingId);
-            if (client?.AttachedAccount?.Permissions != null)
+            if (client?.AttachedAccount != null)
             {
-                permissionsToUse = client.AttachedAccount.Permissions;
+                permissionsToUse = client.AttachedAccount.GetPermissions().Result;
             }
             return TryRunCommandFromCharacter(word, extraWords, executingCharacter, permissionsToUse);
         }

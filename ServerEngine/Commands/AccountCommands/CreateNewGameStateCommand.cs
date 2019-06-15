@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters.Behaviors;
+using ServerEngine.GrainInterfaces;
 using System.Collections.Generic;
 
 namespace ServerEngine.Commands.AccountCommands
@@ -9,7 +10,7 @@ namespace ServerEngine.Commands.AccountCommands
 
         public string PermissionNeeded => "Sysop";
 
-        public void Execute(List<string> extraWords, Account executingAccount)
+        public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             // Create a new game
             GameState.CreateNewGameState();

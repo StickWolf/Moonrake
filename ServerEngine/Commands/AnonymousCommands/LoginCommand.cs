@@ -39,8 +39,9 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var potentialAccount = GameState.CurrentGameState.GetAccount(extraWords[0]);
-            if (potentialAccount != null && potentialAccount.ValidatePassword(extraWords[1]))
+            var gameUniverse = GameState.CurrentGameState.GetGameUniverseGrain();
+            var potentialAccount = gameUniverse.GetAccount(extraWords[0]).Result;
+            if (potentialAccount != null && potentialAccount.ValidatePassword(extraWords[1]).Result)
             {
                 executingClient.AttachedAccount = potentialAccount;
                 var successMsgDto = new DescriptiveTextDto("Login success.");

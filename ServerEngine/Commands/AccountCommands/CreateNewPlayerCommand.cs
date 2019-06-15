@@ -1,4 +1,5 @@
 ﻿using BaseClientServerDtos.ToClient;
+using ServerEngine.GrainInterfaces;
 using System;
 using System.Collections.Generic;
 
@@ -10,10 +11,10 @@ namespace ServerEngine.Commands.AccountCommands
 
         public string PermissionNeeded => null;
 
-        public void Execute(List<string> extraWords, Account executingAccount)
+        public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
-            if (executingAccount == null || executingClient == null || GameState.CurrentGameState == null || !executingAccount.CanCreateNewPlayer())
+            if (executingAccount == null || executingClient == null || GameState.CurrentGameState == null || !executingAccount.CanCreateNewPlayer().Result)
             {
                 var errorMsgDto = new DescriptiveTextDto("The create new player command is currently unavailable.");
                 executingClient?.SendDtoMessage(errorMsgDto);
@@ -34,13 +35,12 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            executingAccount.LastPlayerCreationTime = DateTime.Now;
-            var newPlayerCharacter = EngineInternal.NewPlayerCreator();
+            var newPlayerCharacter = EngineInternal.NewPlayerCreator(); // TODO: move this NewPlayerCreator into the game Universe grain
             newPlayerCharacter.Name = extraWords[0];
 
             // Mark all player characters as needing focus to stay in the world
             newPlayerCharacter.NeedsFocus = true;
-            executingAccount.AddCharacter(newPlayerCharacter.TrackingId);
+            executingAccount.AddCharacter(newPlayerCharacter.TrackingId).Wait();
 
             var successMsgDto = new DescriptiveTextDto("New player created.");
             executingClient?.SendDtoMessage(successMsgDto);

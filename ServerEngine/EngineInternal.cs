@@ -42,26 +42,16 @@ namespace ServerEngine
             RunFactory = true;
             shutdownStarted = false;
 
-            var engineStartingAccount = new Account()
-            {
-                Permissions = new List<string>() { "Sysop" }
-            };
-            CommandRunner.TryRunCommandFromAccount("autoloadbestgamestate", new List<string>(), engineStartingAccount);
-
             // After the game state is loaded is the appropriate time to start accepting connections
             try
             {
                 GrainSiloHost.StartAsync().Wait();
-                Task.Delay(5000).Wait();
                 GrainClusterClient.StartAsync().Wait();
 
-                // TODO: This would need to be in the createnewgamestate command instead of here
-                Guid testGuid = Guid.NewGuid();
-                var item = GrainClusterClient.ClusterClient.GetGrain<IItemGrain>(testGuid);
-                item.SetDisplayName("Test thing").Wait();
-
-                var item2 = GrainClusterClient.ClusterClient.GetGrain<IItemGrain>(testGuid);
-                var desc = item2.GetDescription(2).Result;
+                var gameUniverse = GrainClusterClient.ClusterClient.GetGrain<IGameUniverseGrain>("Spark");
+                var sysopAccount = gameUniverse.GetSysopAccount().Result;
+                CommandRunner.TryRunCommandFromAccount("autoloadbestgamestate", new List<string>(), sysopAccount);
+                GameState.CurrentGameState.SetGameUniverseName("Spark"); // TODO: get this name from game data
 
                 Broker.StartHost();
 

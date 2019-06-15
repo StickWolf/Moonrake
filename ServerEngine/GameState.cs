@@ -2,6 +2,8 @@
 using ServerEngine.Characters;
 using ServerEngine.Characters.Behaviors;
 using ServerEngine.Commands.GameCommands;
+using ServerEngine.GrainSiloAndClient;
+using ServerEngine.GrainInterfaces;
 using ServerEngine.Locations;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,9 @@ namespace ServerEngine
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class GameState
     {
+        public string GameUniverseName { get; set; }
+
+
         [JsonProperty]
         public string GameIntroductionText { get; set; }
 
@@ -80,25 +85,23 @@ namespace ServerEngine
         [JsonProperty]
         private Dictionary<string, ITurnBehavior> TurnBehaviors { get; set; } = new Dictionary<string, ITurnBehavior>();
 
-        [JsonProperty]
-        private Dictionary<string, Account> Accounts { get; set; } = new Dictionary<string, Account>();
-        private object accountLock = new object();
-
-        // LastAccountCreationTime[{IpAddress}] = {LastAccountCreationDateTime}
-        [JsonProperty]
-        private DateTime LastAccountCreationTime { get; set; } = DateTime.MinValue;
-
-        // Only 1 account can be created per 10 minutes
-        // TODO: Temp limiters for testing, either expose as an option to be set by gamedata or come up with something better
-        [JsonProperty]
-        private TimeSpan LastAccountCreationTimeSpanCooldown = TimeSpan.FromMinutes(10);
-
         // Everything below (that does not have a [JsonProperty]) is excluded from save files
 
         public static GameState CurrentGameState { get; private set; }
         private static string SavesFolder { get; set; } = "GameSaves";
         private static DateTime LastSaveGameStateTime = DateTime.MinValue;
         private static TimeSpan AutoSaveInterval = TimeSpan.FromMinutes(15);
+
+        public void SetGameUniverseName(string name)
+        {
+            GameUniverseName = name;
+        }
+
+        public IGameUniverseGrain GetGameUniverseGrain()
+        {
+            var gameUniverseGrain = GrainClusterClient.ClusterClient.GetGrain<IGameUniverseGrain>(GameUniverseName);
+            return gameUniverseGrain;
+        }
 
         private static DirectoryInfo GetSavesFolder()
         {
@@ -956,54 +959,6 @@ namespace ServerEngine
                 .FirstOrDefault(c => c.PermissionNeeded == null || accountPermissions.Contains(c.PermissionNeeded, StringComparer.OrdinalIgnoreCase));
 
             return command;
-        }
-
-        public Account CreateAccount(string userName, string password)
-        {
-            lock (accountLock)
-            {
-                // An account can only be created so often
-                if ((LastAccountCreationTime + LastAccountCreationTimeSpanCooldown) > DateTime.Now)
-                {
-                    return null;
-                }
-                LastAccountCreationTime = DateTime.Now;
-
-                var alreadyExistsAccount = GetAccount(userName);
-                if (alreadyExistsAccount != null)
-                {
-                    // This account already exists.
-                    // Only direct GetAccount calls will return an account like this.
-                    return null;
-                }
-
-                var account = new Account()
-                {
-                    UserName = userName,
-                    Permissions = new List<string>()
-                };
-                account.SetPassword(password);
-                Accounts.Add(userName, account);
-
-                // Force autosave after every new account is created
-                // This is because currently the way to add permissions to an account is by directly editing 
-                // the latest gamesave json file.
-                AutoSaveIfNeeded(forceSave: true);
-
-                return account;
-            }
-        }
-
-        public Account GetAccount(string userName)
-        {
-            lock (accountLock)
-            {
-                if (Accounts.ContainsKey(userName))
-                {
-                    return Accounts[userName];
-                }
-                return null;
-            }
         }
     }
 }
