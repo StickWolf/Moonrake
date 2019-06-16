@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
@@ -35,6 +36,10 @@ namespace ServerEngine.GrainSiloAndClient
                     {
                         options.AdvertisedIPAddress = IPAddress.Loopback;
                     })
+                    .AddAzureTableGrainStorageAsDefault(builder => builder.Configure<IOptions<ClusterOptions>>((options, silo) =>
+                    {
+                        options.ConnectionString = "UseDevelopmentStorage=true";
+                    }))
                     .Build();
             }
             await SiloHost.StartAsync();

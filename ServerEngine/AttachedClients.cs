@@ -1,5 +1,6 @@
 ﻿using Amqp;
 using ServerEngine.Characters;
+using ServerEngine.GrainInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,7 +151,7 @@ namespace ServerEngine
             }
         }
 
-        public static AttachedClient GetAccountFocusedClient(Account account)
+        public static AttachedClient GetAccountFocusedClient(IAccountGrain account)
         {
             lock (addRemoveClientLock)
             {
@@ -163,7 +164,7 @@ namespace ServerEngine
         {
             lock (addRemoveClientLock)
             {
-                return Clients.Values.Any(c => c.AttachedAccount != null && c.AttachedAccount.UserName.Equals(accountName));
+                return Clients.Values.Any(c => c.AttachedAccount != null && c.AttachedAccount.GetUserName().Result.Equals(accountName));
             }
         }
     }

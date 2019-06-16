@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ServerEngine.GrainInterfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ServerEngine.Commands.AccountCommands
@@ -9,7 +10,7 @@ namespace ServerEngine.Commands.AccountCommands
 
         public string PermissionNeeded => "Sysop";
 
-        public void Execute(List<string> extraWords, Account executingAccount)
+        public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             try
             {

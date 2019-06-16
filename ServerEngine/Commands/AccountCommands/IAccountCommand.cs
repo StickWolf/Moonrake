@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ServerEngine.GrainInterfaces;
+using System.Collections.Generic;
 
 namespace ServerEngine.Commands.AccountCommands
 {
@@ -13,6 +14,6 @@ namespace ServerEngine.Commands.AccountCommands
 
         string PermissionNeeded { get; }
 
-        void Execute(List<string> extraWords, Account executingAccount);
+        void Execute(List<string> extraWords, IAccountGrain executingAccount);
     }
 }

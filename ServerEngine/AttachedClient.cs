@@ -6,6 +6,7 @@ using BaseClientServerDtos.ToClient;
 using BaseClientServerDtos.ToServer;
 using Newtonsoft.Json;
 using ServerEngine.Commands;
+using ServerEngine.GrainInterfaces;
 using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace ServerEngine
         /// The account that this client is currently logged into
         /// </summary>
         [JsonIgnore]
-        public Account AttachedAccount { get; set; }
+        public IAccountGrain AttachedAccount { get; set; }
 
         [JsonIgnore]
         private ServerToClientLinkEndpoint ServerToClientEndpoint { get; set; }
@@ -36,7 +37,6 @@ namespace ServerEngine
             this.ClientConnection.Closed += ClientConnection_Closed;
             System.Console.WriteLine($"Client connection discovered.\r\n   Client Tracking Id: {this.TrackingId}");
         }
-
 
         public bool EqualsConnection(Connection connection)
         {

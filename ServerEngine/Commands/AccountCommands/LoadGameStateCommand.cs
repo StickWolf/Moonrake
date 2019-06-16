@@ -1,4 +1,5 @@
 ﻿using BaseClientServerDtos.ToClient;
+using ServerEngine.GrainInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace ServerEngine.Commands.AccountCommands
         public string PermissionNeeded => "Sysop";
 
         // Slot to load must be passed in extraWords
-        public void Execute(List<string> extraWords, Account executingAccount)
+        public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
             if (executingAccount == null || GameState.CurrentGameState != null)

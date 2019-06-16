@@ -1,4 +1,5 @@
 ﻿using BaseClientServerDtos.ToClient;
+using ServerEngine.GrainInterfaces;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace ServerEngine.Commands.AccountCommands
 
         public string PermissionNeeded => null;
 
-        public void Execute(List<string> extraWords, Account executingAccount)
+        public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
             if (executingAccount == null || executingClient == null || GameState.CurrentGameState == null)
@@ -27,7 +28,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var character = executingAccount.GetCharacter(extraWords[0]);
+            var character = executingAccount.GetCharacter(extraWords[0]).Result; ;
             if (character == null)
             {
                 var errorMsgDto = new DescriptiveTextDto("Unknown character.");

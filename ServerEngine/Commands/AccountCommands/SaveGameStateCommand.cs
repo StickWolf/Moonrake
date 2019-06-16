@@ -1,4 +1,5 @@
 ﻿using BaseClientServerDtos.ToClient;
+using ServerEngine.GrainInterfaces;
 using System.Collections.Generic;
 
 namespace ServerEngine.Commands.AccountCommands
@@ -9,7 +10,7 @@ namespace ServerEngine.Commands.AccountCommands
 
         public string PermissionNeeded => "Sysop";
 
-        public void Execute(List<string> extraWords, Account executingAccount)
+        public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
             if (executingAccount == null || GameState.CurrentGameState == null)

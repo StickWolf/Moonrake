@@ -32,7 +32,8 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var potentialAccount = GameState.CurrentGameState.CreateAccount(extraWords[0], extraWords[1]);
+            var gameUniverse = GameState.CurrentGameState.GetGameUniverseGrain();
+            var potentialAccount = gameUniverse.CreateAccount(extraWords[0], extraWords[1]).Result;
             if (potentialAccount == null)
             {
                 var errorMsgDto = new DescriptiveTextDto("Error creating account.");
