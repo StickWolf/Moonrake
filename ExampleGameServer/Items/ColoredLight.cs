@@ -1,5 +1,6 @@
 ﻿using ServerEngine;
 using Newtonsoft.Json;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ExampleGameServer.Items
 {
@@ -18,7 +19,7 @@ namespace ExampleGameServer.Items
 
         public override string GetDescription(int count)
         {
-            string lightColor = GameState.CurrentGameState.GetGameVarValue(GameVariableColor) ?? "blue";
+            string lightColor = GrainClusterClient.Universe.GetGameVarValue(GameVariableColor).Result ?? "blue";
             return $"a light neatly fastened to the wall that is covered in metal mesh which is glowing {lightColor}";
         }
     }

@@ -12,6 +12,9 @@ namespace ServerEngine.Grains
 
         public Dictionary<string, IAccountGrain> Accounts { get; set; } = new Dictionary<string, IAccountGrain>();
 
+        // GameVars[{GameVarName}] = {GameVarValue}
+        public Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
+
         public DateTime LastAccountCreationTime { get; set; } = DateTime.MinValue;
 
         // Only 1 account can be created per 10 minutes

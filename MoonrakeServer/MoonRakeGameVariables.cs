@@ -1,4 +1,5 @@
 ﻿using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 
 namespace Moonrake
 {
@@ -8,7 +9,7 @@ namespace Moonrake
 
         public void NewWorld(MoonrakeGameData gameData)
         {
-            IceCreamShopDoor = GameState.CurrentGameState.SetGameVarValue("IceCreamShopDoor", "open");
+            IceCreamShopDoor = GrainClusterClient.Universe.SetGameVarValue("IceCreamShopDoor", "open").Result;
         }
     }
 }

@@ -12,6 +12,22 @@ namespace ServerEngine.GrainSiloAndClient
     {
         public static IClusterClient ClusterClient { get; set; }
 
+        private static string GameUniverseName { get; set; }
+
+        public static IGameUniverseGrain Universe
+        {
+            get
+            {
+                var gameUniverseGrain = ClusterClient.GetGrain<IGameUniverseGrain>(GameUniverseName);
+                return gameUniverseGrain;
+            }
+        }
+
+        public static void SetGameUniverseName(string name)
+        {
+            GameUniverseName = name;
+        }
+
         public static async Task StartAsync()
         {
             if (ClusterClient == null)

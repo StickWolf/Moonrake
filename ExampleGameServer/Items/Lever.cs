@@ -2,6 +2,7 @@
 using ServerEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ExampleGameServer.Items
 {
@@ -27,7 +28,7 @@ namespace ExampleGameServer.Items
 
         public override void Interact(Item otherItem, Character interactingCharacter)
         {
-            string leverPosition = GameState.CurrentGameState.GetGameVarValue(GameVariableToggle);
+            string leverPosition = GrainClusterClient.Universe.GetGameVarValue(GameVariableToggle).Result;
             if (leverPosition == null)
             {
                 interactingCharacter.SendDescriptiveTextDtoMessage($"The lever appears to be broken and cannot be moved.");
@@ -49,7 +50,7 @@ namespace ExampleGameServer.Items
                 GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
 
                 // TODO: try to move away from game variables and just use properties of items/locations/etc directly
-                GameState.CurrentGameState.SetGameVarValue(GameVariableToggle, "on");
+                GrainClusterClient.Universe.SetGameVarValue(GameVariableToggle, "on").Wait();
             }
             else
             {

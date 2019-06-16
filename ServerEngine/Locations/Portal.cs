@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace ServerEngine.Locations
                 else if (destRule is PortalOpenGameVarRule)
                 {
                     var gameVarRule = destRule as PortalOpenGameVarRule;
-                    var gameVarRuleValue = GameState.CurrentGameState.GetGameVarValue(gameVarRule.GameVarName);
+                    var gameVarRuleValue = GrainClusterClient.Universe.GetGameVarValue(gameVarRule.GameVarName).Result;
                     if (gameVarRuleValue != null &&
                         gameVarRuleValue.Equals(gameVarRule.ExpectedValue, StringComparison.OrdinalIgnoreCase))
                     {

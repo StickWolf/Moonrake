@@ -1,5 +1,6 @@
 ﻿using BaseClientServerDtos.ToClient;
 using ServerEngine.Commands.AnonymousCommands;
+using ServerEngine.GrainSiloAndClient;
 using System.Collections.Generic;
 
 namespace ServerEngine.Commands.AccountCommands
@@ -32,8 +33,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var gameUniverse = GameState.CurrentGameState.GetGameUniverseGrain();
-            var potentialAccount = gameUniverse.CreateAccount(extraWords[0], extraWords[1]).Result;
+            var potentialAccount = GrainClusterClient.Universe.CreateAccount(extraWords[0], extraWords[1]).Result;
             if (potentialAccount == null)
             {
                 var errorMsgDto = new DescriptiveTextDto("Error creating account.");
