@@ -17,5 +17,19 @@ namespace ServerEngine.GrainInterfaces
         Task<IAccountGrain> GetAccount(string userName);
 
         Task<IAccountGrain> GetSysopAccount();
+
+        /// <summary>
+        /// Gets a game variable by its full name
+        /// </summary>
+        /// <param name="gameVariableName">The name of the game variable to get</param>
+        /// <returns>The value or null if it's not set.</returns>
+        Task<string> GetGameVarValue(string gameVariableName);
+
+        /// <summary>
+        /// Sets the game variable to the specified value
+        /// </summary>
+        /// <param name="gameVariableName">The game variable to set</param>
+        /// <param name="value">The value to set the game variable to</param>
+        Task<string> SetGameVarValue(string gameVariableName, string value);
     }
 }

@@ -35,7 +35,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var newPlayerCharacter = EngineInternal.NewPlayerCreator(); // TODO: move this NewPlayerCreator into the game Universe grain
+            var newPlayerCharacter = EngineInternal.NewPlayerCreator();
             newPlayerCharacter.Name = extraWords[0];
 
             // Mark all player characters as needing focus to stay in the world

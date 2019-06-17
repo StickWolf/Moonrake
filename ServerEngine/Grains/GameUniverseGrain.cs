@@ -66,5 +66,36 @@ namespace ServerEngine.Grains
             }
             return Task.FromResult<IAccountGrain>(null);
         }
+
+        /// <summary>
+        /// Gets a game variable by its full name
+        /// </summary>
+        /// <param name="gameVariableName">The name of the game variable to get</param>
+        /// <returns>The value or null if it's not set.</returns>
+        public Task<string> GetGameVarValue(string gameVariableName)
+        {
+            if (State.GameVars.ContainsKey(gameVariableName))
+            {
+                return Task.FromResult(State.GameVars[gameVariableName]);
+            }
+            return Task.FromResult<string>(null);
+        }
+
+        /// <summary>
+        /// Sets the game variable to the specified value
+        /// </summary>
+        /// <param name="gameVariableName">The game variable to set</param>
+        /// <param name="value">The value to set the game variable to</param>
+        public Task<string> SetGameVarValue(string gameVariableName, string value)
+        {
+            // Only set and save if the value is changing
+            var currentValue = GetGameVarValue(gameVariableName).Result;
+            if (!value.Equals(currentValue))
+            {
+                State.GameVars[gameVariableName] = value;
+                this.WriteStateAsync().Wait();
+            }
+            return Task.FromResult(gameVariableName);
+        }
     }
 }

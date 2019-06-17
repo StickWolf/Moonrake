@@ -20,9 +20,6 @@ namespace ServerEngine
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class GameState
     {
-        public string GameUniverseName { get; set; }
-
-
         [JsonProperty]
         public string GameIntroductionText { get; set; }
 
@@ -64,11 +61,6 @@ namespace ServerEngine
         [JsonProperty]
         private Dictionary<Guid, Guid> CharacterLocations { get; set; } = new Dictionary<Guid, Guid>();
 
-        // GameVars[{GameVarName}] = {GameVarValue}
-        [JsonProperty]
-        private Dictionary<string, string> GameVars { get; set; } = new Dictionary<string, string>();
-        private object gameVarLock = new object();
-
         // TradeSets[{TradeSetTrackingId}] = {TradeSet}
         [JsonProperty]
         private Dictionary<Guid, TradeSet> TradeSets { get; set; } = new Dictionary<Guid, TradeSet>();
@@ -91,17 +83,6 @@ namespace ServerEngine
         private static string SavesFolder { get; set; } = "GameSaves";
         private static DateTime LastSaveGameStateTime = DateTime.MinValue;
         private static TimeSpan AutoSaveInterval = TimeSpan.FromMinutes(15);
-
-        public void SetGameUniverseName(string name)
-        {
-            GameUniverseName = name;
-        }
-
-        public IGameUniverseGrain GetGameUniverseGrain()
-        {
-            var gameUniverseGrain = GrainClusterClient.ClusterClient.GetGrain<IGameUniverseGrain>(GameUniverseName);
-            return gameUniverseGrain;
-        }
 
         private static DirectoryInfo GetSavesFolder()
         {
@@ -787,37 +768,6 @@ namespace ServerEngine
                 {
                     CharacterLocations[characterTrackingId] = locationTrackingId;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Gets a game variable by its full name
-        /// </summary>
-        /// <param name="gameVariableName">The name of the game variable to get</param>
-        /// <returns>The value or null if it's not set.</returns>
-        public string GetGameVarValue(string gameVariableName)
-        {
-            lock (gameVarLock)
-            {
-                if (GameVars.ContainsKey(gameVariableName))
-                {
-                    return GameVars[gameVariableName];
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Sets the game variable to the specified value
-        /// </summary>
-        /// <param name="gameVariableName">The game variable to set</param>
-        /// <param name="value">The value to set the game variable to</param>
-        public string SetGameVarValue(string gameVariableName, string value)
-        {
-            lock (gameVarLock)
-            {
-                GameVars[gameVariableName] = value;
-                return gameVariableName;
             }
         }
 

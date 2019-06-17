@@ -2,6 +2,7 @@
 using ServerEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ExampleGameServer.Items
 {
@@ -26,7 +27,7 @@ namespace ExampleGameServer.Items
 
         public override string GetDescription(int count)
         {
-            var doorIsOpen = GameState.CurrentGameState.GetGameVarValue(GameVarDoorIsOpen);
+            var doorIsOpen = GrainClusterClient.Universe.GetGameVarValue(GameVarDoorIsOpen).Result;
             if (!doorIsOpen.Equals("true", StringComparison.OrdinalIgnoreCase))
             {
                 return "a keyhole in the locked door";
@@ -48,7 +49,7 @@ namespace ExampleGameServer.Items
             {
                 interactingCharacter.SendDescriptiveTextDtoMessage("The door unlocks and swings open!");
                 interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} has unlocked the door!", interactingCharacter);
-                GameState.CurrentGameState.SetGameVarValue(GameVarDoorIsOpen, "true");
+                GrainClusterClient.Universe.SetGameVarValue(GameVarDoorIsOpen, "true").Wait();
                 IsVisible = false;
                 return;
             }

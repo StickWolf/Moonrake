@@ -1,5 +1,6 @@
 ﻿using BaseClientServerDtos.ToClient;
 using ServerEngine.Commands.AnonymousCommands;
+using ServerEngine.GrainSiloAndClient;
 using System.Collections.Generic;
 
 namespace ServerEngine.Commands.AccountCommands
@@ -39,8 +40,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var gameUniverse = GameState.CurrentGameState.GetGameUniverseGrain();
-            var potentialAccount = gameUniverse.GetAccount(extraWords[0]).Result;
+            var potentialAccount = GrainClusterClient.Universe.GetAccount(extraWords[0]).Result;
             if (potentialAccount != null && potentialAccount.ValidatePassword(extraWords[1]).Result)
             {
                 executingClient.AttachedAccount = potentialAccount;

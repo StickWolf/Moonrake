@@ -2,6 +2,7 @@
 using ServerEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ExampleGameServer.Items
 {
@@ -27,7 +28,7 @@ namespace ExampleGameServer.Items
 
         public override void Interact(Item otherItem, Character interactingCharacter)
         {
-            string lightColor = GameState.CurrentGameState.GetGameVarValue(GameVariableColor);
+            string lightColor = GrainClusterClient.Universe.GetGameVarValue(GameVariableColor).Result;
             if (lightColor == null)
             {
                 interactingCharacter.SendDescriptiveTextDtoMessage($"You flip the light switch, but nothing appears to happen.");
@@ -51,7 +52,7 @@ namespace ExampleGameServer.Items
                         newColor = "dark purple";
                         break;
                 }
-                GameState.CurrentGameState.SetGameVarValue(GameVariableColor, newColor);
+                GrainClusterClient.Universe.SetGameVarValue(GameVariableColor, newColor).Wait();
                 interactingCharacter.SendDescriptiveTextDtoMessage($"You flip the light switch and the {lightColor} light now begins to glow {newColor}.");
                 interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} flips the light switch.", interactingCharacter);
             }

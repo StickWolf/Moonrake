@@ -1,4 +1,5 @@
 ﻿using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ExampleGameServer
 {
@@ -14,13 +15,13 @@ namespace ExampleGameServer
 
         public void NewWorld(ExampleGameSourceData gameData)
         {
-            BanquetElevatorFloor = GameState.CurrentGameState.SetGameVarValue("BanquetElevatorFloor", "1");
-            BanquetToSecretWarpedHallDoorOpen = GameState.CurrentGameState.SetGameVarValue("BanquetToSecretWarpedHallDoorOpen", "false");
+            BanquetElevatorFloor = GrainClusterClient.Universe.SetGameVarValue("BanquetElevatorFloor", "1").Result;
+            BanquetToSecretWarpedHallDoorOpen = GrainClusterClient.Universe.SetGameVarValue("BanquetToSecretWarpedHallDoorOpen", "false").Result;
 
-            ColoredLightAColor = GameState.CurrentGameState.SetGameVarValue("ColoredLightA.Color", "red");
-            ColoredLightBColor = GameState.CurrentGameState.SetGameVarValue("ColoredLightB.Color", "teal");
+            ColoredLightAColor = GrainClusterClient.Universe.SetGameVarValue("ColoredLightA.Color", "red").Result;
+            ColoredLightBColor = GrainClusterClient.Universe.SetGameVarValue("ColoredLightB.Color", "teal").Result;
 
-            StartRoomLever = GameState.CurrentGameState.SetGameVarValue("StartRoomLever", "off");
+            StartRoomLever = GrainClusterClient.Universe.SetGameVarValue("StartRoomLever", "off").Result;
         }
     }
 }
