@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,8 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character attackingCharacter)
         {
-            var attackingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(attackingCharacter.TrackingId);
-            var otherCharactersInLoc = GameState.CurrentGameState.GetCharactersInLocation(attackingCharacterLocation.TrackingId)
+            var attackingCharacterLocation = GrainClusterClient.Universe.GetCharacterLocation(attackingCharacter.TrackingId).Result;
+            var otherCharactersInLoc = GrainClusterClient.Universe.GetCharactersInLocation(attackingCharacterLocation.TrackingId).Result
                 .Where(c => c.TrackingId != attackingCharacter.TrackingId) // don't include the character doing the attacking
                 .Select(c => new KeyValuePair<Character, string>(c, c.Name))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

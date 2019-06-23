@@ -3,6 +3,7 @@ using ExampleGameServer.Characters.Behaviors;
 using ServerEngine;
 using ServerEngine.Characters;
 using ServerEngine.Characters.Behaviors;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 
@@ -17,13 +18,13 @@ namespace ExampleGameServer
 
         public void NewWorld(ExampleGameSourceData gameData)
         {
-            Rat1 = GameState.CurrentGameState.AddCharacter(new Rat("Joe the rat", 7, 23) { MaxAttack = 10, CounterAttackPercent = 15 }, gameData.EgLocations.Start);
-            Rat2 = GameState.CurrentGameState.AddCharacter(new Rat("Henry the rat", 8, 15) { MaxAttack = 12, CounterAttackPercent = 17 }, gameData.EgLocations.BanquetHall);
-            GoldenStatue = GameState.CurrentGameState.AddCharacter(new Character("Goldie Plink", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start);
-            StuffedEagle = GameState.CurrentGameState.AddCharacter(new Character("Eagle Eyes", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start);
+            Rat1 = GrainClusterClient.Universe.AddCharacter(new Rat("Joe the rat", 7, 23) { MaxAttack = 10, CounterAttackPercent = 15 }, gameData.EgLocations.Start).Result;
+            Rat2 = GrainClusterClient.Universe.AddCharacter(new Rat("Henry the rat", 8, 15) { MaxAttack = 12, CounterAttackPercent = 17 }, gameData.EgLocations.BanquetHall).Result;
+            GoldenStatue = GrainClusterClient.Universe.AddCharacter(new Character("Goldie Plink", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start).Result;
+            StuffedEagle = GrainClusterClient.Universe.AddCharacter(new Character("Eagle Eyes", 15) { MaxAttack = 1, CounterAttackPercent = 0 }, gameData.EgLocations.Start).Result;
 
             // Custom turn behaviors
-            GameState.CurrentGameState.AddTurnBehavior(CustomTurnBehavior.Squeak, new SqueakTurnBehavior());
+            GrainClusterClient.Universe.AddTurnBehavior(CustomTurnBehavior.Squeak, new SqueakTurnBehavior()).Wait();
         }
     }
 }

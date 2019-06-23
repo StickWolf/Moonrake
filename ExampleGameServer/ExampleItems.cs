@@ -1,5 +1,6 @@
 ﻿using ExampleGameServer.Items;
 using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace ExampleGameServer
@@ -18,48 +19,48 @@ namespace ExampleGameServer
 
         public void NewWorld(ExampleGameSourceData gameData)
         {
-            CrystalDiviner = GameState.CurrentGameState.AddItem(new CrystalDiviner());
+            CrystalDiviner = GrainClusterClient.Universe.AddItem(new CrystalDiviner()).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, CrystalDiviner, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.Start, CrystalDiviner, 1);
             }
 
             // Light and light switch A in Start
-            ColoredLightA = GameState.CurrentGameState.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightAColor));
+            ColoredLightA = GrainClusterClient.Universe.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightAColor)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, ColoredLightA, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.Start, ColoredLightA, 1);
             }
-            ColoredLightSwitchA = GameState.CurrentGameState.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightAColor));
+            ColoredLightSwitchA = GrainClusterClient.Universe.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightAColor)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, ColoredLightSwitchA, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.Start, ColoredLightSwitchA, 1);
             }
 
             // Light and light switch B in the Banquet Elevator
-            ColoredLightB = GameState.CurrentGameState.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightBColor));
+            ColoredLightB = GrainClusterClient.Universe.AddItem(new ColoredLight(gameData.GameVariables.ColoredLightBColor)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetElevator, ColoredLightB, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.BanquetElevator, ColoredLightB, 1);
             }
-            ColoredLightSwitchB = GameState.CurrentGameState.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightBColor));
+            ColoredLightSwitchB = GrainClusterClient.Universe.AddItem(new ColoredLightSwitch(gameData.GameVariables.ColoredLightBColor)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetElevator, ColoredLightSwitchB, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.BanquetElevator, ColoredLightSwitchB, 1);
             }
 
             // Bronze key and keyhole pair
-            DullBronzeKey = GameState.CurrentGameState.AddItem(new Item("Dull Bronze Key") { IsUnique = true, IsUseableFrom = ItemUseableFrom.Inventory });
-            BanquetToSecretWarpedHallKeyhole = GameState.CurrentGameState.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey));
+            DullBronzeKey = GrainClusterClient.Universe.AddItem(new Item("Dull Bronze Key") { IsUnique = true, IsUseableFrom = ItemUseableFrom.Inventory }).Result;
+            BanquetToSecretWarpedHallKeyhole = GrainClusterClient.Universe.AddItem(new Keyhole(gameData.GameVariables.BanquetToSecretWarpedHallDoorOpen, DullBronzeKey)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.BanquetHall, BanquetToSecretWarpedHallKeyhole, 1);
             }
 
             // Start room lever
-            StartRoomLever = GameState.CurrentGameState.AddItem(new Lever(gameData.GameVariables.StartRoomLever));
+            StartRoomLever = GrainClusterClient.Universe.AddItem(new Lever(gameData.GameVariables.StartRoomLever)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, StartRoomLever, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.Start, StartRoomLever, 1);
             }
 
             // Healing potion
-            HealingPotion = GameState.CurrentGameState.AddItem(new HealingPotion(5));
+            HealingPotion = GrainClusterClient.Universe.AddItem(new HealingPotion(5)).Result;
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, HealingPotion, 25);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.Start, HealingPotion, 25);
             }
         }
     }

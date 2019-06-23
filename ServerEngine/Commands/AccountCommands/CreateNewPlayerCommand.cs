@@ -1,5 +1,6 @@
 ﻿using BaseClientServerDtos.ToClient;
 using ServerEngine.GrainInterfaces;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace ServerEngine.Commands.AccountCommands
         public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
-            if (executingAccount == null || executingClient == null || GameState.CurrentGameState == null || !executingAccount.CanCreateNewPlayer().Result)
+            if (executingAccount == null || executingClient == null || !executingAccount.CanCreateNewPlayer().Result)
             {
                 var errorMsgDto = new DescriptiveTextDto("The create new player command is currently unavailable.");
                 executingClient?.SendDtoMessage(errorMsgDto);
@@ -28,7 +29,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            if (GameState.CurrentGameState.IsPlayerCharacterNameInUse(extraWords[0]))
+            if (GrainClusterClient.Universe.IsPlayerCharacterNameInUse(extraWords[0]).Result)
             {
                 var errorMsgDto = new DescriptiveTextDto("This character name is already taken.");
                 executingClient?.SendDtoMessage(errorMsgDto);

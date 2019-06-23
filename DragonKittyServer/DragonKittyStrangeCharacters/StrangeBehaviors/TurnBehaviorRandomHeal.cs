@@ -1,6 +1,7 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
 using ServerEngine.Characters.Behaviors;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace DragonKittyServer.DragonKittyStrangeCharacters.StrangeBehaviors
@@ -11,7 +12,7 @@ namespace DragonKittyServer.DragonKittyStrangeCharacters.StrangeBehaviors
 
         public void Turn(Character turnTakingCharacter)
         {
-            var characterList = GameState.CurrentGameState.GetCharactersInLocation(turnTakingCharacter.GetLocation().TrackingId);
+            var characterList = GrainClusterClient.Universe.GetCharactersInLocation(turnTakingCharacter.GetLocation().TrackingId).Result;
             int characterAmount = characterList.Count;
             int characterToHealIndex = rnd.Next(0, characterAmount);
             var characterToHeal = characterList[characterToHealIndex];

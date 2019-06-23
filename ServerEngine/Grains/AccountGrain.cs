@@ -2,6 +2,7 @@
 using Orleans;
 using ServerEngine.Characters;
 using ServerEngine.GrainInterfaces;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace ServerEngine.Grains
 
         public Task<Character> GetCharacter(string characterName)
         {
-            var allAccountCharacters = State.Characters.Select(c => GameState.CurrentGameState.GetCharacter(c)); // TODO: rewrite this to not use gamestate when characters have grains
+            var allAccountCharacters = State.Characters.Select(c => GrainClusterClient.Universe.GetCharacter(c).Result);
             var foundCharacter = allAccountCharacters.FirstOrDefault(c => c.Name.Equals(characterName, StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(foundCharacter);
         }

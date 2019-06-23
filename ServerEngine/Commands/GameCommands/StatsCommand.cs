@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +14,7 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character statSeekingCharacter)
         {
-            var statSeekingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(statSeekingCharacter.TrackingId);
+            var statSeekingCharacterLocation = GrainClusterClient.Universe.GetCharacterLocation(statSeekingCharacter.TrackingId).Result;
 
             StringBuilder statsBuilder = new StringBuilder();
 

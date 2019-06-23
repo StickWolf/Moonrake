@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using ServerEngine.Locations;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character movingCharacter)
         {
-            var movingCharacterStartLocation = GameState.CurrentGameState.GetCharacterLocation(movingCharacter.TrackingId);
+            var movingCharacterStartLocation = GrainClusterClient.Universe.GetCharacterLocation(movingCharacter.TrackingId).Result;
 
             // Get a list of locations that can be moved to from here.
-            var validLocations = GameState.CurrentGameState.GetConnectedLocations(movingCharacterStartLocation.TrackingId)
+            var validLocations = GrainClusterClient.Universe.GetConnectedLocations(movingCharacterStartLocation.TrackingId).Result
                 .ToDictionary(kvp => kvp, kvp => kvp.LocationName); // convert to Dictionary[{location}] = {locationName}
 
             var wordLocationMap = WordTranslator.WordsToLocations(extraWords, validLocations.Keys.ToList());
@@ -29,7 +30,7 @@ namespace ServerEngine.Commands.GameCommands
             {
                 Location location = foundLocations[0];
                 movingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{movingCharacter.Name} moves to the {location.LocationName}.", movingCharacter);
-                GameState.CurrentGameState.SetCharacterLocation(movingCharacter.TrackingId, location.TrackingId);
+                GrainClusterClient.Universe.SetCharacterLocation(movingCharacter.TrackingId, location.TrackingId).Wait();
                 movingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{movingCharacter.Name} has arrived in the area.", movingCharacter);
 
                 // Make the player automatically look after they move to the new location

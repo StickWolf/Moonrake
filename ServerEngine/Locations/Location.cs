@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseClientServerDtos;
 using BaseClientServerDtos.ToClient;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ServerEngine.Locations
 {
@@ -53,7 +54,7 @@ namespace ServerEngine.Locations
         /// </param>
         public void SendDtoMessage(FiniteDto dto, Character fromCharacter)
         {
-            var charactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(this.TrackingId)
+            var charactersInLocation = GrainClusterClient.Universe.GetCharactersInLocation(this.TrackingId).Result
                 .Where(c => fromCharacter == null || c.TrackingId != fromCharacter.TrackingId);
             foreach (var charInLoc in charactersInLocation)
             {
@@ -73,7 +74,7 @@ namespace ServerEngine.Locations
         /// <returns></returns>
         public List<KeyValuePair<Item, int>> GetUseableItems()
         {
-            var useableLocationItems = GameState.CurrentGameState.GetLocationItems(this.TrackingId)
+            var useableLocationItems = GrainClusterClient.Universe.GetLocationItems(this.TrackingId).Result
                 .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
                 .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Location) // Only choose items that can be used
                 .Select(i => new KeyValuePair<Item, int>(i.Key, i.Value))

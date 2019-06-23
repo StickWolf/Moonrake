@@ -1,5 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 
 namespace DragonKittyServer.DragonKittyStrangeItems
 {
@@ -30,7 +31,7 @@ namespace DragonKittyServer.DragonKittyStrangeItems
             interactingCharacter.HitPoints += healAmount;
             interactingCharacter.SendDescriptiveTextDtoMessage("You eat an apple, and you feel some of your health come back.");
             interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} eats a delicious looking apple.", interactingCharacter);
-            GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1);
+            GrainClusterClient.Universe.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1).Wait();
         }
     }
 }

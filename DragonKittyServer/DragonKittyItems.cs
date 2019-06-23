@@ -1,5 +1,6 @@
 ﻿using DragonKittyServer.DragonKittyStrangeItems;
 using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace DragonKittyServer
@@ -19,16 +20,16 @@ namespace DragonKittyServer
 
         public void NewWorld(DragonKittySourceData gameData)
         {
-            Money = GameState.CurrentGameState.AddItem(new Item("dollar"));
-            Paper = GameState.CurrentGameState.AddItem(new Item("paper piece"));
-            BronzeChunk = GameState.CurrentGameState.AddItem(new Item("bronze chunk"));
-            BronzeBar = GameState.CurrentGameState.AddItem(new Item("bronze bar"));
-            PlasticChunk = GameState.CurrentGameState.AddItem(new Item("leftover plastic part"));
-            PlayersRoomLight = GameState.CurrentGameState.AddItem(new RoomLight("White", true, 1));
-            PlayersLivingRoomLight = GameState.CurrentGameState.AddItem(new RoomLight("White", true, 2));
-            BronzeTalisman = GameState.CurrentGameState.AddItem(new BronzeTalisman());
-            Apple = GameState.CurrentGameState.AddItem(new Apple());
-            DadsWallet = GameState.CurrentGameState.AddItem(new Wallet(gameData.DkCharacters.DadCharacter, 10000));
+            Money = GrainClusterClient.Universe.AddItem(new Item("dollar")).Result;
+            Paper = GrainClusterClient.Universe.AddItem(new Item("paper piece")).Result;
+            BronzeChunk = GrainClusterClient.Universe.AddItem(new Item("bronze chunk")).Result;
+            BronzeBar = GrainClusterClient.Universe.AddItem(new Item("bronze bar")).Result;
+            PlasticChunk = GrainClusterClient.Universe.AddItem(new Item("leftover plastic part")).Result;
+            PlayersRoomLight = GrainClusterClient.Universe.AddItem(new RoomLight("White", true, 1)).Result;
+            PlayersLivingRoomLight = GrainClusterClient.Universe.AddItem(new RoomLight("White", true, 2)).Result;
+            BronzeTalisman = GrainClusterClient.Universe.AddItem(new BronzeTalisman()).Result;
+            Apple = GrainClusterClient.Universe.AddItem(new Apple()).Result;
+            DadsWallet = GrainClusterClient.Universe.AddItem(new Wallet(gameData.DkCharacters.DadCharacter, 10000)).Result;
         }
     }
 }

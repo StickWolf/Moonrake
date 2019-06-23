@@ -1,4 +1,5 @@
 ﻿using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 
 namespace DragonKittyServer
 {
@@ -16,45 +17,45 @@ namespace DragonKittyServer
             GameVarables.NewWorld(this);
             DkItems.NewWorld(this);
 
-            GameState.CurrentGameState.GameIntroductionText = "Once, there was a group of kids." +
+            GrainClusterClient.Universe.SetGameIntroductionText("Once, there was a group of kids." +
                 " These kids played around every day, they even had a youtube channel that they shared." +
                 " Now, in this story, you will join these kids and go on a journey with them." +
                 " Their names are: Zach, and Amaya." +
-                " Welcome to The Tale of The DragonKitty.";
+                " Welcome to The Tale of The DragonKitty.").Wait();
 
             #region Room Items
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Money, 30);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Paper, 21);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.BronzeChunk, 9);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.Money, 2);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.BlackSmithShop, DkItems.BronzeBar, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlasticChunk, 23);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.PlayersRoomLight, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlayersLivingRoomLight, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.ESStreet, DkItems.BronzeTalisman, 1);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.Apple, 10);
-            GameState.CurrentGameState.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.DadsWallet, 1);
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Money, 30).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.Paper, 21).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.BronzeChunk, 9).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.Money, 2).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.BlackSmithShop, DkItems.BronzeBar, 1).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlasticChunk, 23).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersRoom, DkItems.PlayersRoomLight, 1).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.PlayersLivingRoomLight, 1).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.ESStreet, DkItems.BronzeTalisman, 1).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersLivingRoom, DkItems.Apple, 10).Wait();
+            GrainClusterClient.Universe.TryAddLocationItemCount(DkLocations.PlayersBackyard, DkItems.DadsWallet, 1).Wait();
             #endregion
 
             #region Trade-Sets
-            var tsBlackSmith = GameState.CurrentGameState.AddTradeSet("Metal",
+            var tsBlackSmith = GrainClusterClient.Universe.AddTradeSet("Metal",
                 new ItemRecipe(DkItems.BronzeBar,
                     new ItemRecipeIngredient(DkItems.BronzeChunk, 3),
                     new ItemRecipeIngredient(DkItems.Money, 50)
-                    ));
+                    )).Result;
             #endregion
 
             #region Trade-Posts
-            var tpBlackSmith = GameState.CurrentGameState.AddTradePost(DkLocations.BlackSmithShop, "The Black-Smith",
-                tsBlackSmith);
+            var tpBlackSmith = GrainClusterClient.Universe.AddTradePost(DkLocations.BlackSmithShop, "The Black-Smith",
+                tsBlackSmith).Result;
             #endregion
 
-            GameState.CurrentGameState.Custom = this;
+            GrainClusterClient.Universe.SetCustom(this).Wait();
         }
 
         public static DragonKittySourceData Current()
         {
-            return GameState.CurrentGameState.Custom as DragonKittySourceData;
+            return GrainClusterClient.Universe.GetCustom().Result as DragonKittySourceData;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ServerEngine.Commands.GameCommands
             // TODO: rewrite as server/client,  // TODO: this command needs to be redesigned into smaller commands like entershop, listshopitem, buyshopitem, etc
 
             ////  2. Look in the game data for any tradeposts that are currently at this location
-            //var allTradePostsInPlayersLocation = GameState.CurrentGameState.GetTradePostsAtLocation(shoppingCharacter.GetLocation().TrackingId);
+            //var allTradePostsInPlayersLocation = GrainClusterClient.Universe.GetTradePostsAtLocation(shoppingCharacter.GetLocation().TrackingId).Result;
 
             ////  3. If there are no tradeposts here then mention that and return.
             //if (allTradePostsInPlayersLocation.Count == 0)

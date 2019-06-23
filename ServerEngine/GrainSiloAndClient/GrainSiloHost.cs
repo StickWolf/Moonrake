@@ -39,6 +39,7 @@ namespace ServerEngine.GrainSiloAndClient
                     .AddAzureTableGrainStorageAsDefault(builder => builder.Configure<IOptions<ClusterOptions>>((options, silo) =>
                     {
                         options.ConnectionString = "UseDevelopmentStorage=true";
+                        options.UseJson = true;
                     }))
                     .Build();
             }

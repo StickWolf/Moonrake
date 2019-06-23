@@ -267,17 +267,12 @@
     <Compile Include="Commands\GameCommands\InventoryCommand.cs" />
     <Compile Include="Commands\GameCommands\ShopCommand.cs" />
     <Compile Include="Commands\WordTranslator.cs" />
-    <Compile Include="Commands\AccountCommands\UnloadGameStateCommand.cs" />
     <Compile Include="Commands\GameCommands\IGameCommand.cs" />
     <Compile Include="Commands\GameCommands\ChangePlayerNameCommand.cs" />
-    <Compile Include="Commands\AccountCommands\CreateNewGameStateCommand.cs" />
     <Compile Include="Commands\AnonymousCommands\IAnonymousCommand.cs" />
-    <Compile Include="Commands\AccountCommands\AutoLoadBestGameStateCommand.cs" />
-    <Compile Include="Commands\AccountCommands\LoadGameStateCommand.cs" />
     <Compile Include="Commands\AccountCommands\CreateNewPlayerCommand.cs" />
     <Compile Include="Commands\GameCommands\LookCommand.cs" />
     <Compile Include="Commands\GameCommands\MoveCommand.cs" />
-    <Compile Include="Commands\AccountCommands\SaveGameStateCommand.cs" />
     <Compile Include="Commands\GameCommands\StatsCommand.cs" />
     <Compile Include="EqualChecker.cs" />
     <Compile Include="GrainInterfaces\IAccountGrain.cs" />
@@ -304,7 +299,6 @@
     <Compile Include="EngineFactory.cs" />
     <Compile Include="Characters\Character.cs" />
     <Compile Include="EngineInternal.cs" />
-    <Compile Include="GameState.cs" />
     <Compile Include="Locations\Location.cs" />
     <Compile Include="MessageBroker\Broker.cs" />
     <Compile Include="MessageBroker\LinkProcessor.cs" />

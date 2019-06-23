@@ -3,6 +3,7 @@ using ServerEngine.Commands.AccountCommands;
 using ServerEngine.Commands.AnonymousCommands;
 using ServerEngine.Commands.GameCommands;
 using ServerEngine.GrainInterfaces;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +26,8 @@ namespace ServerEngine.Commands
 
             BuildInAccountCommands = new List<IAccountCommand>()
             {
-                new AutoLoadBestGameStateCommand(),
-                new CreateNewGameStateCommand(),
-                new LoadGameStateCommand(),
                 new CreateNewPlayerCommand(),
                 new UsePlayerCommand(),
-                new SaveGameStateCommand(),
-                //new UnloadGameStateCommand()
             };
 
             BuiltInGameCommands = new List<IGameCommand>()
@@ -152,7 +148,7 @@ namespace ServerEngine.Commands
             }
 
             // Extensible game commands
-            gameCommandToRun = GameState.CurrentGameState.GetGameCommand(word, accountPermissions);
+            gameCommandToRun = GrainClusterClient.Universe.GetGameCommand(word, accountPermissions).Result;
             if (gameCommandToRun != null)
             {
                 gameCommandToRun.Execute(extraWords, executingCharacter);

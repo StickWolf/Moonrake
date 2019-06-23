@@ -1,5 +1,6 @@
 ﻿using BaseClientServerDtos.ToClient;
 using ServerEngine.GrainInterfaces;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace ServerEngine.Commands.AccountCommands
         public void Execute(List<string> extraWords, IAccountGrain executingAccount)
         {
             AttachedClient executingClient = AttachedClients.GetAccountFocusedClient(executingAccount);
-            if (executingAccount == null || executingClient == null || GameState.CurrentGameState == null)
+            if (executingAccount == null || executingClient == null)
             {
                 var errorMsgDto = new DescriptiveTextDto("The use player command is currently unavailable.");
                 executingClient?.SendDtoMessage(errorMsgDto);
@@ -41,7 +42,7 @@ namespace ServerEngine.Commands.AccountCommands
             if (character.IsNew)
             {
                 character.IsNew = false;
-                var gameIntroMsgDto = new DescriptiveTextDto(GameState.CurrentGameState.GameIntroductionText);
+                var gameIntroMsgDto = new DescriptiveTextDto(GrainClusterClient.Universe.GetGameIntroductionText().Result);
                 executingClient?.SendDtoMessage(gameIntroMsgDto);
             }
             else
