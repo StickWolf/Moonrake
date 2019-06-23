@@ -1,5 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace Moonrake
@@ -8,14 +9,14 @@ namespace Moonrake
     {
         public Character NewPlayer()
         {
-            var gameData = GameState.CurrentGameState.Custom as MoonrakeGameData;
+            var gameData = GrainClusterClient.Universe.GetCustom().Result as MoonrakeGameData;
 
             var playerCharacter = new Character("Player", 100)
             {
                 TurnCooldown = TimeSpan.FromSeconds(5)
             };
 
-            GameState.CurrentGameState.AddCharacter(playerCharacter, gameData.MoonRakeLocations.TreeHouse);
+            GrainClusterClient.Universe.AddCharacter(playerCharacter, gameData.MoonRakeLocations.TreeHouse).Wait();
 
             return playerCharacter;
         }

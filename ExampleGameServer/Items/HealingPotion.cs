@@ -2,6 +2,7 @@
 using ServerEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ExampleGameServer.Items
 {
@@ -40,22 +41,22 @@ namespace ExampleGameServer.Items
                 return;
             }
 
-            bool removeResult = GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1);
+            bool removeResult = GrainClusterClient.Universe.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, -1).Result;
             if (!removeResult)
             {
                 interactingCharacter.SendDescriptiveTextDtoMessage($"You don't appear to be holding a potion.");
                 return;
 
             }
-            GameState.CurrentGameState.ConvertItemToClone(this.TrackingId);
-            GameState.CurrentGameState.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, 1);
+            GrainClusterClient.Universe.ConvertItemToClone(this.TrackingId).Wait();
+            GrainClusterClient.Universe.TryAddCharacterItemCount(interactingCharacter.TrackingId, this.TrackingId, 1).Wait();
 
             interactingCharacter.Heal(HealPerCharge);
             Charges--;
             interactingCharacter.SendDescriptiveTextDtoMessage($"You feel refreshed. The potion has {Charges} uses left.");
             interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} takes a swig of a healing potion and looks refreshed.", interactingCharacter);
 
-            GameState.CurrentGameState.DedupeItems();
+            GrainClusterClient.Universe.DedupeItems().Wait();
         }
     }
 }

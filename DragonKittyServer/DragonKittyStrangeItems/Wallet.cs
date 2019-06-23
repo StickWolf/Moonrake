@@ -2,6 +2,7 @@
 using ServerEngine.Characters;
 using Newtonsoft.Json;
 using System;
+using ServerEngine.GrainSiloAndClient;
 
 namespace DragonKittyServer.DragonKittyStrangeItems
 {
@@ -25,20 +26,20 @@ namespace DragonKittyServer.DragonKittyStrangeItems
 
         public override string GetDescription(int count)
         {
-            var character = GameState.CurrentGameState.GetCharacter(WalletOwnerCharacterTrackingId);
+            var character = GrainClusterClient.Universe.GetCharacter(WalletOwnerCharacterTrackingId).Result;
             return $"{character.Name}'s wallet";
         }
 
         public override void Grab(int count, Character grabbingCharacter)
         {
-            var walletOwnerCharacter = GameState.CurrentGameState.GetCharacter(WalletOwnerCharacterTrackingId);
+            var walletOwnerCharacter = GrainClusterClient.Universe.GetCharacter(WalletOwnerCharacterTrackingId).Result;
             if (walletOwnerCharacter.IsDead())
             {
                 grabbingCharacter.SendDescriptiveTextDtoMessage($"Since {walletOwnerCharacter.Name} is dead, you get {MoneyWalletContains} dollars!");
 
-                var gameData = (GameState.CurrentGameState.Custom as DragonKittySourceData);
-                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, gameData.DkItems.Money, MoneyWalletContains);
-                GameState.CurrentGameState.TryAddLocationItemCount(grabbingCharacter.GetLocation().TrackingId, this.TrackingId, -1);
+                var gameData = (GrainClusterClient.Universe.GetCustom().Result as DragonKittySourceData);
+                GrainClusterClient.Universe.TryAddCharacterItemCount(grabbingCharacter.TrackingId, gameData.DkItems.Money, MoneyWalletContains);
+                GrainClusterClient.Universe.TryAddLocationItemCount(grabbingCharacter.GetLocation().TrackingId, this.TrackingId, -1);
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace ExampleGameServer
@@ -8,7 +9,7 @@ namespace ExampleGameServer
     {
         public Character NewPlayer()
         {
-            var gameData = GameState.CurrentGameState.Custom as ExampleGameSourceData;
+            var gameData = GrainClusterClient.Universe.GetCustom().Result as ExampleGameSourceData;
 
             var playerCharacter = new Character("Sally", 50)
             {
@@ -17,7 +18,7 @@ namespace ExampleGameServer
                 TurnCooldown = TimeSpan.FromSeconds(5)
             };
 
-            GameState.CurrentGameState.AddCharacter(playerCharacter, gameData.EgLocations.Start);
+            GrainClusterClient.Universe.AddCharacter(playerCharacter, gameData.EgLocations.Start).Wait();
 
             return playerCharacter;
         }

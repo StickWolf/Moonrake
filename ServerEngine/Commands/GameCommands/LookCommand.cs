@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace ServerEngine.Commands.GameCommands
             lookingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{lookingCharacter.Name} glances around.", lookingCharacter);
 
             // Get all portals that have a rule that originates from the current location
-            var originPortals = GameState.CurrentGameState.GetPortalsInLocation(lookingCharacter.GetLocation().TrackingId);
+            var originPortals = GrainClusterClient.Universe.GetPortalsInLocation(lookingCharacter.GetLocation().TrackingId).Result;
 
             var portalDesinations = originPortals
                 .Select(p => p.GetDestination(lookingCharacter.GetLocation().TrackingId));
@@ -43,12 +44,12 @@ namespace ServerEngine.Commands.GameCommands
                 else
                 {
                     // If we got here, the description AND the destination exist.
-                    var remoteLocation = GameState.CurrentGameState.GetLocation(portalDest.DestinationTrackingId);
+                    var remoteLocation = GrainClusterClient.Universe.GetLocation(portalDest.DestinationTrackingId).Result;
                     descriptiveText.AppendLine($"[{remoteLocation.LocationName}] {portalDest.Description} {remoteLocation.RemoteDescription}");
                 }
             }
 
-            var locationItems = GameState.CurrentGameState.GetLocationItems(lookingCharacter.GetLocation().TrackingId);
+            var locationItems = GrainClusterClient.Universe.GetLocationItems(lookingCharacter.GetLocation().TrackingId).Result;
             if (locationItems != null)
             {
                 string itemDescriptions = string.Empty;
@@ -80,7 +81,7 @@ namespace ServerEngine.Commands.GameCommands
                 }
             }
 
-            var otherCharactersInLocation = GameState.CurrentGameState.GetCharactersInLocation(lookingCharacter.GetLocation().TrackingId)
+            var otherCharactersInLocation = GrainClusterClient.Universe.GetCharactersInLocation(lookingCharacter.GetLocation().TrackingId).Result
                 .Where(c => c.TrackingId != lookingCharacter.TrackingId).ToList();
             if (otherCharactersInLocation.Count != 0)
             {

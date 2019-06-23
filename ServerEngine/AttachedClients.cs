@@ -1,6 +1,7 @@
 ﻿using Amqp;
 using ServerEngine.Characters;
 using ServerEngine.GrainInterfaces;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -134,7 +135,7 @@ namespace ServerEngine
                     return null;
                 }
                 var characterTrackingId = ClientFocusedCharacters[clientTrackingId];
-                return GameState.CurrentGameState?.GetCharacter(characterTrackingId);
+                return GrainClusterClient.Universe.GetCharacter(characterTrackingId).Result;
             }
         }
 

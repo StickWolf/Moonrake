@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,8 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character droppingCharacter)
         {
-            var droppingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
-            var droppingCharacterItems = GameState.CurrentGameState.GetCharacterItems(droppingCharacter.TrackingId);
+            var droppingCharacterLocation = GrainClusterClient.Universe.GetCharacterLocation(droppingCharacter.TrackingId).Result;
+            var droppingCharacterItems = GrainClusterClient.Universe.GetCharacterItems(droppingCharacter.TrackingId).Result;
             if (droppingCharacterItems == null || droppingCharacterItems.Count == 0)
             {
                 droppingCharacter.SendDescriptiveTextDtoMessage("You have no items.");

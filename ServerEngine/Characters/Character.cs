@@ -2,6 +2,7 @@
 using BaseClientServerDtos.ToClient;
 using Newtonsoft.Json;
 using ServerEngine.Commands;
+using ServerEngine.GrainSiloAndClient;
 using ServerEngine.Locations;
 using System;
 using System.Collections.Generic;
@@ -100,7 +101,7 @@ namespace ServerEngine.Characters
         /// <returns></returns>
         public Location GetLocation()
         {
-            return GameState.CurrentGameState.GetCharacterLocation(this.TrackingId);
+            return GrainClusterClient.Universe.GetCharacterLocation(this.TrackingId).Result;
         }
 
         public AttachedClient GetClient()
@@ -128,7 +129,7 @@ namespace ServerEngine.Characters
             {
                 foreach (var turnBehaviorName in TurnBehaviors)
                 {
-                    var behavior = GameState.CurrentGameState.GetTurnBehavior(turnBehaviorName);
+                    var behavior = GrainClusterClient.Universe.GetTurnBehavior(turnBehaviorName).Result;
                     behavior?.Turn(this);
                 }
             }
@@ -281,7 +282,7 @@ namespace ServerEngine.Characters
         /// <returns></returns>
         public List<KeyValuePair<Item, int>> GetUseableInventoryItems()
         {
-            var useableCharacterItems = GameState.CurrentGameState.GetCharacterItems(this.TrackingId)
+            var useableCharacterItems = GrainClusterClient.Universe.GetCharacterItems(this.TrackingId).Result
                 .Where(i => i.Key.IsVisible) // Only allow interaction with visible items
                 .Where(i => i.Key.IsUseableFrom == ItemUseableFrom.All || i.Key.IsUseableFrom == ItemUseableFrom.Inventory) // Only choose items that can be used
                 .Select(i => new KeyValuePair<Item, int>(i.Key, i.Value))

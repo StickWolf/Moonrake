@@ -47,7 +47,7 @@ namespace ExampleGameServer.Items
                 var gameData = ExampleGameSourceData.Current();
                 interactingCharacter.SendDescriptiveTextDtoMessage($"You move the lever. A small crack forms in the wall and a dull looking key falls out.");
                 interactingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{interactingCharacter.Name} moves the lever and a key falls out of the wall!.", interactingCharacter);
-                GameState.CurrentGameState.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1);
+                GrainClusterClient.Universe.TryAddLocationItemCount(gameData.EgLocations.Start, gameData.EgItems.DullBronzeKey, 1).Wait();
 
                 // TODO: try to move away from game variables and just use properties of items/locations/etc directly
                 GrainClusterClient.Universe.SetGameVarValue(GameVariableToggle, "on").Wait();

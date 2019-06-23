@@ -1,4 +1,5 @@
 ﻿using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace Moonrake
@@ -31,18 +32,18 @@ namespace Moonrake
 
         public void NewWorld(MoonrakeGameData gameData)
         {
-            WaterEye = GameState.CurrentGameState.AddItem(new Item("Water Eye") { IsUnique = true });
-            Money = GameState.CurrentGameState.AddItem(new Item("Money"));
-            ChocolateIceCream = GameState.CurrentGameState.AddItem(new Item("Chocolate Ice Cream"));
-            StrawberryIceCream = GameState.CurrentGameState.AddItem(new Item("Strawberry Ice Cream"));
-            VanillaIceCream = GameState.CurrentGameState.AddItem(new Item("Vanilla Ice Cream"));
-            CheeseBurger = GameState.CurrentGameState.AddItem(new Item("Cheese Burger"));
-            Burger = GameState.CurrentGameState.AddItem(new Item("Burger"));
-            Fries = GameState.CurrentGameState.AddItem(new Item("Fries"));
-            Soda = GameState.CurrentGameState.AddItem(new Item("Soda"));
-            Burrito = GameState.CurrentGameState.AddItem(new Item("Burrito"));
-            Taco = GameState.CurrentGameState.AddItem(new Item("Taco"));
-            Rice = GameState.CurrentGameState.AddItem(new Item("Rice"));
+            WaterEye = GrainClusterClient.Universe.AddItem(new Item("Water Eye") { IsUnique = true }).Result;
+            Money = GrainClusterClient.Universe.AddItem(new Item("Money")).Result;
+            ChocolateIceCream = GrainClusterClient.Universe.AddItem(new Item("Chocolate Ice Cream")).Result;
+            StrawberryIceCream = GrainClusterClient.Universe.AddItem(new Item("Strawberry Ice Cream")).Result;
+            VanillaIceCream = GrainClusterClient.Universe.AddItem(new Item("Vanilla Ice Cream")).Result;
+            CheeseBurger = GrainClusterClient.Universe.AddItem(new Item("Cheese Burger")).Result;
+            Burger = GrainClusterClient.Universe.AddItem(new Item("Burger")).Result;
+            Fries = GrainClusterClient.Universe.AddItem(new Item("Fries")).Result;
+            Soda = GrainClusterClient.Universe.AddItem(new Item("Soda")).Result;
+            Burrito = GrainClusterClient.Universe.AddItem(new Item("Burrito")).Result;
+            Taco = GrainClusterClient.Universe.AddItem(new Item("Taco")).Result;
+            Rice = GrainClusterClient.Universe.AddItem(new Item("Rice")).Result;
         }
     }
 }

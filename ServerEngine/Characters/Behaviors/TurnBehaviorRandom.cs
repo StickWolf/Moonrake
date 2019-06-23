@@ -1,4 +1,5 @@
-﻿using ServerEngine.Locations;
+﻿using ServerEngine.GrainSiloAndClient;
+using ServerEngine.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +107,7 @@ namespace ServerEngine.Characters.Behaviors
 
         private Location PickRandomMoveableLocation(Character turnTakingCharacter)
         {
-            var destLocations = GameState.CurrentGameState.GetConnectedLocations(turnTakingCharacter.GetLocation().TrackingId);
+            var destLocations = GrainClusterClient.Universe.GetConnectedLocations(turnTakingCharacter.GetLocation().TrackingId).Result;
             if (destLocations.Count == 0)
             {
                 return null;
@@ -117,7 +118,7 @@ namespace ServerEngine.Characters.Behaviors
 
         private Character PickRandomCharacterInRoom(Character turnTakingCharacter)
         {
-            var roomCharactersExceptRat = GameState.CurrentGameState.GetCharactersInLocation(turnTakingCharacter.GetLocation().TrackingId)
+            var roomCharactersExceptRat = GrainClusterClient.Universe.GetCharactersInLocation(turnTakingCharacter.GetLocation().TrackingId).Result
                 .Where(c => c.TrackingId != turnTakingCharacter.TrackingId).ToList();
             if (roomCharactersExceptRat.Count == 0)
             {
@@ -129,7 +130,7 @@ namespace ServerEngine.Characters.Behaviors
 
         private KeyValuePair<Item, int>? PickRandomGrabbableLocationItem(Character turnTakingCharacter)
         {
-            var locationItems = GameState.CurrentGameState.GetLocationItems(turnTakingCharacter.GetLocation().TrackingId)
+            var locationItems = GrainClusterClient.Universe.GetLocationItems(turnTakingCharacter.GetLocation().TrackingId).Result
                 .Where(i => !i.Key.IsBound && i.Key.IsVisible).ToList();
             if (locationItems.Count == 0)
             {
@@ -141,7 +142,7 @@ namespace ServerEngine.Characters.Behaviors
 
         private KeyValuePair<Item, int>? PickRandomDroppableInventoryItem(Character turnTakingCharacter)
         {
-            var inventoryItems = GameState.CurrentGameState.GetCharacterItems(turnTakingCharacter.TrackingId)
+            var inventoryItems = GrainClusterClient.Universe.GetCharacterItems(turnTakingCharacter.TrackingId).Result
                 .Where(i => !i.Key.IsBound && i.Key.IsVisible).ToList();
             if (inventoryItems.Count == 0)
             {

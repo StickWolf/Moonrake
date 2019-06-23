@@ -19,13 +19,6 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            if (GameState.CurrentGameState == null)
-            {
-                var errorMsgDto = new DescriptiveTextDto("The create new account command is currently unavailable.");
-                executingClient?.SendDtoMessage(errorMsgDto);
-                return;
-            }
-
             if (extraWords.Count != 2)
             {
                 var errorMsgDto = new DescriptiveTextDto("Wrong number of parameters.");

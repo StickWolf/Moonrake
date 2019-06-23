@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using BaseClientServerDtos.ToClient;
+using ServerEngine.GrainSiloAndClient;
 
 namespace ServerEngine
 {
@@ -90,13 +91,13 @@ namespace ServerEngine
         public virtual void Grab(int count, Character grabbingCharacter)
         {
             var description = GetDescription(count);
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
+            var characterLoc = GrainClusterClient.Universe.GetCharacterLocation(grabbingCharacter.TrackingId).Result;
             // Remove it from the floor
-            var removeLocationResult = GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, -count);
+            var removeLocationResult = GrainClusterClient.Universe.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, -count).Result;
             // And place it in the player's inventory, but only if it was removed from the floor successfully
             if (removeLocationResult)
             {
-                GameState.CurrentGameState.TryAddCharacterItemCount(grabbingCharacter.TrackingId, this.TrackingId, count);
+                GrainClusterClient.Universe.TryAddCharacterItemCount(grabbingCharacter.TrackingId, this.TrackingId, count).Wait();
                 grabbingCharacter.SendDescriptiveTextDtoMessage($"You grabbed {description}.");
                 grabbingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{grabbingCharacter.Name} grabbed {description}.", grabbingCharacter);
             }
@@ -115,15 +116,15 @@ namespace ServerEngine
         public virtual void Drop(int count, Character droppingCharacter)
         {
             var description = GetDescription(count);
-            var characterLoc = GameState.CurrentGameState.GetCharacterLocation(droppingCharacter.TrackingId);
+            var characterLoc = GrainClusterClient.Universe.GetCharacterLocation(droppingCharacter.TrackingId).Result;
 
             // Remove it from the character's inventory
-            var removeCharResult = GameState.CurrentGameState.TryAddCharacterItemCount(droppingCharacter.TrackingId, this.TrackingId, -count);
+            var removeCharResult = GrainClusterClient.Universe.TryAddCharacterItemCount(droppingCharacter.TrackingId, this.TrackingId, -count).Result;
 
             // And place it on the floor, but only if it was removed from the inventory successfully
             if (removeCharResult)
             {
-                GameState.CurrentGameState.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, count);
+                GrainClusterClient.Universe.TryAddLocationItemCount(characterLoc.TrackingId, this.TrackingId, count).Wait();
 
                 droppingCharacter.SendDescriptiveTextDtoMessage($"You dropped {description}.");
                 droppingCharacter.GetLocation().SendDescriptiveTextDtoMessage($"{droppingCharacter.Name} dropped {description}.", droppingCharacter);

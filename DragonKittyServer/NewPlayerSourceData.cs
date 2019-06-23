@@ -1,5 +1,6 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System;
 
 namespace DragonKittyServer
@@ -8,7 +9,7 @@ namespace DragonKittyServer
     {
         public Character NewPlayer()
         {
-            var gameData = GameState.CurrentGameState.Custom as DragonKittySourceData;
+            var gameData = GrainClusterClient.Universe.GetCustom().Result as DragonKittySourceData;
 
             var playerCharacter = new Character("James", 50)
             {
@@ -17,8 +18,8 @@ namespace DragonKittyServer
                 TurnCooldown = TimeSpan.FromSeconds(5)
             };
 
-            GameState.CurrentGameState.TryAddCharacterItemCount(playerCharacter.TrackingId, gameData.DkItems.Money, 200);
-            GameState.CurrentGameState.AddCharacter(playerCharacter, gameData.DkLocations.PlayersRoom);
+            GrainClusterClient.Universe.TryAddCharacterItemCount(playerCharacter.TrackingId, gameData.DkItems.Money, 200).Wait();
+            GrainClusterClient.Universe.AddCharacter(playerCharacter, gameData.DkLocations.PlayersRoom).Wait();
             return playerCharacter;
         }
     }

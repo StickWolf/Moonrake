@@ -1,6 +1,7 @@
 ﻿using ServerEngine;
 using ServerEngine.Characters;
 using ServerEngine.Characters.Behaviors;
+using ServerEngine.GrainSiloAndClient;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace Moonrake
 
         public void NewWorld(MoonrakeGameData gameData)
         {
-            Paige = GameState.CurrentGameState.AddCharacter(new Character("Paige", 100), gameData.MoonRakeLocations.TreeHouse);
+            Paige = GrainClusterClient.Universe.AddCharacter(new Character("Paige", 100), gameData.MoonRakeLocations.TreeHouse).Result;
         }
     }
 }

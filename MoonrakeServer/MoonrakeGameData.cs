@@ -1,4 +1,5 @@
 ﻿using ServerEngine;
+using ServerEngine.GrainSiloAndClient;
 using ServerEngine.Locations;
 
 namespace Moonrake
@@ -17,15 +18,15 @@ namespace Moonrake
             MoonRakePlayers.NewWorld(this);
             MoonRakeItems.NewWorld(this);
 
-            GameState.CurrentGameState.GameIntroductionText = "Once, there were three ancient instruments:" +
+            GrainClusterClient.Universe.SetGameIntroductionText("Once, there were three ancient instruments:" +
                 " The Harp, Piano, and the Drum." +
                 " Inside of each instrument there was a magical gem:" +
                 " A ruby, sapphire, and a diamond." +
                 " When the gems are merged, it will the create an ancient weapon:" +
                 " The Moonrake." +
-                "And also...... wanna go inside? Play somethin' or somethin'?";
+                "And also...... wanna go inside? Play somethin' or somethin'?");
 
-            //GameState.CurrentGameState.TryAddCharacterItemCount(MoonRakePlayers.Player, MoonRakeItems.Money, 35);
+            //GrainClusterClient.Universe.TryAddCharacterItemCount(MoonRakePlayers.Player, MoonRakeItems.Money, 35).Wait();
 
             #region TradeSets
 
@@ -33,7 +34,7 @@ namespace Moonrake
 
             #region TradePosts
 
-            var IceCream = GameState.CurrentGameState.AddTradeSet("Ice Cream",
+            var IceCream = GrainClusterClient.Universe.AddTradeSet("Ice Cream",
                 new ItemRecipe(MoonRakeItems.ChocolateIceCream,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 10)
                 ),
@@ -43,10 +44,10 @@ namespace Moonrake
                 new ItemRecipe(MoonRakeItems.StrawberryIceCream,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 15)
                 )
-            );
-            var IceCreamShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.IceCreamShop, "Ice Cream Shop", IceCream);
+            ).Result;
+            var IceCreamShop = GrainClusterClient.Universe.AddTradePost(MoonRakeLocations.IceCreamShop, "Ice Cream Shop", IceCream).Result;
 
-            var BigPepper = GameState.CurrentGameState.AddTradeSet("Big Pepper",
+            var BigPepper = GrainClusterClient.Universe.AddTradeSet("Big Pepper",
                 new ItemRecipe(MoonRakeItems.Burrito,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 20)
                 ),
@@ -56,10 +57,10 @@ namespace Moonrake
                 new ItemRecipe(MoonRakeItems.Rice,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 5)
                 )
-            );
-            var BigPepperShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.BigPepperShop, "Big Pepper Shop", BigPepper);
+            ).Result;
+            var BigPepperShop = GrainClusterClient.Universe.AddTradePost(MoonRakeLocations.BigPepperShop, "Big Pepper Shop", BigPepper).Result;
 
-            var TheBurgerDimplomat = GameState.CurrentGameState.AddTradeSet("The Burger Dimplomat",
+            var TheBurgerDimplomat = GrainClusterClient.Universe.AddTradeSet("The Burger Dimplomat",
                 new ItemRecipe(MoonRakeItems.Burger,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 15)
                 ),
@@ -72,17 +73,17 @@ namespace Moonrake
                 new ItemRecipe(MoonRakeItems.Fries,
                     new ItemRecipeIngredient(MoonRakeItems.Money, 5)
                 )
-            );
-            var TheBurgerDimplomatShop = GameState.CurrentGameState.AddTradePost(MoonRakeLocations.TheBurgerDimplomatShop, "The Burger Dimplomat Shop", BigPepper);
+            ).Result;
+            var TheBurgerDimplomatShop = GrainClusterClient.Universe.AddTradePost(MoonRakeLocations.TheBurgerDimplomatShop, "The Burger Dimplomat Shop", BigPepper).Result;
 
             #endregion
 
-            GameState.CurrentGameState.Custom = this;
+            GrainClusterClient.Universe.SetCustom(this).Wait();
         }
 
         public static MoonrakeGameData Current()
         {
-            return GameState.CurrentGameState.Custom as MoonrakeGameData;
+            return GrainClusterClient.Universe.GetCustom().Result as MoonrakeGameData;
         }
     }
 }

@@ -4,10 +4,7 @@ using ServerEngine.GrainSiloAndClient;
 using ServerEngine.MessageBroker;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
-using ServerEngine.GrainInterfaces;
 
 namespace ServerEngine
 {
@@ -57,10 +54,8 @@ namespace ServerEngine
                 // Main game loop goes 1 loop for 1 game turn.
                 while (RunGameLoop)
                 {
-                    GameState.AutoSaveIfNeeded(forceSave: false);
-
                     // Get all characters in the game that are still alive
-                    var turningNPC = GameState.CurrentGameState.GetNextTurnNPC();
+                    var turningNPC = GrainClusterClient.Universe.GetNextTurnNPC().Result;
 
                     if (turningNPC == null)
                     {
@@ -95,7 +90,6 @@ namespace ServerEngine
                 if (!shutdownStarted)
                 {
                     shutdownStarted = true;
-                    GameState.AutoSaveIfNeeded(forceSave: true);
                     Broker.StopHost();
                 }
             }

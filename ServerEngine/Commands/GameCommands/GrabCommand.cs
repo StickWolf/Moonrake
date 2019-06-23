@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,8 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character grabbingCharacter)
         {
-            var grabbingCharacterLocation = GameState.CurrentGameState.GetCharacterLocation(grabbingCharacter.TrackingId);
-            var locationItems = GameState.CurrentGameState.GetLocationItems(grabbingCharacterLocation.TrackingId);
+            var grabbingCharacterLocation = GrainClusterClient.Universe.GetCharacterLocation(grabbingCharacter.TrackingId).Result;
+            var locationItems = GrainClusterClient.Universe.GetLocationItems(grabbingCharacterLocation.TrackingId).Result;
             if (locationItems == null || locationItems.Count == 0)
             {
                 grabbingCharacter.SendDescriptiveTextDtoMessage("There is nothing to grab.");

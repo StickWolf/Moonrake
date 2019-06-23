@@ -1,4 +1,5 @@
 ﻿using ServerEngine.Characters;
+using ServerEngine.GrainSiloAndClient;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace ServerEngine.Commands.GameCommands
 
         public void Execute(List<string> extraWords, Character inventorySeekingCharacter)
         {
-            var characterItems = GameState.CurrentGameState.GetCharacterItems(inventorySeekingCharacter.TrackingId);
+            var characterItems = GrainClusterClient.Universe.GetCharacterItems(inventorySeekingCharacter.TrackingId).Result;
             if (characterItems == null || !characterItems.Any())
             {
                 inventorySeekingCharacter.SendDescriptiveTextDtoMessage("You have no items.");
