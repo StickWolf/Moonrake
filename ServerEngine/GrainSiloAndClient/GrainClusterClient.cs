@@ -12,20 +12,29 @@ namespace ServerEngine.GrainSiloAndClient
     {
         public static IClusterClient ClusterClient { get; set; }
 
-        private static string GameUniverseName { get; set; }
+        private static string TopLevelUniverseName { get; set; }
 
         public static IGameUniverseGrain Universe
         {
             get
             {
-                var gameUniverseGrain = ClusterClient.GetGrain<IGameUniverseGrain>(GameUniverseName);
+                var gameUniverseGrain = ClusterClient.GetGrain<IGameUniverseGrain>(TopLevelUniverseName);
                 return gameUniverseGrain;
+            }
+        }
+
+        public static IAccountsGrain Accounts
+        {
+            get
+            {
+                var accountsGrain = ClusterClient.GetGrain<IAccountsGrain>(TopLevelUniverseName);
+                return accountsGrain;
             }
         }
 
         public static void SetGameUniverseName(string name)
         {
-            GameUniverseName = name;
+            TopLevelUniverseName = name;
         }
 
         public static async Task StartAsync()
@@ -41,7 +50,7 @@ namespace ServerEngine.GrainSiloAndClient
                     })
                     .ConfigureApplicationParts(parts =>
                     {
-                        parts.AddApplicationPart(typeof(IItemGrain).Assembly).WithReferences();
+                        parts.AddApplicationPart(typeof(IGameUniverseGrain).Assembly).WithReferences();
                     })
                     .ConfigureLogging(logging =>
                     {

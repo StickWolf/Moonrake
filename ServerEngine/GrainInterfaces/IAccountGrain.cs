@@ -10,6 +10,8 @@ namespace ServerEngine.GrainInterfaces
     {
         Task<string> GetUserName();
 
+        Task<bool> IsClaimed();
+
         Task<bool> CanCreateNewPlayer();
 
         Task SetPassword(string password);

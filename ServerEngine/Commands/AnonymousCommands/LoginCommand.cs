@@ -33,7 +33,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var potentialAccount = GrainClusterClient.Universe.GetAccount(extraWords[0]).Result;
+            var potentialAccount = GrainClusterClient.Accounts.GetAccount(extraWords[0]).Result;
             if (potentialAccount != null && potentialAccount.ValidatePassword(extraWords[1]).Result)
             {
                 executingClient.AttachedAccount = potentialAccount;

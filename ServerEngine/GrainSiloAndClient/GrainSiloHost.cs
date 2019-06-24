@@ -26,7 +26,7 @@ namespace ServerEngine.GrainSiloAndClient
                     })
                     .ConfigureApplicationParts(parts =>
                     {
-                        parts.AddApplicationPart(typeof(ItemGrain).Assembly).WithReferences();
+                        parts.AddApplicationPart(typeof(GameUniverseGrain).Assembly).WithReferences();
                     })
                     .ConfigureLogging(logging =>
                     {
@@ -40,6 +40,8 @@ namespace ServerEngine.GrainSiloAndClient
                     {
                         options.ConnectionString = "UseDevelopmentStorage=true";
                         options.UseJson = true;
+                        options.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All;
+                        options.UseFullAssemblyNames = true;
                     }))
                     .Build();
             }

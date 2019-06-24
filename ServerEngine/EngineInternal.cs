@@ -46,7 +46,8 @@ namespace ServerEngine
                 GrainClusterClient.StartAsync().Wait();
 
                 GrainClusterClient.SetGameUniverseName("Spark"); // TODO: get this name from game data
-                var sysopAccount = GrainClusterClient.Universe.GetSysopAccount().Result;
+
+                var sysopAccount = GrainClusterClient.Accounts.GetSysopAccount().Result;
                 CommandRunner.TryRunCommandFromAccount("autoloadbestgamestate", new List<string>(), sysopAccount);
 
                 Broker.StartHost();
