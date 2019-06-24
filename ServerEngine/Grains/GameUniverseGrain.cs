@@ -5,6 +5,7 @@ using ServerEngine.Characters;
 using ServerEngine.Characters.Behaviors;
 using ServerEngine.Commands.GameCommands;
 using ServerEngine.GrainInterfaces;
+using ServerEngine.GrainStates;
 using ServerEngine.Locations;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ namespace ServerEngine.Grains
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Id: {this.GetPrimaryKeyString()}");
-            sb.AppendLine($"Number accounts: {State.Accounts.Count}");
             return Task.FromResult(sb.ToString());
         }
 
@@ -35,55 +35,6 @@ namespace ServerEngine.Grains
             return this.WriteStateAsync();
         }
 
-        public async Task<IAccountGrain> CreateAccount(string userName, string password)
-        {
-            // An account can only be created so often
-            if ((State.LastAccountCreationTime + State.LastAccountCreationTimeSpanCooldown) > DateTime.Now)
-            {
-                return null; // TODO: create a better response here (be able to tell why we're returning null)
-            }
-            State.LastAccountCreationTime = DateTime.Now;
-
-            var alreadyExistsAccount = GetAccount(userName).Result;
-            if (alreadyExistsAccount != null)
-            {
-                // This account already exists.
-                // Only direct GetAccount calls will return an account like this.
-                return null; // TODO: create a better response here (be able to tell why we're returning null)
-            }
-
-            var account = GrainFactory.GetGrain<IAccountGrain>(userName);
-            await account.SetPassword(password);
-            State.Accounts.Add(userName, account);
-
-            // Save the newly updated data
-            await this.WriteStateAsync();
-
-            return account;
-        }
-
-        public async Task<IAccountGrain> GetSysopAccount()
-        {
-            var account = GrainFactory.GetGrain<IAccountGrain>("sysop");
-            await account.AddPermission("Sysop");
-            return account;
-        }
-
-        public Task<IAccountGrain> GetAccount(string userName)
-        {
-            // The sysop account is special and cannot be retrieved through normal means
-            if (userName.Equals("sysop", StringComparison.OrdinalIgnoreCase))
-            {
-                return Task.FromResult<IAccountGrain>(null);
-            }
-
-            if (State.Accounts.ContainsKey(userName))
-            {
-                return Task.FromResult(State.Accounts[userName]);
-            }
-            return Task.FromResult<IAccountGrain>(null);
-        }
-
         public Task<string> GetGameVarValue(string gameVariableName)
         {
             if (State.GameVars.ContainsKey(gameVariableName))
@@ -93,23 +44,19 @@ namespace ServerEngine.Grains
             return Task.FromResult<string>(null);
         }
 
-        public Task<string> SetGameVarValue(string gameVariableName, string value)
+        public async Task<string> SetGameVarValue(string gameVariableName, string value)
         {
-            // Only set and save if the value is changing
-            var currentValue = GetGameVarValue(gameVariableName).Result;
-            if (!value.Equals(currentValue))
-            {
-                State.GameVars[gameVariableName] = value;
-                this.WriteStateAsync().Wait();
-            }
-            return Task.FromResult(gameVariableName);
+            State.GameVars[gameVariableName] = value;
+            await this.WriteStateAsync();
+
+            return gameVariableName;
         }
 
-        public Task<Guid> AddTradeSet(TradeSet tradeSet)
+        public async Task<Guid> AddTradeSet(TradeSet tradeSet)
         {
             State.TradeSets[tradeSet.TrackingId] = tradeSet;
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(tradeSet.TrackingId);
+            await WriteStateAsync();
+            return tradeSet.TrackingId;
         }
 
         public Task<Guid> AddTradeSet(string tradesetName, params ItemRecipe[] itemRecipes)
@@ -173,12 +120,12 @@ namespace ServerEngine.Grains
             return AddTradePost(tradePost, locationTrackingId);
         }
 
-        public Task<Guid> AddTradePost(TradePost tradePost, Guid locationTrackingId)
+        public async Task<Guid> AddTradePost(TradePost tradePost, Guid locationTrackingId)
         {
             State.TradePosts[tradePost.TrackingId] = tradePost;
             State.CurrentTradePostLocations[tradePost.TrackingId] = locationTrackingId;
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(tradePost.TrackingId);
+            await this.WriteStateAsync();
+            return tradePost.TrackingId;
         }
 
         public Task<TradePost> GetTradePost(Guid tradePostTrackingId)
@@ -232,12 +179,12 @@ namespace ServerEngine.Grains
             return this.WriteStateAsync();
         }
 
-        public Task<Guid> AddCharacter(Character character, Guid locationTrackingId)
+        public async Task<Guid> AddCharacter(Character character, Guid locationTrackingId)
         {
             State.Characters.Add(character.TrackingId, character);
             State.CharacterLocations[character.TrackingId] = locationTrackingId;
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(character.TrackingId);
+            await this.WriteStateAsync();
+            return character.TrackingId;
         }
 
         public Task<Character> GetCharacter(Guid characterTrackingId)
@@ -284,11 +231,11 @@ namespace ServerEngine.Grains
             return  Task.FromResult(nextCharacter);
         }
 
-        public Task<Guid> AddItem(Item item)
+        public async Task<Guid> AddItem(Item item)
         {
             State.Items[item.TrackingId] = item;
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(item.TrackingId);
+            await this.WriteStateAsync();
+            return item.TrackingId;
         }
 
         public Task<Item> GetItem(Guid itemTrackingId)
@@ -309,11 +256,11 @@ namespace ServerEngine.Grains
             return AddPortal(portal);
         }
 
-        public Task<Guid> AddPortal(Portal portal)
+        public async Task<Guid> AddPortal(Portal portal)
         {
             State.Portals[portal.TrackingId] = portal;
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(portal.TrackingId);
+            await this.WriteStateAsync();
+            return portal.TrackingId;
         }
 
         public Task<Portal> GetPortal(Guid portalTrackingId)
@@ -362,17 +309,17 @@ namespace ServerEngine.Grains
             return this.WriteStateAsync();
         }
 
-        public Task<bool> TryAddCharacterItemCount(Guid characterTrackingId, Guid itemTrackingId, int count)
+        public async Task<bool> TryAddCharacterItemCount(Guid characterTrackingId, Guid itemTrackingId, int count)
         {
             var item = GetItem(itemTrackingId).Result;
             if (item == null)
             {
-                return Task.FromResult(false);
+                return false;
             }
 
             if (count == 0)
             {
-                return Task.FromResult(true);
+                return true;
             }
 
             void setCharacterItemCount(Guid sCharacterTrackingId, Guid sItemTrackingId, int sCount)
@@ -422,17 +369,17 @@ namespace ServerEngine.Grains
                 if (characterItemCount > 0)
                 {
                     setCharacterItemCount(characterTrackingId, itemTrackingId, characterItemCount);
-                    this.WriteStateAsync().Wait();
-                    return Task.FromResult(true);
+                    await this.WriteStateAsync();
+                    return true;
                 }
                 else if (characterItemCount == 0)
                 {
                     removeCharacterItem(characterTrackingId, itemTrackingId);
-                    this.WriteStateAsync().Wait();
-                    return Task.FromResult(true);
+                    await this.WriteStateAsync();
+                    return true;
                 }
-                this.WriteStateAsync().Wait();
-                return Task.FromResult(false);
+                await this.WriteStateAsync();
+                return false;
             }
 
             // The item is unique, and we're removing it.
@@ -442,32 +389,32 @@ namespace ServerEngine.Grains
                 if (characterItemCount > 0)
                 {
                     removeCharacterItem(characterTrackingId, itemTrackingId);
-                    this.WriteStateAsync().Wait();
-                    return Task.FromResult(true);
+                    await this.WriteStateAsync();
+                    return true;
                 }
-                this.WriteStateAsync().Wait();
-                return Task.FromResult(false);
+                await this.WriteStateAsync();
+                return false;
             }
 
             // The only other option is that this is a unique item being added to the character
             // First remove it from everywhere else, then add it here.
-            RemoveItemEveryWhere(itemTrackingId);
+            await RemoveItemEveryWhere(itemTrackingId);
             setCharacterItemCount(characterTrackingId, itemTrackingId, 1);
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(true);
+            await this.WriteStateAsync();
+            return true;
         }
 
-        public Task<bool> TryAddLocationItemCount(Guid locationTrackingId, Guid itemTrackingId, int count)
+        public async Task<bool> TryAddLocationItemCount(Guid locationTrackingId, Guid itemTrackingId, int count)
         {
             var item = GetItem(itemTrackingId).Result;
             if (item == null)
             {
-                return Task.FromResult(false);
+                return false;
             }
 
             if (count == 0)
             {
-                return Task.FromResult(true);
+                return true;
             }
 
             void setLocationItemCount(Guid sLocationTrackingId, Guid sItemTrackingId, int sCount)
@@ -517,17 +464,17 @@ namespace ServerEngine.Grains
                 if (locationItemCount > 0)
                 {
                     setLocationItemCount(locationTrackingId, itemTrackingId, locationItemCount);
-                    this.WriteStateAsync().Wait();
-                    return Task.FromResult(true);
+                    await this.WriteStateAsync();
+                    return true;
                 }
                 else if (locationItemCount == 0)
                 {
                     removeLocationItem(locationTrackingId, itemTrackingId);
-                    this.WriteStateAsync().Wait();
-                    return Task.FromResult(true);
+                    await this.WriteStateAsync();
+                    return true;
                 }
-                this.WriteStateAsync().Wait();
-                return Task.FromResult(false);
+                await this.WriteStateAsync();
+                return false;
             }
 
             // The item is unique, and we're removing it.
@@ -538,19 +485,19 @@ namespace ServerEngine.Grains
                 if (locationItemCount > 0)
                 {
                     removeLocationItem(locationTrackingId, itemTrackingId);
-                    this.WriteStateAsync().Wait();
-                    return Task.FromResult(true);
+                    await this.WriteStateAsync();
+                    return true;
                 }
-                this.WriteStateAsync().Wait();
-                return Task.FromResult(false);
+                await this.WriteStateAsync();
+                return false;
             }
 
             // The only other option is that this is a unique item being added to a location
             // First remove it from everywhere else, then add it here.
-            RemoveItemEveryWhere(itemTrackingId);
+            await RemoveItemEveryWhere(itemTrackingId);
             setLocationItemCount(locationTrackingId, itemTrackingId, 1);
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(true);
+            await this.WriteStateAsync();
+            return true;
         }
 
         /// <summary>
@@ -580,7 +527,7 @@ namespace ServerEngine.Grains
             return Task.CompletedTask;
         }
 
-        public Task DedupeItems()
+        public async Task DedupeItems()
         {
             bool dupeFound = true;
             while (dupeFound)
@@ -603,7 +550,7 @@ namespace ServerEngine.Grains
                             // TODO: Not sure how we would update refs to itemB that are found in other object properties
                             // TODO: Maybe we can raise an event here that can be subscribed to
                             State.Items.Remove(itemB.TrackingId);
-                            StackItems(itemB.TrackingId, itemA.TrackingId);
+                            await StackItems(itemB.TrackingId, itemA.TrackingId);
                             break;
                         }
                     }
@@ -613,14 +560,14 @@ namespace ServerEngine.Grains
                     }
                 }
             }
-            return this.WriteStateAsync();
+            await this.WriteStateAsync();
         }
 
-        public Task<Guid> AddLocation(Location location)
+        public async Task<Guid> AddLocation(Location location)
         {
             State.Locations.Add(location.TrackingId, location);
-            this.WriteStateAsync().Wait();
-            return Task.FromResult(location.TrackingId);
+            await this.WriteStateAsync();
+            return location.TrackingId;
         }
 
         public Task<Location> GetLocation(Guid locationTrackingId)
@@ -656,7 +603,7 @@ namespace ServerEngine.Grains
             return Task.FromResult(State.Custom);
         }
 
-        private void StackItems(Guid removeItemTrackingId, Guid receiveItemTrackingId)
+        private async Task StackItems(Guid removeItemTrackingId, Guid receiveItemTrackingId)
         {
             foreach (var characterTrackingId in State.CharactersItems.Keys)
             {
@@ -706,7 +653,7 @@ namespace ServerEngine.Grains
                 }
             }
 
-            this.WriteStateAsync().Wait();
+            await this.WriteStateAsync();
         }
 
         private JsonSerializerSettings GetJsonSerializerSettings()

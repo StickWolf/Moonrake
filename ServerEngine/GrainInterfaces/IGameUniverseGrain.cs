@@ -18,12 +18,6 @@ namespace ServerEngine.GrainInterfaces
         /// <returns></returns>
         Task<string> GetStats();
 
-        Task<IAccountGrain> CreateAccount(string userName, string password);
-
-        Task<IAccountGrain> GetAccount(string userName);
-
-        Task<IAccountGrain> GetSysopAccount();
-
         Task<string> GetGameIntroductionText();
 
         Task SetGameIntroductionText(string value);

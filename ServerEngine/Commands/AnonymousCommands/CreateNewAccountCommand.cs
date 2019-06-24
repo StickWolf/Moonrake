@@ -26,7 +26,7 @@ namespace ServerEngine.Commands.AccountCommands
                 return;
             }
 
-            var potentialAccount = GrainClusterClient.Universe.CreateAccount(extraWords[0], extraWords[1]).Result;
+            var potentialAccount = GrainClusterClient.Accounts.CreateAccount(extraWords[0], extraWords[1]).Result;
             if (potentialAccount == null)
             {
                 var errorMsgDto = new DescriptiveTextDto("Error creating account.");

@@ -3,6 +3,7 @@ using Orleans;
 using ServerEngine.Characters;
 using ServerEngine.GrainInterfaces;
 using ServerEngine.GrainSiloAndClient;
+using ServerEngine.GrainStates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace ServerEngine.Grains
             return Task.FromResult(this.GetPrimaryKeyString());
         }
 
+        public Task<bool> IsClaimed()
+        {
+            return Task.FromResult(State.Claimed);
+        }
+
         public Task<bool> CanCreateNewPlayer()
         {
             if ((State.LastPlayerCreationTime + LastPlayerCreationTimeSpanCooldown) > DateTime.Now)
@@ -31,6 +37,7 @@ namespace ServerEngine.Grains
 
         public Task SetPassword(string password)
         {
+            State.Claimed = true;
             State.HashedPassword = GetPasswordHash(password);
             return WriteStateAsync();
         }
